@@ -54,7 +54,7 @@ class Drawing():
     b = y - mx
     We hack around the slope to prevent division by zero.
     """
-    m = (y2 - y1) / (x2 - x1 + 1)
+    m = (y2 - y1) / (x2 - x1)
     b = y1 - (m * x1)
     print m, b
     """
@@ -63,16 +63,23 @@ class Drawing():
     B = - delta X
     C = - delta X times b
     """
-    A = abs(y2 - y1)
-    B = -abs(x2 - x1)
-    C = -abs(x2 - x1) * b
+    A = y2 - y1
+    B = -(x2 - x1)
+    C = -(x2 - x1) * b
     print A, B, C
     self.picture.map(Transformation.line_lambda(A, B, C, color, thickness),
                      section=[[x1, y1], [x2, y2]])
 
   def bresenham_line(self, x1, y1, x2, y2, color):
     """
-    (x1, y1) to (x2, y2)
+    Uses the Bresenham line algorithm to draw a line.
+
+    Parameters:
+    x1: number, the x coordinate of one endpoint of the line
+    y1: number, the y coordinate of one endpoint of the line
+    x2: number, the x coordinate of the other endpoint of the line
+    y2: number, the y coordinate of the other endpoint of the line
+    color: Color, the color of the line
     
     """
     pass

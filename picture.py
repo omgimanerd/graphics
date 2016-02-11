@@ -2,6 +2,8 @@
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
 # This is a class that facilitates the generation of a raster ppm image file.
 
+from util import Util
+
 HEADER = "P3 %d %d %d\n"
 
 class Picture():
@@ -20,7 +22,7 @@ class Picture():
     self.width = width
     self.height = height
     self.max_color_value = max_color_value
-    self.grid = [[[0, 0, 0] for x in range(width)] for y in range(height)]
+    self.grid = [[[255, 255, 255] for x in range(width)] for y in range(height)]
 
   def set_pixel(self, x, y, color):
     """
@@ -34,10 +36,10 @@ class Picture():
     Returns:
     None
     """
-    if len(color) == 3:
-      raise ValueError("Invalid color.")
     if Util.in_bound(x, 0, self.width) and Util.in_bound(y, 0, self.height):
-      self.grid[x][y] = color
+      for i, color in enumerate(color):
+        # The internal raster is reversed because of the way Python lists work.
+        self.grid[y][x][i] = color
       return True
     raise ValueError("Invalid coordinate.")
 
@@ -65,8 +67,9 @@ class Picture():
 
     for y in range(y_range[0], y_range[1]):
       for x in range(x_range[0], x_range[1]):
-        self.grid[x][y] = function([x, y], [self.width, self.height],
-                                   self.grid[x][y])
+        # The internal raster is reversed because of the way Python lists work.
+        self.grid[y][x] = function([x, y], [self.width, self.height],
+                                   self.grid[y][x])
       
   def generate(self):
     """
