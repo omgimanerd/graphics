@@ -21,6 +21,16 @@ class Color:
   def __len__(self):
     return len(self.color)
 
+  def __getitem__(self, index):
+    if index >= 0 and index <= 2:
+      return self.color[index]
+    raise IndexError("Index out of range.")
+
+  def __setitem__(self, index, value):
+    if index >= 0 and index <= 2:
+      self.color[index] = value
+    raise IndexError("Index out of range.")
+
   @staticmethod
   def __hex_to_rgb__(hex_code):
     """

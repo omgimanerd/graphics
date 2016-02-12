@@ -46,6 +46,8 @@ class Drawing():
 
     Returns:
     None
+
+    TODO: Fix
     """
     
     """
@@ -54,8 +56,8 @@ class Drawing():
     b = y - mx
     We hack around the slope to prevent division by zero.
     """
-    m = (y2 - y1) / (x2 - x1)
-    b = y1 - (m * x1)
+    m = float(y2 - y1) / float(x2 - x1 + 0.00000001)
+    b = y2 - (m * x2)
     print m, b
     """
     Values for Ax + By + C = 0 line formula.
@@ -65,12 +67,12 @@ class Drawing():
     """
     A = y2 - y1
     B = -(x2 - x1)
-    C = -(x2 - x1) * b
+    C = B * b
     print A, B, C
     self.picture.map(Transformation.line_lambda(A, B, C, color, thickness),
                      section=[[x1, y1], [x2, y2]])
 
-  def bresenham_line(self, x1, y1, x2, y2, color):
+  def draw_bresenham_line(self, x1, y1, x2, y2, color):
     """
     Uses the Bresenham line algorithm to draw a line.
 
@@ -81,8 +83,70 @@ class Drawing():
     y2: number, the y coordinate of the other endpoint of the line
     color: Color, the color of the line
     
+    Returns:
+    None
     """
-    pass
+    # Handles horizontal and vertical lines
+    if x1 == x2:
+      low = min(y1, y2)
+      high = max(y1, y2)
+      while low <= high:
+        self.draw_point(x1, low, color)
+        low += 1
+      return None
+    if y1 == y2:
+      low = min(x1, x2)
+      high = max(x1, x2)
+      while low <= high:
+        self.draw_point(low, y1, color)
+        low += 1
+      return None
+
+    m = float(y2 - y1) / float(x2 - x1)
+
+    if m >= -1 and m <= 1 and x1 > x2:
+      x1, x2 = x2, x1
+      y1, y2 = y2, y1
+    elif (m < -1 or m > 1) and y1 > y2:
+      y1, y2 = y2, y1
+      x1, x2 = x2, x1
+
+    A = 2 * (y2 - y1)
+    B = -2 * (x2 - x1)
+    d = A + (B / 2)
+
+    if m < -1:
+      while y1 < y2:
+        self.draw_point(x1, y1, color)
+        if d > 0:
+          x1 += -1
+          d += -A
+        y1 += 1
+        d += B
+    elif m >= -1 and m < 0:
+      while x1 < x2:
+        self.draw_point(x1, y1, color)
+        if d > 0:
+          y1 += -1
+          d += B
+        x1 += 1
+        d += -A
+    elif m > 0 and m <= 1:
+      while x1 < x2:
+        self.draw_point(x1, y1, color)
+        if d > 0:
+          y1 += 1
+          d += B
+        d += A
+        x1 += 1
+    elif m > 1:
+      while y1 < y2:
+        self.draw_point(x1, y1, color)
+        if d < 0:
+          x1 += 1
+          d += A
+        y1 += 1
+        d += B
 
   def stroke_circle(self, cx, cy, r, color, thickness):
     """
