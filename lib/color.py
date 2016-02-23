@@ -2,6 +2,8 @@
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
 # This is a class that manages colors for the Picture and Drawing class.
 
+import random
+
 class Color:
   def __init__(self, color):
     """
@@ -18,6 +20,10 @@ class Color:
     else:
       raise ValueError(
         "Invalid color, only hex or a list of RGB values are allowed.")
+
+  @staticmethod
+  def random():
+    return Color([random.randint(0, 256) for x in range(3)])
 
   def __iter__(self):
     return self

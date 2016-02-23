@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
 # This is a class that facilitates the generation of a raster ppm image file.
+# X increases down and y increases across.
 
 from color import Color
 from util import Util
@@ -23,7 +24,7 @@ class Picture():
     self.width = width
     self.height = height
     self.max_color_value = max_color_value
-    self.grid = [[Color("#FFFFFF") for x in range(width)] for y in range(height)]
+    self.grid = [[Color("#FFFFFF") for y in range(width)] for x in range(height)]
 
   def set_pixel(self, x, y, color):
     """
@@ -37,12 +38,11 @@ class Picture():
     Returns:
     None
     """
-    if Util.in_bound(x, 0, self.width - 1) and Util.in_bound(
-        y, 0, self.height - 1):
-      # The internal raster is reversed because of the way Python lists work.
-      self.grid[y][x] = color
+    if Util.in_bound(x, 0, self.height - 1) and Util.in_bound(
+        y, 0, self.width - 1):
+      self.grid[x][y] = color
     else:
-      raise ValueError("Invalid coordinate.")
+      raise ValueError("Invalid coordinate %d %d." % (x, y))
 
   def map(self, function, section=None):
     """
@@ -66,11 +66,10 @@ class Picture():
       y_range = [min(section[0][1], section[1][1]),
                  max(section[0][1], section[1][1])]
 
-    for y in range(y_range[0], y_range[1]):
-      for x in range(x_range[0], x_range[1]):
-        # The internal raster is reversed because of the way Python lists work.
-        self.grid[y][x] = function([x, y], [self.width, self.height],
-                                   self.grid[y][x])
+    for x in range(x_range[0], x_range[1]):
+      for y in range(y_range[0], y_range[1]):
+        self.grid[x][y] = function([x, y], [self.width, self.height],
+                                   self.grid[x][y])
       
   def generate(self):
     """
