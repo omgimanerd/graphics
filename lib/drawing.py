@@ -116,7 +116,7 @@ class Drawing():
     d = A + (B / 2)
 
     if m < -1:
-      while y1 < y2:
+      while y1 < y2 and x1 < x2:
         self.draw_point(x1, y1, color)
         if d > 0:
           x1 += -1

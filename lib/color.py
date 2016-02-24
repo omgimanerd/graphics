@@ -2,8 +2,10 @@
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
 # This is a class that manages colors for the Picture and Drawing class.
 
+import random
+
 class Color:
-  def __init__(self, color, rgb=False):
+  def __init__(self, color):
     """
     Constructor for a Color class.
 
@@ -11,9 +13,17 @@ class Color:
     color: string, the hexadecimal or rgb representation of the color
     """
     self.counter = 0
-    if rgb:
+    if type(color) is list and len(color) == 3:
       self.color = color
-    self.color = self.__hex_to_rgb__(color)
+    elif type(color) is str:
+      self.color = self.__hex_to_rgb__(color)
+    else:
+      raise ValueError(
+        "Invalid color, only hex or a list of RGB values are allowed.")
+
+  @staticmethod
+  def random():
+    return Color([random.randint(0, 256) for x in range(3)])
 
   def __iter__(self):
     return self
