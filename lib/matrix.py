@@ -1,15 +1,28 @@
 #!/usr/bin/python
-# This class encapsulates matrixes for graphics programming.
+# This class encapsulates matrixes for graphics programming. The Matrix class
+# handles the base arithmetic operations associated with matrices while the
+# TransformationMatrix class generates transformation matrices to be applied
+# to sets of points.
 # Author: Alvin Lin
 
-from math import pi
+from math import pi, sin, cos
 
 class Matrix():
   def __init__(self, matrix=[]):
+    """
+    Constructor for a Matrix
+
+    
+    """
     self.matrix = self._verify(matrix)
 
   def __str__(self):
     return str(self.matrix)
+
+  def __neg__(self):
+    for i in range(len(self.matrix)):
+      for j in range(len(self.matrix[i])):
+        self.matrix[i][j] *= -1
 
   def __add__(self, other):
     if type(other) is list:
@@ -61,8 +74,6 @@ class TransformationMatrix(Matrix):
     raise ValueError('Invalid matrix: %s' % matrix)
   
   def _r2d(self, theta):
-    # Floating point number may cause inefficiency?
-    # WONTFIX
     return (theta / pi) * 180
 
   @staticmethod
@@ -72,26 +83,39 @@ class TransformationMatrix(Matrix):
                                  [0, 0, 1, 0],
                                  [0, 0, 0, 1]])
 
-  def compose_rotationX(theta, radians=False):
+  def compose_rotationX(self, theta, radians=False):
     if radians:
       theta = self._r2d(theta)
-    pass
+    self *= [[cos(theta), -sin(theta), 0, 0],
+             [sin(theta), cos(theta), 0, 0],
+             [0, 0, 1, 0],
+             [0, 0, 0, 1]]
+    return self
 
-  def compose_rotationY(theta, radians=False):
+  def compose_rotationY(self, theta, radians=False):
     if radians:
       theta = self._r2d(theta)
-    pass
+    self *= [[cos(theta), 0, -sin(theta), 0],
+             [0, 1, 0, 0],
+             [sin(theta), 0, cos(theta), 0],
+             [0, 0, 0, 1]]
+    return self
 
-  def compose_rotationZ(theta, radians=False):
+  def compose_rotationZ(self, theta, radians=False):
     if radians:
       theta = self._r2d(theta)
-    pass
-
-  def compose_translation(x, y, z):
+    self *= [[1, 0, 0, 0],
+             [0, cos(theta), -sin(theta), 0],
+             [0, sin(theta), cos(theta), 0],
+             [0, 0, 0, 1]]
+    return self
+    
+  def compose_translation(self, x, y, z):
     self *= [[1, 0, 0, x],
              [0, 1, 0, y],
              [0, 0, 1, z],
              [0, 0, 0, 1]]
+    return self
 
 if __name__ == '__main__':
   pass
