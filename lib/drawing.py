@@ -86,67 +86,58 @@ class Drawing():
     Returns:
     None
     """
-    # Handles horizontal and vertical lines
-    if x1 == x2:
-      low = min(y1, y2)
-      high = max(y1, y2)
-      while low <= high:
-        self.draw_point(x1, low, color)
-        low += 1
-      return None
-    if y1 == y2:
-      low = min(x1, x2)
-      high = max(x1, x2)
-      while low <= high:
-        self.draw_point(low, y1, color)
-        low += 1
-      return None
-
-    m = float(y2 - y1) / float(x2 - x1)
-
-    if m >= -1 and m <= 1 and x1 > x2:
+    dx = x2 - x1
+    dy = y2 - y1
+    if dx + dy < 0:
+      dx *= -1
+      dy *= -1
       x1, x2 = x2, x1
       y1, y2 = y2, y1
-    elif (m < -1 or m > 1) and y1 > y2:
-      y1, y2 = y2, y1
-      x1, x2 = x2, x1
 
-    A = 2 * (y2 - y1)
-    B = -2 * (x2 - x1)
-    d = A + (B / 2)
-
-    if m < -1:
-      while y1 < y2 and x1 < x2:
+    if dx == 0:
+      while y1 <= y2:
         self.draw_point(x1, y1, color)
-        if d > 0:
-          x1 += -1
-          d += -A
         y1 += 1
-        d += B
-    elif m >= -1 and m < 0:
-      while x1 < x2:
+    elif dy == 0:
+      while x1 <= x2:
+        self.draw_point(x1, y2, color)
+        x1 += 1
+    elif dy < 0:
+      d = 0
+      while x1 <= x2:
         self.draw_point(x1, y1, color)
         if d > 0:
           y1 += -1
-          d += B
+          d += -dx
         x1 += 1
-        d += -A
-    elif m > 0 and m <= 1:
-      while x1 < x2:
+        d += -dy
+    elif dx < 0:
+      d = 0
+      while y1 <= y2:
+        self.draw_point(x1, y1, color)
+        if d > 0:
+          x1 += -1
+          d += -dy
+        y1 += 1
+        d += -dx
+    elif dx > dy:
+      d = 0
+      while x1 <= x2:
         self.draw_point(x1, y1, color)
         if d > 0:
           y1 += 1
-          d += B
-        d += A
+          d += -dx
         x1 += 1
-    elif m > 1:
-      while y1 < y2:
+        d += dy
+    else:
+      d = 0
+      while y1 <= y2:
         self.draw_point(x1, y1, color)
-        if d < 0:
+        if d > 0:
           x1 += 1
-          d += A
+          d += -dy
         y1 += 1
-        d += B
+        d += dx
 
   def stroke_circle(self, cx, cy, r, color, thickness):
     """

@@ -24,7 +24,7 @@ class Picture():
     self.width = width
     self.height = height
     self.max_color_value = max_color_value
-    self.grid = [[Color("#FFFFFF") for y in range(width)] for x in range(height)]
+    self.grid = [[Color("#FFFFFF") for x in range(width)] for y in range(height)]
 
   def set_pixel(self, x, y, color):
     """
@@ -42,6 +42,7 @@ class Picture():
         y, 0, self.width - 1):
       self.grid[x][y] = color
     else:
+      print x, y
       raise ValueError("Invalid coordinate %d %d." % (x, y))
 
   def map(self, function, section=None):

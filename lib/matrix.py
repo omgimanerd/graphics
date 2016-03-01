@@ -8,13 +8,13 @@
 from math import pi, sin, cos
 
 class Matrix():
-  def __init__(self, matrix=[]):
+  def __init__(self, matrix=None):
     """
     Constructor for a Matrix
-
-    
     """
-    self.matrix = self._verify(matrix)
+    self.matrix = []
+    if matrix:
+      self.matrix = self._verify(matrix)
 
   def __str__(self):
     return str(self.matrix)
@@ -39,8 +39,7 @@ class Matrix():
           self.matrix[i][j] *= other
     if isinstance(other, Matrix):
       if len(self.matrix[0]) == len(other.matrix):
-        result = [[x for x in range(len(other.matrix[0]))] for y in range(
-          len(self.matrix))]
+        result = [[0] * len(other.matrix[0])] * len(self.matrix)
         for i in range(len(self.matrix)):
           for j in range(len(other.matrix[0])):
             result_row = 0
@@ -69,10 +68,10 @@ class Matrix():
 
 class TransformationMatrix(Matrix):
   def _verify(self, matrix):
-    if all(map(lambda x: len(x) == 4, matrix)) and len(matrix) == 4:
+    if all([len(x) == 4 for x in matrix]) and len(matrix) == 4:
       return matrix
     raise ValueError('Invalid matrix: %s' % matrix)
-  
+
   def _r2d(self, theta):
     return (theta / pi) * 180
 
@@ -86,36 +85,38 @@ class TransformationMatrix(Matrix):
   def compose_rotationX(self, theta, radians=False):
     if radians:
       theta = self._r2d(theta)
-    self *= [[cos(theta), -sin(theta), 0, 0],
-             [sin(theta), cos(theta), 0, 0],
-             [0, 0, 1, 0],
-             [0, 0, 0, 1]]
+    self *= TransformationMatrix([[cos(theta), -sin(theta), 0, 0],
+                                  [sin(theta), cos(theta), 0, 0],
+                                  [0, 0, 1, 0],
+                                  [0, 0, 0, 1]])
     return self
 
   def compose_rotationY(self, theta, radians=False):
     if radians:
       theta = self._r2d(theta)
-    self *= [[cos(theta), 0, -sin(theta), 0],
-             [0, 1, 0, 0],
-             [sin(theta), 0, cos(theta), 0],
-             [0, 0, 0, 1]]
+    self *= TransformationMatrix([[cos(theta), 0, -sin(theta), 0],
+                                  [0, 1, 0, 0],
+                                  [sin(theta), 0, cos(theta), 0],
+                                  [0, 0, 0, 1]])
     return self
 
   def compose_rotationZ(self, theta, radians=False):
     if radians:
       theta = self._r2d(theta)
-    self *= [[1, 0, 0, 0],
-             [0, cos(theta), -sin(theta), 0],
-             [0, sin(theta), cos(theta), 0],
-             [0, 0, 0, 1]]
+    self *= TransformationMatrix([[1, 0, 0, 0],
+                                  [0, cos(theta), -sin(theta), 0],
+                                  [0, sin(theta), cos(theta), 0],
+                                  [0, 0, 0, 1]])
     return self
-    
+
   def compose_translation(self, x, y, z):
-    self *= [[1, 0, 0, x],
-             [0, 1, 0, y],
-             [0, 0, 1, z],
-             [0, 0, 0, 1]]
+    self *= TransformationMatrix([[1, 0, 0, x],
+                                  [0, 1, 0, y],
+                                  [0, 0, 1, z],
+                                  [0, 0, 0, 1]])
     return self
 
 if __name__ == '__main__':
-  pass
+  m = Matrix([[0, 0, 0, 1]])
+  n = Matrix([[0, 0, 1, 1]])
+  print m + n + [0, 1, 0, 1]
