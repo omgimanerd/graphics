@@ -47,7 +47,7 @@ class Drawing():
     Returns:
     None
 
-    TODO: Fix
+    TODO: Fix, this method is broken
     """
     
     """

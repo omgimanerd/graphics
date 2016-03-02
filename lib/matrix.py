@@ -9,9 +9,6 @@ from math import pi, sin, cos
 
 class Matrix():
   def __init__(self, matrix=None):
-    """
-    Constructor for a Matrix
-    """
     self.matrix = []
     if matrix:
       self.matrix = self._verify(matrix)
@@ -82,7 +79,7 @@ class TransformationMatrix(Matrix):
                                  [0, 0, 1, 0],
                                  [0, 0, 0, 1]])
 
-  def compose_rotationX(self, theta, radians=False):
+  def rotateX(self, theta, radians=False):
     if radians:
       theta = self._r2d(theta)
     self *= TransformationMatrix([[cos(theta), -sin(theta), 0, 0],
@@ -91,7 +88,7 @@ class TransformationMatrix(Matrix):
                                   [0, 0, 0, 1]])
     return self
 
-  def compose_rotationY(self, theta, radians=False):
+  def rotateY(self, theta, radians=False):
     if radians:
       theta = self._r2d(theta)
     self *= TransformationMatrix([[cos(theta), 0, -sin(theta), 0],
@@ -100,7 +97,7 @@ class TransformationMatrix(Matrix):
                                   [0, 0, 0, 1]])
     return self
 
-  def compose_rotationZ(self, theta, radians=False):
+  def rotateZ(self, theta, radians=False):
     if radians:
       theta = self._r2d(theta)
     self *= TransformationMatrix([[1, 0, 0, 0],
@@ -109,12 +106,16 @@ class TransformationMatrix(Matrix):
                                   [0, 0, 0, 1]])
     return self
 
-  def compose_translation(self, x, y, z):
+  def translate(self, x, y, z):
     self *= TransformationMatrix([[1, 0, 0, x],
                                   [0, 1, 0, y],
                                   [0, 0, 1, z],
                                   [0, 0, 0, 1]])
     return self
+
+class EdgeMatrix(Matrix):
+  def add(self, point):
+    pass
 
 if __name__ == '__main__':
   m = Matrix([[0, 0, 0, 1]])
