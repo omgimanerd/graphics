@@ -36,7 +36,8 @@ class Matrix():
           self.matrix[i][j] *= other
     if isinstance(other, Matrix):
       if len(self.matrix[0]) == len(other.matrix):
-        result = [[0] * len(other.matrix[0])] * len(self.matrix)
+        result = [[0 for x in range(len(other.matrix[0]))] for y in range(
+          len(self.matrix))]
         for i in range(len(self.matrix)):
           for j in range(len(other.matrix[0])):
             result_row = 0
@@ -45,7 +46,7 @@ class Matrix():
             result[i][j] = result_row
         return Matrix(result)
       raise ValueError('Matrices %s and %s cannot be multipled' % (self, other))
-    raise TypeError('Cannot add %s to %s' % (other, self))
+    raise TypeError('Cannot multiply %s and %s' % (other, self))
 
   def __iadd__(self, other):
     self = self + other
@@ -70,7 +71,10 @@ class TransformationMatrix(Matrix):
     raise ValueError('Invalid matrix: %s' % matrix)
 
   def _r2d(self, theta):
-    return (theta / pi) * 180
+    return theta / pi * 180.0
+
+  def _d2r(self, theta):
+    return theta / 180.0 * pi
 
   @staticmethod
   def identity():
@@ -80,8 +84,8 @@ class TransformationMatrix(Matrix):
                                  [0, 0, 0, 1]])
 
   def rotateX(self, theta, radians=False):
-    if radians:
-      theta = self._r2d(theta)
+    if not radians:
+      theta = self._d2r(theta)
     self *= TransformationMatrix([[cos(theta), -sin(theta), 0, 0],
                                   [sin(theta), cos(theta), 0, 0],
                                   [0, 0, 1, 0],
@@ -89,8 +93,8 @@ class TransformationMatrix(Matrix):
     return self
 
   def rotateY(self, theta, radians=False):
-    if radians:
-      theta = self._r2d(theta)
+    if not radians:
+      theta = self._d2r(theta)
     self *= TransformationMatrix([[cos(theta), 0, -sin(theta), 0],
                                   [0, 1, 0, 0],
                                   [sin(theta), 0, cos(theta), 0],
@@ -98,8 +102,8 @@ class TransformationMatrix(Matrix):
     return self
 
   def rotateZ(self, theta, radians=False):
-    if radians:
-      theta = self._r2d(theta)
+    if not radians:
+      theta = self._d2r(theta)
     self *= TransformationMatrix([[1, 0, 0, 0],
                                   [0, cos(theta), -sin(theta), 0],
                                   [0, sin(theta), cos(theta), 0],
@@ -118,6 +122,11 @@ class EdgeMatrix(Matrix):
     pass
 
 if __name__ == '__main__':
-  m = Matrix([[0, 0, 0, 1]])
-  n = Matrix([[0, 0, 1, 1]])
-  print m + n + [0, 1, 0, 1]
+  m = EdgeMatrix([[ 0, 0, 0, 1]])
+  m += [0, 0, 1, 1]
+  m += [0, 1, 1, 1]
+  m += [1, 1, 1, 1]
+  m += [1, 0, 1, 0]
+  a = TransformationMatrix.identity().rotateX(10)
+  print m, a
+  print m * a
