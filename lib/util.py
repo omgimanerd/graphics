@@ -11,7 +11,7 @@ class Util():
       tmp = lower
       lower = upper
       upper = tmp
-    return x >= lower and x <= upper
+    return x >= lower and x < upper
 
   @staticmethod
   def is_almost_equal(a, b, epsilon=1):

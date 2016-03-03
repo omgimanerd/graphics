@@ -5,6 +5,7 @@
 
 from picture import Picture
 from transformation import Transformation
+from util import Util
 
 class Drawing():
   def __init__(self, name, width, height):
@@ -16,9 +17,11 @@ class Drawing():
     width: number, the width of the image in pixels
     height: number, the height of the image in pixels
     """
+    self.width = width
+    self.height = height
     self.picture = Picture(name, width, height)
     
-  def draw_point(self, x, y, color):
+  def draw_point(self, x, y, color, safe=True):
     """
     Draws a point on the picture.
     
@@ -30,7 +33,11 @@ class Drawing():
     Returns:
     None
     """
-    self.picture.set_pixel(x, y, color)
+    if safe:
+      if Util.in_bound(x, 0, self.width) and Util.in_bound(y, 0, self.height):
+        self.picture.set_pixel(x, y, color)
+    else:
+      self.picture.set_pixel(x, y, color)
 
   def draw_line(self, x1, y1, x2, y2, color, thickness):
     """
@@ -72,7 +79,7 @@ class Drawing():
     self.picture.map(Transformation.line_lambda(A, B, C, color, thickness),
                      section=[[x1, y1], [x2, y2]])
 
-  def draw_bresenham_line(self, x1, y1, x2, y2, color):
+  def draw_bresenham_line(self, x1, y1, x2, y2, color, safe=True):
     """
     Uses the Bresenham line algorithm to draw a line.
 
@@ -96,16 +103,16 @@ class Drawing():
 
     if dx == 0:
       while y1 <= y2:
-        self.draw_point(x1, y1, color)
+        self.draw_point(x1, y1, color, safe=safe)
         y1 += 1
     elif dy == 0:
       while x1 <= x2:
-        self.draw_point(x1, y2, color)
+        self.draw_point(x1, y2, color, safe=safe)
         x1 += 1
     elif dy < 0:
       d = 0
       while x1 <= x2:
-        self.draw_point(x1, y1, color)
+        self.draw_point(x1, y1, color, safe=safe)
         if d > 0:
           y1 += -1
           d += -dx
@@ -114,7 +121,7 @@ class Drawing():
     elif dx < 0:
       d = 0
       while y1 <= y2:
-        self.draw_point(x1, y1, color)
+        self.draw_point(x1, y1, color, safe=safe)
         if d > 0:
           x1 += -1
           d += -dy
@@ -123,7 +130,7 @@ class Drawing():
     elif dx > dy:
       d = 0
       while x1 <= x2:
-        self.draw_point(x1, y1, color)
+        self.draw_point(x1, y1, color, safe=safe)
         if d > 0:
           y1 += 1
           d += -dx
@@ -132,7 +139,7 @@ class Drawing():
     else:
       d = 0
       while y1 <= y2:
-        self.draw_point(x1, y1, color)
+        self.draw_point(x1, y1, color, safe=safe)
         if d > 0:
           x1 += 1
           d += -dy

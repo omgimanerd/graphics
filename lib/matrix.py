@@ -16,6 +16,10 @@ class Matrix():
   def __str__(self):
     return str(self.matrix)
 
+  def __iter__(self):
+    for item in self.matrix:
+      yield item
+
   def __neg__(self):
     for i in range(len(self.matrix)):
       for j in range(len(self.matrix[i])):
@@ -118,15 +122,28 @@ class TransformationMatrix(Matrix):
     return self
 
 class EdgeMatrix(Matrix):
-  def add(self, point):
-    pass
+  def _verify(self, matrix):
+    if len(matrix) % 2 != 0:
+      raise ValueError(
+        'EdgeMatrix must be initialized with an even number of points')
+    if not all([len(x) == 4 for x in matrix]):
+      raise ValueError(
+        'EdgeMatrix must be initialized with point lists of length 4')
+    return matrix
+
+  def __add__(self, other):
+    raise NotImplementedError('__add__ cannot be called on an EdgeMatrix')
+
+  def _add_point(self, point):
+    self.matrix.append(point if len(point) == 4 else point + [1])
+
+  def add_edge(self, point1, point2):
+    self._add_point(point1)
+    self._add_point(point2)
 
 if __name__ == '__main__':
-  m = EdgeMatrix([[ 0, 0, 0, 1]])
-  m += [0, 0, 1, 1]
-  m += [0, 1, 1, 1]
-  m += [1, 1, 1, 1]
-  m += [1, 0, 1, 0]
-  a = TransformationMatrix.identity().rotateX(10)
-  print m, a
-  print m * a
+  m = EdgeMatrix()
+  m.add_edge([0, 0, 1, 1], [1, 0, 1, 1])
+  a = TransformationMatrix.identity().rotateZ(10)
+  m *= a
+  print m

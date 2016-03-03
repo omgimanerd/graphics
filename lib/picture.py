@@ -38,11 +38,9 @@ class Picture():
     Returns:
     None
     """
-    if Util.in_bound(x, 0, self.height - 1) and Util.in_bound(
-        y, 0, self.width - 1):
+    if Util.in_bound(x, 0, self.height) and Util.in_bound(y, 0, self.width):
       self.grid[x][y] = color
     else:
-      print x, y
       raise ValueError("Invalid coordinate %d %d." % (x, y))
 
   def map(self, function, section=None):
