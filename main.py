@@ -9,18 +9,26 @@ import random
 if __name__ == '__main__':
   SIZE = 1000;
   ITERATIONS = 1000;
-  d = Drawing("test.ppm", SIZE, SIZE)
-  square = EdgeMatrix()
-  square.add_edge([100, 100], [100, 200])
-  square.add_edge([100, 100], [200, 100])
-  square.add_edge([100, 200], [200, 200])
-  square.add_edge([200, 100], [200, 200])
-  square.add_edge([100, 300], [200, 200])
+  d = Drawing('test.ppm', SIZE, SIZE)
+  square = EdgeMatrix([[0, 0, 0, 1], [0, 50, 0, 1],
+                       [0, 0, 0, 1], [50, 0, 0, 1],
+                       [0, 50, 0, 1], [50, 50, 0, 1],
+                       [50, 0, 0, 1], [50, 50, 0, 1]])
+  color = Color('#000000')
+  square2 = EdgeMatrix([[899, 899, 0, 1], [899, 999, 0, 1],
+                        [899, 899, 0, 1], [999, 899, 0, 1],
+                        [899, 999, 0, 1], [999, 999, 0, 1],
+                        [999, 899, 0, 1], [999, 999, 0, 1]])
+  color2 = Color('#808080')
 
-  d.draw_matrix(square, Color("FF0000"))
+  rotation = TransformationMatrix().identity().rotateX(4)
 
-  a = TransformationMatrix.identity().translate(30, 30, 0).rotateX(10)
-  square *= a
+  for i in range(400):
+    d.draw_matrix(square, color)
+    d.draw_matrix(square2, color2)
+    square *= 1.02
+    square2 *= 0.95
+    color += [20, 10, 5]
+    color2 += [5, 10, 20]
 
-  d.draw_matrix(square, Color("FF0000"))
   d.generate()

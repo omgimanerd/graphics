@@ -42,7 +42,8 @@ class Matrix():
       for i in range(len(self.matrix)):
         for j in range(len(self.matrix[i])):
           self.matrix[i][j] *= other
-    if isinstance(other, Matrix):
+      return self
+    elif isinstance(other, Matrix):
       if len(self.matrix[0]) == len(other.matrix):
         result = [[0 for x in range(len(other.matrix[0]))] for y in range(
           len(self.matrix))]

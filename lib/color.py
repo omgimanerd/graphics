@@ -16,7 +16,7 @@ class Color:
     if type(color) is list and len(color) == 3:
       self.color = color
     elif type(color) is str:
-      self.color = self.__hex_to_rgb__(color)
+      self.color = self._hex_to_rgb(color)
     else:
       raise ValueError(
         "Invalid color, only hex or a list of RGB values are allowed.")
@@ -28,8 +28,23 @@ class Color:
   def __iter__(self):
     return self
     
+  def __str__(self):
+    return str(self.color)
+
   def __len__(self):
     return len(self.color)
+
+  def __add__(self, other):
+    if isinstance(other, (list, Color)) and len(other) == 3:
+      return Color([
+        (self[0] + other[0]) % 256,
+        (self[1] + other[1]) % 256,
+        (self[2] + other[2]) % 256])
+    raise ValueError('Cannot add %s to %s:' % (self, other))
+
+  def __iadd__(self, other):
+    self = self + other
+    return self
 
   def __getitem__(self, index):
     if index >= 0 and index <= 2:
@@ -42,7 +57,7 @@ class Color:
     raise IndexError("Index out of range.")
 
   @staticmethod
-  def __hex_to_rgb__(hex_code):
+  def _hex_to_rgb(hex_code):
     """
     Given the hexdecimal representation of a color, this returns the rgb
     representation of the given color.
