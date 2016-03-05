@@ -5,6 +5,7 @@
 # to sets of points.
 # Author: Alvin Lin
 
+from copy import deepcopy
 from math import pi, sin, cos
 
 class Matrix():
@@ -19,6 +20,9 @@ class Matrix():
   def __iter__(self):
     for item in self.matrix:
       yield item
+
+  def __len__(self):
+    return len(self.matrix)
 
   def __neg__(self):
     for i in range(len(self.matrix)):
@@ -48,6 +52,10 @@ class Matrix():
             for k in range(len(other.matrix)):
               result_row += self.matrix[i][k] * other.matrix[k][j]
             result[i][j] = result_row
+        if isinstance(self, EdgeMatrix):
+          return EdgeMatrix(result)
+        elif isinstance(self, TransformationMatrix):
+          return TransformationMatrix(result)
         return Matrix(result)
       raise ValueError('Matrices %s and %s cannot be multipled' % (self, other))
     raise TypeError('Cannot multiply %s and %s' % (other, self))
@@ -67,6 +75,21 @@ class Matrix():
       if len(matrix[i]) != len(matrix[i + 1]):
         raise ValueError('Invalid matrix: %s' % matrix)
     return matrix
+
+  def _matrix(self):
+    return self.matrix
+
+  def get_rounded(self):
+    c = deepcopy(self.matrix)
+    for i in range(len(self.matrix)):
+      for j in range(len(self.matrix[i])):
+        c[i][j] = int(round(self.matrix[i][j]))
+    if isinstance(self, TransformationMatrix):
+      return TransformationMatrix(c)
+    elif isinstance(self, EdgeMatrix):
+      return EdgeMatrix(c)
+    return Matrix(c)
+
 
 class TransformationMatrix(Matrix):
   def _verify(self, matrix):
@@ -90,38 +113,56 @@ class TransformationMatrix(Matrix):
   def rotateX(self, theta, radians=False):
     if not radians:
       theta = self._d2r(theta)
-    self *= TransformationMatrix([[cos(theta), -sin(theta), 0, 0],
-                                  [sin(theta), cos(theta), 0, 0],
-                                  [0, 0, 1, 0],
-                                  [0, 0, 0, 1]])
+    self.matrix = (self * TransformationMatrix([[cos(theta), sin(theta), 0, 0],
+                                                [-sin(theta), cos(theta), 0, 0],
+                                                [0, 0, 1, 0],
+                                                [0, 0, 0, 1]]))._matrix()
     return self
 
   def rotateY(self, theta, radians=False):
     if not radians:
       theta = self._d2r(theta)
-    self *= TransformationMatrix([[cos(theta), 0, -sin(theta), 0],
-                                  [0, 1, 0, 0],
-                                  [sin(theta), 0, cos(theta), 0],
-                                  [0, 0, 0, 1]])
+    self.matrix = (self * TransformationMatrix([[cos(theta), 0, sin(theta), 0],
+                                                [0, 1, 0, 0],
+                                                [-sin(theta), 0, cos(theta), 0],
+                                                [0, 0, 0, 1]]))._matrix()
     return self
 
   def rotateZ(self, theta, radians=False):
     if not radians:
       theta = self._d2r(theta)
-    self *= TransformationMatrix([[1, 0, 0, 0],
-                                  [0, cos(theta), -sin(theta), 0],
-                                  [0, sin(theta), cos(theta), 0],
-                                  [0, 0, 0, 1]])
+    self.matrix = (self * TransformationMatrix([[1, 0, 0, 0],
+                                                [0, cos(theta), sin(theta), 0],
+                                                [0, -sin(theta), cos(theta), 0],
+                                                [0, 0, 0, 1]]))._matrix()
     return self
 
   def translate(self, x, y, z):
-    self *= TransformationMatrix([[1, 0, 0, x],
-                                  [0, 1, 0, y],
-                                  [0, 0, 1, z],
-                                  [0, 0, 0, 1]])
+    self.matrix = (self * TransformationMatrix([[1, 0, 0, 0],
+                                                [0, 1, 0, 0],
+                                                [0, 0, 1, 0],
+                                                [x, y, z, 1]]))._matrix()
     return self
 
+
 class EdgeMatrix(Matrix):
+  def __init__(self, matrix=None):
+    self.counter = 0
+    self.matrix = []
+    if matrix:
+      self.matrix = self._verify(matrix)
+
+  def __iter__(self):
+    return self
+
+  def next(self):
+    if self.counter > len(self) - 2:
+      self.counter = 0
+      raise StopIteration
+    edge = self.matrix[self.counter:self.counter + 2]
+    self.counter += 2
+    return edge
+
   def _verify(self, matrix):
     if len(matrix) % 2 != 0:
       raise ValueError(
@@ -135,15 +176,18 @@ class EdgeMatrix(Matrix):
     raise NotImplementedError('__add__ cannot be called on an EdgeMatrix')
 
   def _add_point(self, point):
-    self.matrix.append(point if len(point) == 4 else point + [1])
+    if len(point) == 2:
+      point += [0, 1]
+    elif len(point) == 3:
+      point += [1]
+    self.matrix.append(point)
 
   def add_edge(self, point1, point2):
     self._add_point(point1)
     self._add_point(point2)
+    return self
 
 if __name__ == '__main__':
   m = EdgeMatrix()
-  m.add_edge([0, 0, 1, 1], [1, 0, 1, 1])
-  a = TransformationMatrix.identity().rotateZ(10)
-  m *= a
+  m.add_edge([0, 0], [1, 0, 1])
   print m
