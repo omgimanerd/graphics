@@ -145,6 +145,13 @@ class TransformationMatrix(Matrix):
                                                 [x, y, z, 1]]))._matrix()
     return self
 
+  def scale(self, x, y, z):
+    self.matrix = (self * TransformationMatrix([[x, 0, 0, 0],
+                                                [0, y, 0, 0],
+                                                [0, 0, z, 0],
+                                                [0, 0, 0, 1]]))._matrix()
+    return self
+
 
 class EdgeMatrix(Matrix):
   def __init__(self, matrix=None):
