@@ -27,7 +27,7 @@ class Color:
 
   def __iter__(self):
     return self
-    
+
   def __str__(self):
     return str(self.color)
 
@@ -63,7 +63,7 @@ class Color:
     representation of the given color.
 
     Parameters:
-    hex_code: string, the hex code to convert to rgb 
+    hex_code: string, the hex code to convert to rgb
 
     http://stackoverflow.com/questions/214359/converting-hex-color-to-rgb-and-vice-versa
     """

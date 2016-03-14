@@ -9,8 +9,7 @@ from util import Util
 HEADER = "P3 %d %d %d\n"
 
 class Picture():
-  def __init__(self, filename, width, height,
-               max_color_value=255):
+  def __init__(self, width, height, max_color_value=255):
     """
     Constructor for a Picture class.
 
@@ -20,7 +19,6 @@ class Picture():
     height: number, the height of the image in pixels
     max_color_value: number, the max color value of the ppm, defaults to 255
     """
-    self.filename = filename
     self.width = width
     self.height = height
     self.max_color_value = max_color_value
@@ -46,7 +44,7 @@ class Picture():
   def map(self, function, section=None):
     """
     Applies the given function transformation to a section of the grid.
-    
+
     Parameters:
     function: function([currentX, currentY], [width, height],
                        [currentR, currentG, currentB]), a callback function
@@ -69,8 +67,8 @@ class Picture():
       for y in range(y_range[0], y_range[1]):
         self.grid[x][y] = function([x, y], [self.width, self.height],
                                    self.grid[x][y])
-      
-  def generate(self):
+
+  def generate(self, filename):
     """
     Turns the internal grid into a ppm raster image file and generates the file.
 
@@ -80,7 +78,7 @@ class Picture():
     Returns:
     None
     """
-    with open(self.filename, "w") as picture:
+    with open(filename, "w") as picture:
       picture.write(HEADER % (self.width, self.height, self.max_color_value))
       for row in self.grid:
         for pixel in row:

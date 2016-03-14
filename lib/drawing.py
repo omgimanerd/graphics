@@ -9,7 +9,7 @@ from transformation import Transformation
 from util import Util
 
 class Drawing():
-  def __init__(self, name, width, height):
+  def __init__(self, width, height):
     """
     Constructors for a Drawing class.
 
@@ -20,12 +20,12 @@ class Drawing():
     """
     self.width = width
     self.height = height
-    self.picture = Picture(name, width, height)
-    
+    self.picture = Picture(width, height)
+
   def draw_point(self, x, y, color, safe=True):
     """
     Draws a point on the picture.
-    
+
     Parameters:
     x: number, the x coordinate of the point to draw
     y: number, the y coordinate of the point to draw
@@ -43,7 +43,7 @@ class Drawing():
   def draw_line(self, x1, y1, x2, y2, color, thickness):
     """
     Draws a line on the picture.
-    
+
     Parameters:
     x1: number, the x coordinate of one endpoint of the line
     y1: number, the y coordinate of one endpoint of the line
@@ -57,7 +57,7 @@ class Drawing():
 
     TODO: Fix, this method is broken
     """
-    
+
     """
     Values for y = mx + b line formula.
     y = mx + b
@@ -90,7 +90,7 @@ class Drawing():
     x2: number, the x coordinate of the other endpoint of the line
     y2: number, the y coordinate of the other endpoint of the line
     color: Color, the color of the line
-    
+
     Returns:
     None
     """
@@ -181,7 +181,7 @@ class Drawing():
     cy: number, the y coordinate of the center of the circle
     r: number, the radius of the circle in pixels
     color: Color, the color of the circle
-    
+
     Returns:
     None
     """
@@ -190,7 +190,7 @@ class Drawing():
   def stroke_rect(self, x1, y1, x2, y2, color, thickness):
     """
     Draws a rectangular outline on the picture.
-    
+
     Parameters:
     x1: number, the x coordinate of one corner of the rectangle
     y1: number, the y coordinate of one corner of the rectangle
@@ -202,14 +202,14 @@ class Drawing():
     self.draw_line(x2, y2, x2, y1, color, thickness)
     self.draw_line(x2, y2, x1, y2, color, thickness)
 
-  def generate(self):
+  def generate(self, filename):
     """
     Generates the ppm raster image file.
 
     Parameters:
     None
-    
+
     Returns:
     None
     """
-    self.picture.generate()
+    self.picture.generate(filename)
