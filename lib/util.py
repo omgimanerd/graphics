@@ -5,6 +5,9 @@
 import math
 
 class Util():
+  tau = 2 * math.pi
+  epsilon = 0.1
+
   @staticmethod
   def in_bound(x, lower, upper):
     if lower > upper:
