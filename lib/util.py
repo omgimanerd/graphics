@@ -11,27 +11,12 @@ class Util():
   @staticmethod
   def in_bound(x, lower, upper):
     if lower > upper:
-      tmp = lower
-      lower = upper
-      upper = tmp
+      lower, upper = upper, lower
     return x >= lower and x < upper
 
   @staticmethod
-  def is_almost_equal(a, b, epsilon=1):
+  def is_almost_equal(a, b, epsilon=epsilon):
     return abs(a - b) <= epsilon
-
-  @staticmethod
-  def is_point_on_line(a, b, c, px, py, threshold=2):
-    """
-    Ax + By + C = 0
-    This algorithm operates under the assumption that a and b will never both
-    be zero.
-    """
-    return (abs(px * a + py * b + c) / math.sqrt(a * a + b * b)) <= threshold
-    if a == 0:
-      return abs((-c / b) - py) <= threshold
-    elif b == 0:
-      return abs((-c / a) - px) <= threshold
 
   @staticmethod
   def is_point_on_circle(cx, cy, r, px, py, threshold=2):
@@ -60,4 +45,4 @@ class Util():
 
 if __name__ == "__main__":
   print Util.get_euclidean_distance(0, 0, 3, 4)
-  print Util.is_point_on_line(-50, 0, 5000, 100, 101, 1)
+  print Util.is_almost_equal(1, 1.1)
