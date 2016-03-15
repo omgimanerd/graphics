@@ -19,15 +19,6 @@ class Util():
     return abs(a - b) <= epsilon
 
   @staticmethod
-  def is_point_on_circle(cx, cy, r, px, py, threshold=2):
-    return Util.is_almost_equal(
-      Util.get_euclidean_distance(cx, cy, px, py), r, threshold)
-
-  @staticmethod
-  def is_point_in_circle(cx, cy, r, px, py):
-    return Util.get_euclidean_distance(cx, cy, px, py) <= r
-
-  @staticmethod
   def get_manhattan_distance(x1, y1, x2, y2):
     return abs(y2 - y1) + abs(x2 - x1)
 
