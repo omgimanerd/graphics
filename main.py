@@ -9,7 +9,7 @@ import random
 if __name__ == '__main__':
   SIZE = 1000;
   ITERATIONS = 1000;
-  d = Drawing('test.ppm', SIZE, SIZE)
+  d = Drawing(SIZE, SIZE)
   square = EdgeMatrix([[0, 0, 0, 1], [0, 50, 0, 1],
                        [0, 0, 0, 1], [50, 0, 0, 1],
                        [0, 50, 0, 1], [50, 50, 0, 1],
@@ -21,7 +21,7 @@ if __name__ == '__main__':
                         [999, 899, 0, 1], [999, 999, 0, 1]])
   color2 = Color('#808080')
 
-  rotation = TransformationMatrix().identity().rotateX(4)
+  rotation = TransformationMatrix().identity().rotate_x(4)
 
   for i in range(400):
     d.draw_matrix(square, color)
@@ -31,4 +31,4 @@ if __name__ == '__main__':
     color += [20, 10, 5]
     color2 += [5, 10, 20]
 
-  d.generate()
+  d.generate('test.ppm')

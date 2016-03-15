@@ -1,7 +1,7 @@
 #!/usr/bin/python
-# Author: Alvin Lin (alvin.lin.dev@gmail.com)
 # This is a class abstracting the Transformation and Picture classes into a
 # general Drawing class.
+# Author: Alvin Lin (alvin.lin.dev@gmail.com)
 
 from matrix import *
 from picture import Picture

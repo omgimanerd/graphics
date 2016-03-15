@@ -111,45 +111,50 @@ class TransformationMatrix(Matrix):
                                  [0, 0, 1, 0],
                                  [0, 0, 0, 1]])
 
-  def rotateX(self, theta, radians=False):
+  def rotate_x(self, theta, radians=False):
     if not radians:
       theta = self._d2r(theta)
-    self.matrix = (self * TransformationMatrix([[cos(theta), sin(theta), 0, 0],
-                                                [-sin(theta), cos(theta), 0, 0],
-                                                [0, 0, 1, 0],
-                                                [0, 0, 0, 1]]))._matrix()
+    self.matrix = (self * TransformationMatrix([
+        [cos(theta), sin(theta), 0, 0],
+        [-sin(theta), cos(theta), 0, 0],
+        [0, 0, 1, 0],
+        [0, 0, 0, 1]]))._matrix()
     return self
 
-  def rotateY(self, theta, radians=False):
+  def rotate_y(self, theta, radians=False):
     if not radians:
       theta = self._d2r(theta)
-    self.matrix = (self * TransformationMatrix([[cos(theta), 0, sin(theta), 0],
-                                                [0, 1, 0, 0],
-                                                [-sin(theta), 0, cos(theta), 0],
-                                                [0, 0, 0, 1]]))._matrix()
+    self.matrix = (self * TransformationMatrix([
+        [cos(theta), 0, sin(theta), 0],
+        [0, 1, 0, 0],
+        [-sin(theta), 0, cos(theta), 0],
+        [0, 0, 0, 1]]))._matrix()
     return self
 
-  def rotateZ(self, theta, radians=False):
+  def rotate_z(self, theta, radians=False):
     if not radians:
       theta = self._d2r(theta)
-    self.matrix = (self * TransformationMatrix([[1, 0, 0, 0],
-                                                [0, cos(theta), sin(theta), 0],
-                                                [0, -sin(theta), cos(theta), 0],
-                                                [0, 0, 0, 1]]))._matrix()
+    self.matrix = (self * TransformationMatrix([
+        [1, 0, 0, 0],
+        [0, cos(theta), sin(theta), 0],
+        [0, -sin(theta), cos(theta), 0],
+        [0, 0, 0, 1]]))._matrix()
     return self
 
   def translate(self, x, y, z):
-    self.matrix = (self * TransformationMatrix([[1, 0, 0, 0],
-                                                [0, 1, 0, 0],
-                                                [0, 0, 1, 0],
-                                                [x, y, z, 1]]))._matrix()
+    self.matrix = (self * TransformationMatrix([
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 1, 0],
+        [x, y, z, 1]]))._matrix()
     return self
 
   def scale(self, x, y, z):
-    self.matrix = (self * TransformationMatrix([[x, 0, 0, 0],
-                                                [0, y, 0, 0],
-                                                [0, 0, z, 0],
-                                                [0, 0, 0, 1]]))._matrix()
+    self.matrix = (self * TransformationMatrix([
+        [x, 0, 0, 0],
+        [0, y, 0, 0],
+        [0, 0, z, 0],
+        [0, 0, 0, 1]]))._matrix()
     return self
 
 
