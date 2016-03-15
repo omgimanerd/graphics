@@ -24,7 +24,7 @@ class Picture():
     self.max_color_value = max_color_value
     self.grid = [[Color("#FFFFFF") for x in range(width)] for y in range(height)]
 
-  def set_pixel(self, x, y, color):
+  def set_pixel(self, x, y, color, suppress_error=True):
     """
     Sets the specified pixel to the specified color.
 
@@ -32,13 +32,12 @@ class Picture():
     x: number, the x coordinate of the pixel to set
     y: number, the y coordinate of the pixel to set
     color: Color, the RGB color to set the pixel to
-
-    Returns:
-    None
+    suppress_error: boolean (optional), when set to True, will suppress the
+      error if the point is out of bounds
     """
     if Util.in_bound(x, 0, self.height) and Util.in_bound(y, 0, self.width):
       self.grid[x][y] = color
-    else:
+    elif not suppress_error:
       raise ValueError("Invalid coordinate %d %d." % (x, y))
 
   def map(self, function, section=None):
