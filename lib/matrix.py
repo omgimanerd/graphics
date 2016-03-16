@@ -5,6 +5,8 @@
 # to sets of points.
 # Author: Alvin Lin
 
+from parametric import *
+
 from copy import deepcopy
 from math import pi, sin, cos
 
@@ -164,6 +166,35 @@ class EdgeMatrix(Matrix):
     self.matrix = []
     if matrix:
       self.matrix = self._verify(matrix)
+
+  @staticmethod
+  def get_circle_matrix(center_x, center_y, radius, step=100):
+    """
+    Generates an EdgeMatrix of lines representing a circle.
+
+    Parameters:
+    center_x: number, the x coordinate of the center of the circle
+    center_y: number, the y coordinate of the center of the circle
+    radius: number, the radius of the circle
+    step: number (optional), the number of steps to use when drawing splines
+      for the circle
+    """
+    edge_matrix = EdgeMatrix()
+    parametric = Parametric.circle_parametric(center_x, center_y, radius)
+    counter = 0
+    increment = (2 * pi) / step
+    while counter < 2 * pi:
+      edge_matrix.add_edge(parametric.get_point(counter),
+                           parametric.get_point(counter + increment))
+      counter += increment
+    return edge_matrix
+
+  @staticmethod
+  def get_hermite_curve_matrix(p1, p2, r1, r2):
+    """
+    Generates an EdgeMatrix of lines representing a hermite curve.
+
+    """
 
   def __iter__(self):
     return self

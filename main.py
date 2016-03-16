@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-from lib.color import Color
-from lib.drawing import Drawing
+from lib.color import *
+from lib.drawing import *
 from lib.matrix import *
 
 import random
@@ -11,4 +11,4 @@ if __name__ == '__main__':
   d = Drawing(SIZE, SIZE)
   d.draw_circle(50, 50, 30, Color("FF0000"))
 
-  d.generate('test.ppm')
+  d.display()

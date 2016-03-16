@@ -4,11 +4,11 @@
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
 
 from matrix import *
-from parametric import *
 from picture import *
 from util import *
 
 from math import pi
+from os import system, remove
 
 class Drawing():
   def __init__(self, width, height):
@@ -118,26 +118,33 @@ class Drawing():
 
   def draw_circle(self, center_x, center_y, radius, color, step=100):
     """
-    Generates and draws a circle onto the internal raster.
+    Draws a circle onto the internal raster.
 
     Parameters:
     center_x: number, the x coordinate of the center of the circle
     center_y: number, the y coordinate of the center of the circle
     radius: number, the radius of the circle
     color: Color, the color of the circle
+    step: number (optional), the number of steps to use when drawing splines
+      for the circle
     """
-    edge_matrix = EdgeMatrix()
-    parametric = Parametric.circle_parametric(center_x, center_y, radius)
-    counter = 0
-    increment = (2 * pi) / step
-    while counter < 2 * pi:
-      edge_matrix.add_edge(parametric.get_point(counter),
-                           parametric.get_point(counter + increment))
-      counter += increment
-    self.draw_matrix(edge_matrix, color)
+    self.draw_matrix(EdgeMatrix.get_circle_matrix(center_x, center_y, radius,
+                                                  step), color)
+
+  def display(self):
+    """
+    Displays the current state of the internal raster.
+    """
+    filename = '%s.ppm' % hash(self.picture)
+    self.generate(filename)
+    system('display %s' % filename)
+    remove(filename)
 
   def generate(self, filename):
     """
     Generates the ppm raster image file.
+
+    Parameters:
+    filename: string, the name of the image file to generate
     """
     self.picture.generate(filename)
