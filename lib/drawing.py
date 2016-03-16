@@ -16,9 +16,9 @@ class Drawing():
     Constructors for a Drawing class.
 
     Parameters:
-    filename: string, the name of the new image file
-    width: number, the width of the image in pixels
-    height: number, the height of the image in pixels
+    filename: str, the name of the new image file
+    width: int, the width of the image in pixels
+    height: int, the height of the image in pixels
     """
     self.width = width
     self.height = height
@@ -29,10 +29,10 @@ class Drawing():
     Draws a point on the picture.
 
     Parameters:
-    x: number, the x coordinate of the point to draw
-    y: number, the y coordinate of the point to draw
+    x: int, the x coordinate of the point to draw
+    y: int, the y coordinate of the point to draw
     color: Color, the color to draw the point
-    suppress_error: boolean (optional), when set to True, will suppress the
+    suppress_error: bool (optional), when set to True, will suppress the
       error if the point is out of bounds
     """
     self.picture.set_pixel(x, y, color, suppress_error)
@@ -42,10 +42,10 @@ class Drawing():
     Uses the Bresenham line algorithm to draw a line.
 
     Parameters:
-    x1: number, the x coordinate of one endpoint of the line
-    y1: number, the y coordinate of one endpoint of the line
-    x2: number, the x coordinate of the other endpoint of the line
-    y2: number, the y coordinate of the other endpoint of the line
+    x1: int, the x coordinate of one endpoint of the line
+    y1: int, the y coordinate of one endpoint of the line
+    x2: int, the x coordinate of the other endpoint of the line
+    y2: int, the y coordinate of the other endpoint of the line
     color: Color, the color of the line
     """
     dx = x2 - x1
@@ -121,11 +121,11 @@ class Drawing():
     Draws a circle onto the internal raster.
 
     Parameters:
-    center_x: number, the x coordinate of the center of the circle
-    center_y: number, the y coordinate of the center of the circle
-    radius: number, the radius of the circle
+    center_x: int, the x coordinate of the center of the circle
+    center_y: int, the y coordinate of the center of the circle
+    radius: int, the radius of the circle
     color: Color, the color of the circle
-    step: number (optional), the number of steps to use when drawing splines
+    step: int (optional), the number of steps to use when drawing splines
       for the circle
     """
     self.draw_matrix(EdgeMatrix.get_circle_matrix(center_x, center_y, radius,
@@ -145,6 +145,6 @@ class Drawing():
     Generates the ppm raster image file.
 
     Parameters:
-    filename: string, the name of the image file to generate
+    filename: str, the name of the image file to generate
     """
     self.picture.generate(filename)

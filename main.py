@@ -3,12 +3,18 @@
 from lib.color import *
 from lib.drawing import *
 from lib.matrix import *
+from lib.parametric import *
 
 import random
 
 if __name__ == '__main__':
-  SIZE = 100;
+  SIZE = 250;
+  m = EdgeMatrix.get_bezier_curve_matrix([0, 0], [250, 250],
+                                         [0, 50], [110, 50])
+  c = EdgeMatrix.get_hermite_curve_matrix([0, 250], [250, 0],
+                                          [0, 0], [250, 250])
   d = Drawing(SIZE, SIZE)
-  d.draw_circle(50, 50, 30, Color("FF0000"))
-
+  d.draw_matrix(m, Color("FF0000"))
+  d.draw_matrix(c, Color("0000FF"))
+  # d.draw_circle(25, 50, 10, Color("FF0000"))
   d.display()

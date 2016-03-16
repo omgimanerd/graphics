@@ -10,13 +10,6 @@ class Parametric():
     self.y_function = y_function;
     self.z_function = z_function;
 
-  @staticmethod
-  def circle_parametric(center_x, center_y, radius):
-    x = lambda t: cos(t) * radius + center_x
-    y = lambda t: sin(t) * radius + center_y
-    z = lambda t: 0
-    return Parametric(x_function=x, y_function=y, z_function=z)
-
   def set_x_function(self, x_function):
     if (not hasattr(x_function, '__call__')):
       raise ValueError('%s is not a function' % x_function)

@@ -14,10 +14,10 @@ class Picture():
     Constructor for a Picture class.
 
     Parameters:
-    filename: string, the name of the new image file
-    width: number, the width of the image in pixels
-    height: number, the height of the image in pixels
-    max_color_value: number, the max color value of the ppm, defaults to 255
+    filename: str, the name of the new image file
+    width: int, the width of the image in pixels
+    height: int, the height of the image in pixels
+    max_color_value: int, the max color value of the ppm, defaults to 255
     """
     self.width = width
     self.height = height
@@ -29,10 +29,10 @@ class Picture():
     Sets the specified pixel to the specified color.
 
     Parameters:
-    x: number, the x coordinate of the pixel to set
-    y: number, the y coordinate of the pixel to set
+    x: int, the x coordinate of the pixel to set
+    y: int, the y coordinate of the pixel to set
     color: Color, the RGB color to set the pixel to
-    suppress_error: boolean (optional), when set to True, will suppress the
+    suppress_error: bool (optional), when set to True, will suppress the
       error if the point is out of bounds
     """
     if Util.in_bound(x, 0, self.height) and Util.in_bound(y, 0, self.width):
@@ -45,14 +45,10 @@ class Picture():
     Applies the given function transformation to a section of the grid.
 
     Parameters:
-    function: function([currentX, currentY], [width, height],
-                       [currentR, currentG, currentB]), a callback function
-      that is run on the pixels in the grid.
-    section: [[x1, y1], [x2, y2]], opposite corners of a rectangular region
+    function: function(), a callback function that is run on the pixels in the
+      grid.
+    section: list, opposite corners of a rectangular region
       in the grid to apply the function transformation to.
-
-    Returns:
-    None
     """
     x_range = [0, self.width]
     y_range = [0, self.height]
@@ -70,12 +66,6 @@ class Picture():
   def generate(self, filename):
     """
     Turns the internal grid into a ppm raster image file and generates the file.
-
-    Parameters:
-    None
-
-    Returns:
-    None
     """
     with open(filename, "w") as picture:
       picture.write(HEADER % (self.width, self.height, self.max_color_value))

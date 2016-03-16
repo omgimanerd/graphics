@@ -10,7 +10,7 @@ class Color:
     Constructor for a Color class.
 
     Parameters:
-    color: string, the hexadecimal or rgb representation of the color
+    color: str or list, the hexadecimal or rgb representation of the color
     """
     self.counter = 0
     if type(color) is list and len(color) == 3:
@@ -63,7 +63,7 @@ class Color:
     representation of the given color.
 
     Parameters:
-    hex_code: string, the hex code to convert to rgb
+    hex_code: str, the hex code to convert to rgb
 
     http://stackoverflow.com/questions/214359/converting-hex-color-to-rgb-and-vice-versa
     """
