@@ -37,7 +37,7 @@ class Drawing():
     """
     self.picture.set_pixel(x, y, color, suppress_error)
 
-  def draw_bresenham_line(self, x1, y1, x2, y2, color):
+  def draw_line(self, x1, y1, x2, y2, color):
     """
     Uses the Bresenham line algorithm to draw a line.
 
@@ -112,9 +112,7 @@ class Drawing():
     if not isinstance(matrix, EdgeMatrix):
       raise ValueError('%s is not an EdgeMatrix' % matrix)
     for edge in matrix.get_rounded():
-      self.draw_bresenham_line(edge[0][0], edge[0][1],
-                               edge[1][0], edge[1][1],
-                               color)
+      self.draw_line(edge[0][0], edge[0][1], edge[1][0], edge[1][1], color)
 
   def draw_circle(self, center_x, center_y, radius, color, step=100):
     """

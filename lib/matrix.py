@@ -293,6 +293,9 @@ class EdgeMatrix(Matrix):
     self._add_point(point2)
     return self
 
+  def combine(self, edge_matrix):
+    self.matrix += edge_matrix._matrix()
+
 if __name__ == '__main__':
   m = EdgeMatrix()
   m.add_edge([0, 0], [1, 0, 1])
