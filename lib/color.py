@@ -37,9 +37,9 @@ class Color:
   def __add__(self, other):
     if isinstance(other, (list, Color)) and len(other) == 3:
       return Color([
-        (self[0] + other[0]) % 256,
-        (self[1] + other[1]) % 256,
-        (self[2] + other[2]) % 256])
+        int(self[0] + other[0]) % 256,
+        int(self[1] + other[1]) % 256,
+        int(self[2] + other[2]) % 256])
     raise ValueError('Cannot add %s to %s:' % (self, other))
 
   def __iadd__(self, other):

@@ -8,10 +8,20 @@ from lib.parametric import *
 import random
 
 if __name__ == '__main__':
-  SIZE = 500;
-  m = EdgeMatrix.get_hermite_curve_matrix([0, 0], [250, 250],
-                                          [100, 0], [200, 200])
-  d = Drawing(SIZE, SIZE)
-  d.draw_matrix(m, Color("FF0000"))
-  # d.draw_circle(25, 50, 10, Color("FF0000"))
-  d.display()
+    SIZE = 500;
+    d = Drawing(SIZE, SIZE)
+    c = Color('000000')
+    t = TransformationMatrix.identity().translate(-250, -250, 0).rotate_x(
+        10).translate(250, 250, 0)
+
+    for i in range(260, 500, 5):
+        for j in [2, 4, 10, 25]:
+            m = EdgeMatrix.get_circle_matrix(i, i, 30, j)
+            for i in range(36):
+                d.draw_matrix(m, c)
+                m *= t
+                c += [random.randint(5, 15), random.randint(5, 15),
+                      random.randint(5, 15)]
+
+    d.display()
+    d.generate('test.ppm')
