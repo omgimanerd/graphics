@@ -169,9 +169,35 @@ class EdgeMatrix(Matrix):
     self.matrix = []
     if matrix:
       self.matrix = self._verify(matrix)
+      
+  @staticmethod
+  def get_polygon_matrix(center_x, center_y, radius, sides):
+    """
+    Generates an EdgeMatrix of lines representing a regular polygon
+    centered at the given points inscribed within a circle of the
+    given radius.
+
+    Parameters:
+    center_x: int, the x coordinate of the center of the polygon
+    center_y: int, the y coordinate of the center of the polygon
+    radius: int, the radius of the circle
+    sides: int, the number of sides in the polygon
+    """
+    edge_matrix = EdgeMatrix()
+    parametric = Parametric(
+        lambda t: cos(t) * radius + center_x,
+        lambda t: sin(t) * radius + center_y,
+        lambda t: 0)
+    counter = 0
+    increment = (2 * pi) / sides
+    while counter <= 2 * pi:
+      edge_matrix.add_edge(parametric.get_point(counter),
+                           parametric.get_point(counter + increment))
+      counter += increment
+    return edge_matrix
 
   @staticmethod
-  def get_circle_matrix(center_x, center_y, radius, step=100):
+  def get_circle_matrix(center_x, center_y, radius, step=25):
     """
     Generates an EdgeMatrix of lines representing a circle.
 
@@ -182,19 +208,8 @@ class EdgeMatrix(Matrix):
     step: int (optional), the number of steps to use when drawing splines
       for the circle
     """
-    edge_matrix = EdgeMatrix()
-    parametric = Parametric(
-        lambda t: cos(t) * radius + center_x,
-        lambda t: sin(t) * radius + center_y,
-        lambda t: 0)
-    counter = 0
-    increment = (2 * pi) / step
-    while counter <= 2 * pi:
-      edge_matrix.add_edge(parametric.get_point(counter),
-                           parametric.get_point(counter + increment))
-      counter += increment
-    return edge_matrix
-
+    return EdgeMatrix.get_polygon_matrix(center_x, center_y, radius, step)
+      
   @staticmethod
   def get_hermite_curve_matrix(p1, p2, r1, r2, step=100):
     """
