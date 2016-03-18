@@ -84,6 +84,8 @@ class Parser():
                 drawing.draw_matrix(self.edge_matrix, self.color)
                 drawing.generate(args[i + 1])
                 i += 2
+            elif args[i] == 'quit':
+                break
             else:
                 raise TypeError('Invalid command %s' % args[i])
 
