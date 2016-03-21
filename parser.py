@@ -36,15 +36,13 @@ class Parser():
                 params = map(float, args[i + 1].split())
                 self.edge_matrix.combine(
                     EdgeMatrix.get_hermite_curve_matrix(
-                        params[0:2], params[4:6], params[2:4],
-                        params[6:8]))
+                        params[0:2], params[2:4], params[4:6], params[6:8]))
                 i += 2
             elif args[i] == 'bezier':
                 params = map(float, args[i + 1].split())
                 self.edge_matrix.combine(
                     EdgeMatrix.get_bezier_curve_matrix(
-                        params[0:2], params[6:8], params[2:4],
-                        params[4:6]))
+                        params[0:2], params[2:4], params[4:6], params[6:8]))
                 i += 2
             elif args[i] == 'ident':
                 self.transformation = TransformationMatrix.identity()

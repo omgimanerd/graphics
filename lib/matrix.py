@@ -6,6 +6,7 @@
 # Author: Alvin Lin
 
 from parametric import *
+from util import *
 
 from copy import deepcopy
 from math import pi, sin, cos
@@ -169,7 +170,7 @@ class EdgeMatrix(Matrix):
     self.matrix = []
     if matrix:
       self.matrix = self._verify(matrix)
-      
+
   @staticmethod
   def get_polygon_matrix(center_x, center_y, radius, sides):
     """
@@ -209,9 +210,9 @@ class EdgeMatrix(Matrix):
       for the circle
     """
     return EdgeMatrix.get_polygon_matrix(center_x, center_y, radius, step)
-      
+
   @staticmethod
-  def get_hermite_curve_matrix(p1, p2, r1, r2, step=100):
+  def get_hermite_curve_matrix(p1, r1, p2, r2, step=100):
     """
     Generates an EdgeMatrix of lines representing a hermite curve.
 
@@ -221,15 +222,17 @@ class EdgeMatrix(Matrix):
     r1: list, the rate of change at p1
     r2: list, the rate of change at p2
     """
-    points = Matrix([p1, p2, r1, r2])
+    points = Matrix([p1, r1, p2, r2])
     inverse = Matrix([
         [2, -2, 1, 1],
         [-3, 3, -2, -1],
         [0, 0, 1, 0],
         [1, 0, 0, 0]])
     c = inverse * points
-    x = lambda t: c[3][0] + (t * (c[2][0] + t * (c[1][0] + (t * c[0][0]))))
-    y = lambda t: c[3][1] + (t * (c[2][1] + t * (c[1][1] + (t * c[0][1]))))
+    x = lambda t: Util.get_hermite_function(
+        c[0][0], c[1][0], c[2][0], c[3][0])(t)
+    y = lambda t: Util.get_hermite_function(
+        c[0][1], c[1][1], c[2][1], c[3][1])(t)
     z = lambda t: 0
     edge_matrix = EdgeMatrix()
     parametric = Parametric(x, y, z)
@@ -242,26 +245,21 @@ class EdgeMatrix(Matrix):
     return edge_matrix
 
   @staticmethod
-  def get_bezier_curve_matrix(p1, p2, i1, i2, step=100):
+  def get_bezier_curve_matrix(p1, i1, i2, p2, step=100):
     """
     Generates an EdgeMatrix of lines representing a bezier curve.
 
     Parameters:
     p1: list, the first endpoint of the bezier curve
-    p2: list, the second endpoint of the bezier curve
     i1: list, the first influence point of the bezier curve
     i2: list, the second influence point of the bezier curve
+    p2: list, the second endpoint of the bezier curve
     """
     points = Matrix([p1, i1, i2, p2])
-    inverse = Matrix([
-        [1, 3, -3, 1],
-        [3, -6, 3, 0],
-        [-3, 3, 0, 0],
-        [1, 0, 0, 0]
-    ])
-    c = inverse * points
-    x = lambda t: c[3][0] + (t * (c[2][0] + t * (c[1][0] + (t * c[0][0]))))
-    y = lambda t: c[3][1] + (t * (c[2][1] + t * (c[1][1] + (t * c[0][1]))))
+    x = lambda t: Util.get_bezier_function(
+        p1[0], i1[0], i2[0], p2[0])(t)
+    y = lambda t: Util.get_bezier_function(
+        p1[1], i1[1], i2[1], p2[1])(t)
     z = lambda t: 0
     edge_matrix = EdgeMatrix()
     parametric = Parametric(x, y, z)
