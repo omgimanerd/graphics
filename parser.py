@@ -10,6 +10,7 @@ from lib.matrix import *
 import argparse
 
 class Parser():
+
     def __init__(self, width=512, height=512, color='FF0000'):
         self.width = width
         self.height = height
@@ -29,20 +30,22 @@ class Parser():
                 i += 2
             elif args[i] == 'circle':
                 params = map(int, args[i + 1].split())
-                self.edge_matrix.combine(EdgeMatrix.get_circle_matrix(
+                self.edge_matrix.combine(Generator.get_circle_edgematrix(
                     params[0], params[1], params[2]))
                 i += 2
             elif args[i] == 'hermite':
                 params = map(float, args[i + 1].split())
                 self.edge_matrix.combine(
-                    EdgeMatrix.get_hermite_curve_matrix(
-                        params[0:2], params[2:4], params[4:6], params[6:8]))
+                    Generator.get_hermite_curve_edgematrix(
+                        params[0:2], params[2:4],
+                        params[4:6], params[6:8]))
                 i += 2
             elif args[i] == 'bezier':
                 params = map(float, args[i + 1].split())
                 self.edge_matrix.combine(
-                    EdgeMatrix.get_bezier_curve_matrix(
-                        params[0:2], params[2:4], params[4:6], params[6:8]))
+                    Generator.get_bezier_curve_edgematrix(
+                        params[0:2], params[2:4],
+                        params[4:6], params[6:8]))
                 i += 2
             elif args[i] == 'ident':
                 self.transformation = TransformationMatrix.identity()
