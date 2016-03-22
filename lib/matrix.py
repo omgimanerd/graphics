@@ -218,11 +218,11 @@ class EdgeMatrix(Matrix):
 
     Parameters:
     p1: list, the first point of the hermite curve
-    p2: list, the second point of the hermite curve
     r1: list, the rate of change at p1
+    p2: list, the second point of the hermite curve
     r2: list, the rate of change at p2
     """
-    points = Matrix([p1, r1, p2, r2])
+    points = Matrix([p1, p2, r1, r2])
     inverse = Matrix([
         [2, -2, 1, 1],
         [-3, 3, -2, -1],

@@ -11,5 +11,6 @@ if __name__ == '__main__':
     SIZE = 300;
     d = Drawing(SIZE, SIZE)
     d.draw_matrix(EdgeMatrix.get_hermite_curve_matrix([0, 50], [20, 20], [200, 50], [175, 40]), Color("FF0000"))
+    d.draw_circle(150, 150, 20, Color("FF00FF"))
 
     d.display()
