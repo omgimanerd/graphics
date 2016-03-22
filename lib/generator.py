@@ -108,3 +108,7 @@ class Generator():
             parametric.get_point(counter + increment))
             counter += increment
         return edge_matrix
+
+    @staticmethod
+    def get_sphere_pointmatrix()
+        pass

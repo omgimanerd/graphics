@@ -12,7 +12,7 @@ from math import pi
 from os import system, remove
 
 class Drawing():
-    
+
     def __init__(self, width, height):
         """
         Constructors for a Drawing class.
@@ -117,7 +117,7 @@ class Drawing():
             self.draw_line(
                 edge[0][0], edge[0][1], edge[1][0], edge[1][1], color)
 
-    def draw_circle(self, center_x, center_y, radius, color, step=100):
+    def draw_circle(self, center_x, center_y, radius, color, step=25):
         """
         Draws a circle onto the internal raster.
 
@@ -131,6 +131,32 @@ class Drawing():
         """
         self.draw_matrix(Generator.get_circle_edgematrix(
             center_x, center_y, radius, step), color)
+
+    def draw_hermite_curve(self, p1, r1, p2, r2, color, step=100):
+        """
+        Draws a hermite curve onto the internal raster.
+
+        Parameters:
+        p1: list, the first point of the hermite curve
+        r1: list, the rate of change at p1
+        p2: list, the second point of the hermite curve
+        r2: list, the rate of change at p2
+        """
+        self.draw_matrix(Generator.get_hermite_curve_edgematrix(
+            p1, r1, p2, r2, step), color)
+
+    def draw_bezier_curve(self, p1, i1, i2, p2, color, step=100):
+        """
+        Draws a bezier curve onto the internal raster.
+
+        Parameters:
+        p1: list, the first endpoint of the bezier curve
+        i1: list, the first influence point of the bezier curve
+        i2: list, the second influence point of the bezier curve
+        p2: list, the second endpoint of the bezier curve
+        """
+        self.draw_matrix(Generator.get_bezier_curve_edgematrix(
+            p1, i1, i2, p2, step), color)
 
     def display(self):
         """
