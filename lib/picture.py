@@ -46,7 +46,7 @@ class Picture():
         Applies the given function transformation to a section of the grid.
 
         Parameters:
-        function: function(), a callback function that is run on the pixels in
+        function: function, a callback function that is run on the pixels in
             the grid.
         section: list, opposite corners of a rectangular region
             in the grid to apply the function transformation to.

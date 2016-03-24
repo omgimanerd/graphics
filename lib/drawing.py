@@ -103,9 +103,9 @@ class Drawing():
                 y1 += 1
                 d += dx
 
-    def draw_matrix(self, matrix, color):
+    def draw_edgematrix(self, matrix, color):
         """
-        Draws the given matrix onto the internal raster.
+        Draws the given EdgeMatrix onto the internal raster as lines.
 
         Parameters:
         matrix: EdgeMatrix, the matrix of lines to draw

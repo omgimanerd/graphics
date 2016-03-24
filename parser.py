@@ -15,8 +15,8 @@ class Parser():
         self.width = width
         self.height = height
         self.color = Color(color)
-        self.edge_matrix = EdgeMatrix()
-        self.transformation = None
+        self.edgematrix = EdgeMatrix()
+        self.transformation = TransformationMatrix.identity()
 
     def parse(self, filename):
         with open(filename) as args_file:
@@ -24,41 +24,54 @@ class Parser():
             args = args.strip().split("\n")
         i = 0
         while i < len(args):
-            if args[i] == 'line':
+            if args[i][0] == '#':
+                i += 1
+            elif args[i] == 'line':
                 params = map(int, args[i + 1].split())
-                self.edge_matrix.add_edge(params[:3], params[3:])
+                self.edgematrix.add_edge(params[:3], params[3:])
                 i += 2
             elif args[i] == 'circle':
                 params = map(int, args[i + 1].split())
-                self.edge_matrix.combine(Generator.get_circle_edgematrix(
+                self.edgematrix.combine(Generator.get_circle_edgematrix(
                     params[0], params[1], params[2]))
                 i += 2
             elif args[i] == 'hermite':
                 params = map(float, args[i + 1].split())
-                self.edge_matrix.combine(
+                self.edgematrix.combine(
                     Generator.get_hermite_curve_edgematrix(
                         params[0:2], params[2:4],
                         params[4:6], params[6:8]))
                 i += 2
             elif args[i] == 'bezier':
                 params = map(float, args[i + 1].split())
-                self.edge_matrix.combine(
+                self.edgematrix.combine(
                     Generator.get_bezier_curve_edgematrix(
                         params[0:2], params[2:4],
                         params[4:6], params[6:8]))
                 i += 2
+            elif args[i] == 'box':
+                params = map(float, args[i + 1].split())
+                pass
+            elif args[i] == 'sphere':
+                params = map(float, args[i + 1].split())
+                point_matrix = Generator.get_sphere_pointmatrix(
+                    params[0], params[1], params[2], params[3])
+                self.edgematrix.combine(EdgeMatrix.create_from_pointmatrix(
+                    point_matrix))
+                i += 2
+            elif args[i] == 'torus':
+                params = map(float, args[i + 1].split())
+                pass
             elif args[i] == 'ident':
                 self.transformation = TransformationMatrix.identity()
                 i += 1
             elif args[i] == 'scale':
                 params = map(float, args[i + 1].split())
-                self.transformation.scale(params[0], params[1],
-                                          params[2])
+                self.transformation.scale(params[0], params[1], params[2])
                 i += 2
             elif args[i] == 'translate':
                 params = map(int, args[i + 1].split())
-                self.transformation.translate(params[0], params[1],
-                                              params[2])
+                self.transformation.translate(params[0], params[1], params[2])
                 i += 2
             elif args[i] == 'xrotate':
                 params = float(args[i + 1])
@@ -73,18 +86,20 @@ class Parser():
                 self.transformation.rotate_z(params)
                 i += 2
             elif args[i] == 'apply':
-                self.edge_matrix *= self.transformation
+                self.edgematrix *= self.transformation
                 i += 1
             elif args[i] == 'display':
                 drawing = Drawing(self.width, self.height)
-                drawing.draw_matrix(self.edge_matrix, self.color)
+                drawing.draw_edgematrix(self.edgematrix, self.color)
                 drawing.display()
                 i += 1
             elif args[i] == 'save':
                 drawing = Drawing(self.width, self.height)
-                drawing.draw_matrix(self.edge_matrix, self.color)
+                drawing.draw_matrix(self.edgematrix, self.color)
                 drawing.generate(args[i + 1])
                 i += 2
+            elif args[i] == 'clear':
+                self.edgematrix.clear()
             elif args[i] == 'quit':
                 break
             else:

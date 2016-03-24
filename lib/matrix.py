@@ -9,7 +9,7 @@ from copy import deepcopy
 from math import pi, sin, cos
 
 class Matrix():
-    
+
     def __init__(self, matrix=None):
         self.matrix = []
         if matrix:
@@ -84,6 +84,9 @@ class Matrix():
 
     def _matrix(self):
         return self.matrix
+
+    def clear(self):
+        self.matrix = []
 
     def get_rounded(self):
         c = deepcopy(self.matrix)
@@ -171,6 +174,13 @@ class EdgeMatrix(Matrix):
         if matrix:
             self.matrix = self._verify(matrix)
 
+    @staticmethod
+    def create_from_pointmatrix(matrix):
+        edgematrix = EdgeMatrix()
+        for point in matrix:
+            edgematrix.add_edge(point, point)
+        return edgematrix
+
     def __iter__(self):
         return self
 
@@ -200,14 +210,14 @@ class EdgeMatrix(Matrix):
         elif len(point) == 3:
             point += [1]
         self.matrix.append(point)
-
-    def add_edge(self, point1, point2):
-        self._add_point(point1)
-        self._add_point(point2)
         return self
 
-    def combine(self, edge_matrix):
-        self.matrix += edge_matrix._matrix()
+    def add_edge(self, p1, p2):
+        self._add_point(p1)._add_point(p2)
+        return self
+
+    def combine(self, edgematrix):
+        self.matrix += edgematrix._matrix()
 
 if __name__ == '__main__':
     m = EdgeMatrix()

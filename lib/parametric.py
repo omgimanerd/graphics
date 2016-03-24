@@ -2,8 +2,6 @@
 # This is a class abstracting a parametric equation.
 # Author: alvin.lin.dev@gmail.com (Alvin Lin)
 
-from math import sin, cos
-
 class Parametric():
 
     def __init__(self, x_function, y_function, z_function):
@@ -26,11 +24,11 @@ class Parametric():
             raise ValueError('%s is not a function' % z_function)
         self.z_function = z_function
 
-    def get_point(self, t):
+    def get_point(self, *args):
         return [
-            self.x_function(t),
-            self.y_function(t),
-            self.z_function(t)]
+            self.x_function(*args),
+            self.y_function(*args),
+            self.z_function(*args)]
 
 if __name__ == '__main__':
     p = Parametric.circle_parametric()

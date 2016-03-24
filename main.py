@@ -10,7 +10,14 @@ import random
 if __name__ == '__main__':
     SIZE = 300;
     d = Drawing(SIZE, SIZE)
-    d.draw_matrix(Generator.get_hermite_curve_edgematrix([0, 50], [20, 20],
-                                                         [200, 50], [175, 40]), Color("FF0000"))
-    d.draw_circle(150, 150, 20, Color("FF00FF"))
+    t = TransformationMatrix.identity().rotate_x(34)
+    a = EdgeMatrix([
+        [0.0, 0.0, 0.0, 0.0],
+        [100.0, 100.0, 100.0, 0.0]
+        ])
+    print a, t
+    print a * t
+    a *= t
+
+    d.draw_edgematrix(a, Color("#ff0000"))
     d.display()
