@@ -15,33 +15,29 @@ class Matrix():
         if matrix:
             self.matrix = self._verify(matrix)
 
-    def __str__(self):
-        return str(self.matrix)
+    def clear(self):
+        self.matrix = []
 
-    def __iter__(self):
-        for item in self.matrix:
-            yield item
-
-    def __len__(self):
-        return len(self.matrix)
-
-    def __getitem__(self, index):
-        return self.matrix[index]
-
-    def __neg__(self):
+    def get_rounded(self):
+        c = deepcopy(self.matrix)
         for i in range(len(self.matrix)):
             for j in range(len(self.matrix[i])):
-                self.matrix[i][j] *= -1
+                c[i][j] = int(round(self.matrix[i][j]))
+        if isinstance(self, TransformationMatrix):
+            return TransformationMatrix(c)
+        elif isinstance(self, EdgeMatrix):
+            return EdgeMatrix(c)
+        return Matrix(c)
 
-    def __add__(self, other):
+    def add(self, other):
         if type(other) is list:
-            other = [other] if len(other) == 4 else [other + [0]]
+            other = [other] if len(other) == 4 else [other + [1]]
             return Matrix(self.matrix + other)
         elif isinstance(other, Matrix):
             return Matrix(self.matrix + other.matrix)
-        raise ValueError('Cannot add % to %s' % (self, other))
+        raise ValueError('Cannot add %s to %s' % (self, other))
 
-    def __mul__(self, other):
+    def multiply(self, other):
         if isinstance(other, (int, long, float)):
             for i in range(len(self.matrix)):
                 for j in range(len(self.matrix[i])):
@@ -66,6 +62,30 @@ class Matrix():
                 'Matrices %s and %s cannot be multipled' % (self, other))
         raise TypeError('Cannot multiply %s and %s' % (other, self))
 
+    def __str__(self):
+        return str(self.matrix)
+
+    def __iter__(self):
+        for item in self.matrix:
+            yield item
+
+    def __len__(self):
+        return len(self.matrix)
+
+    def __getitem__(self, index):
+        return self.matrix[index]
+
+    def __neg__(self):
+        for i in range(len(self.matrix)):
+            for j in range(len(self.matrix[i])):
+                self.matrix[i][j] *= -1
+
+    def __add__(self, other):
+        return self.add(other)
+
+    def __mul__(self, other):
+        return self.multiply(other)
+
     def __iadd__(self, other):
         self = self + other
         return self
@@ -84,20 +104,6 @@ class Matrix():
 
     def _matrix(self):
         return self.matrix
-
-    def clear(self):
-        self.matrix = []
-
-    def get_rounded(self):
-        c = deepcopy(self.matrix)
-        for i in range(len(self.matrix)):
-            for j in range(len(self.matrix[i])):
-                c[i][j] = int(round(self.matrix[i][j]))
-        if isinstance(self, TransformationMatrix):
-            return TransformationMatrix(c)
-        elif isinstance(self, EdgeMatrix):
-            return EdgeMatrix(c)
-        return Matrix(c)
 
 
 class TransformationMatrix(Matrix):

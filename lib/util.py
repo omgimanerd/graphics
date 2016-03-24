@@ -19,6 +19,13 @@ class Util():
         return abs(a - b) <= epsilon
 
     @staticmethod
+    def get_common_values(p1, p2):
+        if len(p1) != len(p2):
+            raise ValueError('Cannot compare %s and %s' % (p1, p2))
+        equals = [p1[i] == p2[i] for i in range(len(p1))]
+        return equals.count(True)
+
+    @staticmethod
     def get_manhattan_distance(t1, y1, t2, y2):
         return abs(y2 - y1) + abs(t2 - t1)
 
@@ -47,5 +54,4 @@ class Util():
         return lambda t: a_term(t) + b_term(t) + c_term(t) + d_term(t)
 
 if __name__ == "__main__":
-    print Util.get_euclidean_distance(0, 0, 3, 4)
-    print Util.is_almost_equal(1, 1.1)
+    print Util.has_two_points_in_common([1, 1, 2], [1, 0, 2])

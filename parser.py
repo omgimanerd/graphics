@@ -51,10 +51,14 @@ class Parser():
                 i += 2
             elif args[i] == 'box':
                 params = map(float, args[i + 1].split())
-                pass
+                pointmatrix = Generator.get_box_edgematrix(
+                    params[0], params[1], params[2], params[3], params[4],
+                    params[5])
+                self.edgematrix.combine(pointmatrix)
+                i += 2
             elif args[i] == 'sphere':
                 params = map(float, args[i + 1].split())
-                point_matrix = Generator.get_sphere_pointmatrix(
+                pointmatrix = Generator.get_sphere_pointmatrix(
                     params[0], params[1], params[2], params[3])
                 self.edgematrix.combine(EdgeMatrix.create_from_pointmatrix(
                     point_matrix))

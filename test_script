@@ -1,7 +1,11 @@
-line
-0 0 0 100 100 100
+box
+0 0 0 100 200 50
 ident
+xrotate
+45
+yrotate
+45
 translate
-100 100 100
+200 150 0
 apply
 display

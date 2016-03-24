@@ -58,7 +58,7 @@ class Generator():
         center_y: int, the y coordinate of the center of the circle
         radius: int, the radius of the circle
         step: int (optional), the number of steps to use when drawing splines
-        for the circle
+            for the circle
         """
         return Generator.get_polygon_edgematrix(
             center_x, center_y, radius, step)
@@ -120,9 +120,38 @@ class Generator():
         return edgematrix
 
     @staticmethod
-    def get_box_pointmatrix(center_x, center_y, center_z,
-                            width, height, depth):
-        pass
+    def get_box_pointmatrix(x, y, z, width, height, depth):
+        """
+        Generates a Matrix of points representing the vertices of a box.
+
+        Parameters:
+        x: int, the x coordinate of the front left bottom of the box
+        y: int, the y coordinate of the front left bottom of the box
+        z: int, the z coordinate of the front left bottom of the box
+        width: int, the width of the box
+        height: int, the height of the box
+        depth: int, the depth of the box
+        """
+        return Matrix([
+            [x, y, z, 1],
+            [x + width, y, z, 1],
+            [x, y + height, z, 1],
+            [x, y, z + depth, 1],
+            [x + width, y + height, z, 1],
+            [x + width, y, z + depth, 1],
+            [x, y + height, z + depth, 1],
+            [x + width, y + height, z + depth, 1]])
+
+    @staticmethod
+    def get_box_edgematrix(x, y, z, width, height, depth):
+        edgematrix = EdgeMatrix()
+        pointmatrix = Generator.get_box_pointmatrix(
+            x, y, z, width, height, depth)
+        for i in range(len(pointmatrix) - 1):
+            for point in pointmatrix[i + 1:]:
+                if Util.get_common_values(pointmatrix[i], point) == 3:
+                    edgematrix.add_edge(pointmatrix[i], point)
+        return edgematrix
 
     @staticmethod
     def get_sphere_pointmatrix(center_x, center_y, center_z, radius,
@@ -136,6 +165,10 @@ class Generator():
         center_y: int, the y coordinate of the center of the sphere
         center_z: int, the z coordinate of the center of the sphere
         radius: int, the radius of the sphere
+        theta_step: int (optional), the number of steps to use when drawing the
+            circles
+        phi_step: int(optional), the number of steps to use when rotating the
+            circles about the center point
         """
         x = lambda theta, phi: radius * cos(theta) + center_x
         y = lambda theta, phi: radius * sin(theta) * cos(phi) + center_y

@@ -103,6 +103,19 @@ class Drawing():
                 y1 += 1
                 d += dx
 
+    def draw_pointmatrix(self, matrix, color):
+        """
+        Draws the given Matrix of points onto the internal raster.
+
+        Parameters:
+        matrix: Matrix, the matrix of points to draw
+        color: Color, the color to draw the matrix with
+        """
+        if not isinstance(matrix, Matrix):
+            raise ValueError('%s is not a Matrix' % matrix)
+        for point in matrix:
+            self.draw_point(point[0], point[1], color)
+
     def draw_edgematrix(self, matrix, color):
         """
         Draws the given EdgeMatrix onto the internal raster as lines.
@@ -129,7 +142,7 @@ class Drawing():
         step: int (optional), the number of steps to use when drawing splines
         for the circle
         """
-        self.draw_matrix(Generator.get_circle_edgematrix(
+        self.draw_edgematrix(Generator.get_circle_edgematrix(
             center_x, center_y, radius, step), color)
 
     def draw_hermite_curve(self, p1, r1, p2, r2, color, step=100):
@@ -141,8 +154,10 @@ class Drawing():
         r1: list, the rate of change at p1
         p2: list, the second point of the hermite curve
         r2: list, the rate of change at p2
+        color: Color, the color of the curve
+        step: int (optional), the number of steps to use for drawing the curve
         """
-        self.draw_matrix(Generator.get_hermite_curve_edgematrix(
+        self.draw_edgematrix(Generator.get_hermite_curve_edgematrix(
             p1, r1, p2, r2, step), color)
 
     def draw_bezier_curve(self, p1, i1, i2, p2, color, step=100):
@@ -154,9 +169,47 @@ class Drawing():
         i1: list, the first influence point of the bezier curve
         i2: list, the second influence point of the bezier curve
         p2: list, the second endpoint of the bezier curve
+        color: Color, the color of the curve
+        step: int (optional), the number of steps to use for drawing the curve
         """
-        self.draw_matrix(Generator.get_bezier_curve_edgematrix(
+        self.draw_edgematrix(Generator.get_bezier_curve_edgematrix(
             p1, i1, i2, p2, step), color)
+
+    def draw_box_points(self, x, y, z, width, height, depth, color):
+        """
+        Draws points representing the vertices of a box onto the internal
+            raster.
+
+        Parameters:
+        x: int, the x coordinate of the front left bottom of the box
+        y: int, the y coordinate of the front left bottom of the box
+        z: int, the z coordinate of the front left bottom of the box
+        width: int, the width of the box
+        height: int, the height of the box
+        depth: int, the depth of the box
+        color: Color, the color of the points
+        """
+        self.draw_pointmatrix(Generator.get_box_pointmatrix(
+            x, y, z, width, height, depth), color)
+
+    def draw_sphere_points(self, center_x, center_y, center_z, radius, color,
+                           theta_step=25, phi_step=25):
+        """
+        Draws points representing a sphere onto the internal raster.
+
+        Parameters:
+        center_x: int, the x coordinate of the center of the sphere
+        center_y: int, the y coordinate of the center of the sphere
+        center_z: int, the z coordinate of the center of the sphere
+        radius: int, the radius of the sphere
+        color: Color, the of the points
+        theta_step: int (optional), the number of steps to use when drawing the
+            circles
+        phi_step: int(optional), the number of steps to use when rotating the
+            circles about the center point
+        """
+        self.draw_pointmatrix(Generator.get_sphere_pointmatrix(
+            center_x, center_y, center_z, radius, theta_step, phi_step), color)
 
     def display(self):
         """
