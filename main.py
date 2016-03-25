@@ -1,9 +1,9 @@
 #!/usr/bin/python
 
-from lib.color import *
-from lib.drawing import *
-from lib.matrix import *
-from lib.parametric import *
+from lib.color import Color
+from lib.drawing import Drawing
+from lib.matrix import Matrix, TransformationMatrix, EdgeMatrix
+from lib.parametric import Parametric
 
 import random
 

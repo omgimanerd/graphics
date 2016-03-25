@@ -1,5 +1,5 @@
-box
-0 0 0 100 200 50
+torus
+0 0 0 30 50
 ident
 xrotate
 45
@@ -8,4 +8,6 @@ yrotate
 translate
 200 150 0
 apply
+hermite
+100 100 150 100 200 100 250 100
 display

@@ -3,10 +3,10 @@
 # general Drawing class.
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
 
-from generator import *
-from matrix import *
-from picture import *
-from util import *
+from generator import Generator
+from matrix import Matrix, EdgeMatrix
+from picture import Picture
+from util import Util
 
 from math import pi
 from os import system, remove

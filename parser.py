@@ -3,9 +3,10 @@
 # them.
 # Author: alvin.lin.dev@gmail.com (Alvin Lin)
 
-from lib.color import *
-from lib.drawing import *
-from lib.matrix import *
+from lib.color import Color
+from lib.drawing import Drawing
+from lib.generator import Generator
+from lib.matrix import Matrix, TransformationMatrix, EdgeMatrix
 
 import argparse
 
@@ -24,7 +25,7 @@ class Parser():
             args = args.strip().split("\n")
         i = 0
         while i < len(args):
-            if args[i][0] == '#':
+            if args[i][0] == '#' or len(args[i]) == 0:
                 i += 1
             elif args[i] == 'line':
                 params = map(int, args[i + 1].split())
@@ -51,21 +52,26 @@ class Parser():
                 i += 2
             elif args[i] == 'box':
                 params = map(float, args[i + 1].split())
-                pointmatrix = Generator.get_box_edgematrix(
+                pointmatrix = Generator.get_box_pointmatrix(
                     params[0], params[1], params[2], params[3], params[4],
                     params[5])
-                self.edgematrix.combine(pointmatrix)
+                self.edgematrix.combine(EdgeMatrix.create_from_pointmatrix(
+                    pointmatrix))
                 i += 2
             elif args[i] == 'sphere':
                 params = map(float, args[i + 1].split())
                 pointmatrix = Generator.get_sphere_pointmatrix(
                     params[0], params[1], params[2], params[3])
                 self.edgematrix.combine(EdgeMatrix.create_from_pointmatrix(
-                    point_matrix))
+                    pointmatrix))
                 i += 2
             elif args[i] == 'torus':
                 params = map(float, args[i + 1].split())
-                pass
+                pointmatrix = Generator.get_torus_pointmatrix(
+                    params[0], params[1], params[2], params[3], params[4])
+                self.edgematrix.combine(EdgeMatrix.create_from_pointmatrix(
+                    pointmatrix))
+                i += 2
             elif args[i] == 'ident':
                 self.transformation = TransformationMatrix.identity()
                 i += 1

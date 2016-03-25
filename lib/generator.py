@@ -2,11 +2,11 @@
 # This class holds static methods for generating matrices of objects.
 # Author: alvin.lin.dev@gmail.com (Alvin Lin)
 
-from parametric import *
-from matrix import *
-from util import *
+from parametric import Parametric
+from matrix import Matrix, EdgeMatrix
+from util import Util
 
-from math import sin, cos, ceil
+from math import ceil, cos, sin, pi
 
 class Generator():
 
@@ -37,9 +37,9 @@ class Generator():
         radius: int, the radius of the circle
         sides: int, the number of sides in the polygon
         """
-        x = lambda t: cos(t) * radius + center_x
-        y = lambda t: sin(t) * radius + center_y
-        z = lambda t: 0
+        def x(t): return cos(t) * radius + center_x
+        def y(t): return sin(t) * radius + center_y
+        def z(t): return 0
         parametric = Parametric(x, y, z)
         edgematrix = EdgeMatrix()
         step_range = Generator.get_step_range(0, 2 * pi, sides)
@@ -81,14 +81,14 @@ class Generator():
         [0, 0, 1, 0],
         [1, 0, 0, 0]])
         c = inverse * points
-        x = lambda t: Util.get_hermite_function(
+        def x(t): return Util.get_hermite_function(
             c[0][0], c[1][0], c[2][0], c[3][0])(t)
-        y = lambda t: Util.get_hermite_function(
+        def y(t): return Util.get_hermite_function(
             c[0][1], c[1][1], c[2][1], c[3][1])(t)
-        z = lambda t: 0
+        def z(t): return 0
         parametric = Parametric(x, y, z)
         edgematrix = EdgeMatrix()
-        step_range = Generator.get_step_range(0, 1, sides)
+        step_range = Generator.get_step_range(0, 1, step)
         for i in range(len(step_range) - 1):
             edgematrix.add_edge(parametric.get_point(step_range[i]),
                                 parametric.get_point(step_range[i + 1]))
@@ -105,15 +105,14 @@ class Generator():
         i2: list, the second influence point of the bezier curve
         p2: list, the second endpoint of the bezier curve
         """
-        points = Matrix([p1, i1, i2, p2])
-        x = lambda t: Util.get_bezier_function(
+        def x(t): return Util.get_bezier_function(
             p1[0], i1[0], i2[0], p2[0])(t)
-        y = lambda t: Util.get_bezier_function(
+        def y(t): return Util.get_bezier_function(
             p1[1], i1[1], i2[1], p2[1])(t)
-        z = lambda t: 0
+        def z(t): return 0
         parametric = Parametric(x, y, z)
         edgematrix = EdgeMatrix()
-        step_range = Generator.get_step_range(0, 1, sides)
+        step_range = Generator.get_step_range(0, 1, step)
         for i in range(len(step_range) - 1):
             edgematrix.add_edge(parametric.get_point(step_range[i]),
                                 parametric.get_point(step_range[i + 1]))
@@ -170,13 +169,46 @@ class Generator():
         phi_step: int(optional), the number of steps to use when rotating the
             circles about the center point
         """
-        x = lambda theta, phi: radius * cos(theta) + center_x
-        y = lambda theta, phi: radius * sin(theta) * cos(phi) + center_y
-        z = lambda theta, phi: radius * sin(theta) * sin(phi) + center_z
+        def x(theta, phi): return radius * cos(theta) + center_x
+        def y(theta, phi): return radius * sin(theta) * cos(phi) + center_y
+        def z(theta, phi): return radius * sin(theta) * sin(phi) + center_z
         parametric = Parametric(x, y, z)
         matrix = Matrix()
-        theta_step_range = Generator.get_step_range(0, 2 * pi, 25)
-        phi_step_range = Generator.get_step_range(0, pi, 25)
+        theta_step_range = Generator.get_step_range(0, 2 * pi, theta_step)
+        phi_step_range = Generator.get_step_range(0, pi, phi_step)
+        for theta in theta_step_range:
+            for phi in phi_step_range:
+                matrix += parametric.get_point(theta, phi)
+        return matrix
+
+    @staticmethod
+    def get_torus_pointmatrix(center_x, center_y, center_z, radius1, radius2,
+                              theta_step=25, phi_step=50):
+        """
+        Generates a Matrix of points representing the points on the surface of
+        a torus.
+
+        Parameters:
+        center_x: int, the x coordinate of the center of the sphere
+        center_y: int, the y coordinate of the center of the sphere
+        center_z: int, the z coordinate of the center of the sphere
+        radius1: int, the radius of the circle being revolved to make the torus
+        radius2: int, the radius of the torus itself
+        theta_step: int (optional), the number of steps to use when drawing the
+            circle that is revolved to make the torus
+        phi_step: int(optional), the number of steps to use when rotating the
+            circles about the center point
+        """
+        def x(theta, phi): return radius1 * cos(theta) + center_x
+        def y(theta, phi): return cos(phi) * (
+            radius1 * sin(theta) + radius2) + center_y
+        def z(theta, phi): return sin(phi) * (
+            radius1 * sin(theta) + radius2) + center_z
+        parametric = Parametric(x, y, z)
+        matrix = Matrix()
+        theta_step_range = Generator.get_step_range(0, 2 * pi, theta_step)
+        phi_step_range = Generator.get_step_range(0, 2 * pi, phi_step)
+        print 'test'
         for theta in theta_step_range:
             for phi in phi_step_range:
                 matrix += parametric.get_point(theta, phi)
