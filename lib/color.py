@@ -8,7 +8,7 @@ class Color:
 
     def __init__(self, color):
         """
-        Constructor for a Color class.
+        Constructor for the Color class.
 
         Parameters:
         color: str or list, the hexadecimal or rgb representation of the color
@@ -24,6 +24,9 @@ class Color:
 
     @staticmethod
     def random():
+        """
+        Returns a randomly generated color.
+        """
         return Color([random.randint(0, 256) for x in range(3)])
 
     def __iter__(self):

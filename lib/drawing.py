@@ -15,7 +15,7 @@ class Drawing():
 
     def __init__(self, width, height):
         """
-        Constructors for a Drawing class.
+        Constructors for the Drawing class.
 
         Parameters:
         filename: str, the name of the new image file
@@ -215,12 +215,12 @@ class Drawing():
         """
         Displays the current state of the internal raster.
         """
-        filename = "%s.ppm" % hash(self.picture)
+        filename = hash(self.picture)
         self.generate(filename)
-        system("display %s" % filename)
+        system("display %s.ppm" % filename)
         remove(filename)
 
-    def generate(self, filename):
+    def generate(self, filename, ext=None):
         """
         Generates the ppm raster image file.
 

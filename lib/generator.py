@@ -208,7 +208,6 @@ class Generator():
         matrix = Matrix()
         theta_step_range = Generator.get_step_range(0, 2 * pi, theta_step)
         phi_step_range = Generator.get_step_range(0, 2 * pi, phi_step)
-        print "test"
         for theta in theta_step_range:
             for phi in phi_step_range:
                 matrix += parametric.get_point(theta, phi)

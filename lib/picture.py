@@ -9,9 +9,10 @@ from util import Util
 HEADER = "P3 %d %d %d\n"
 
 class Picture():
+
     def __init__(self, width, height, max_color_value=255):
         """
-        Constructor for a Picture class.
+        Constructor for the Picture class.
 
         Parameters:
         filename: str, the name of the new image file
@@ -65,10 +66,12 @@ class Picture():
 
     def generate(self, filename):
         """
-        Turns the internal grid into a ppm raster image file and generates the
-        file.
+        Writes the internal raster to a ppm image file.
+
+        Parameters:
+        filename: str, the name of the image file, excluding the extension
         """
-        with open(filename, "w") as picture:
+        with open("%s.ppm" % filename, "w") as picture:
             picture.write(HEADER % (
                 self.width, self.height, self.max_color_value))
             for row in self.grid:

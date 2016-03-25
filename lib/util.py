@@ -2,10 +2,9 @@
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
 # This is a class that contains utility methods for the Drawing class.
 
-import math
+from math import pi
 
 class Util():
-    tau = 2 * math.pi
     epsilon = 0.1
 
     @staticmethod
@@ -24,6 +23,14 @@ class Util():
             raise ValueError("Cannot compare %s and %s" % (p1, p2))
         equals = [p1[i] == p2[i] for i in range(len(p1))]
         return equals.count(True)
+
+    @staticmethod
+    def r2d(theta):
+        return theta / pi * 180.0
+
+    @staticmethod
+    def d2r(theta):
+        return theta / 180.0 * pi
 
     @staticmethod
     def get_manhattan_distance(t1, y1, t2, y2):
