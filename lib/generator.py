@@ -64,6 +64,12 @@ class Generator():
             center_x, center_y, radius, step)
 
     @staticmethod
+    def get_hermite_function(a, b, c, d):
+        def hermite_function(t): return (a * (t ** 3)) + (b * (t ** 2)) + (
+            c * t) + d
+        return hermite_function
+
+    @staticmethod
     def get_hermite_curve_edgematrix(p1, r1, p2, r2, step=100):
         """
         Generates an EdgeMatrix of lines representing a hermite curve.
@@ -81,9 +87,9 @@ class Generator():
         [0, 0, 1, 0],
         [1, 0, 0, 0]])
         c = inverse * points
-        def x(t): return Util.get_hermite_function(
+        def x(t): return Generator.get_hermite_function(
             c[0][0], c[1][0], c[2][0], c[3][0])(t)
-        def y(t): return Util.get_hermite_function(
+        def y(t): return Generator.get_hermite_function(
             c[0][1], c[1][1], c[2][1], c[3][1])(t)
         def z(t): return 0
         parametric = Parametric(x, y, z)
@@ -93,6 +99,13 @@ class Generator():
             edgematrix.add_edge(parametric.get_point(step_range[i]),
                                 parametric.get_point(step_range[i + 1]))
         return edgematrix
+
+    @staticmethod
+    def get_bezier_function(a, b, c, d):
+        def bezier_function(t):
+            return (a * ((1 - t) ** 3)) + (3 * b * ((1 - t) ** 2) * t) + (
+                3 * c * (1 - t) * (t ** 2)) + (d * (t ** 3))
+        return bezier_function
 
     @staticmethod
     def get_bezier_curve_edgematrix(p1, i1, i2, p2, step=100):
@@ -105,9 +118,9 @@ class Generator():
         i2: list, the second influence point of the bezier curve
         p2: list, the second endpoint of the bezier curve
         """
-        def x(t): return Util.get_bezier_function(
+        def x(t): return Generator.get_bezier_function(
             p1[0], i1[0], i2[0], p2[0])(t)
-        def y(t): return Util.get_bezier_function(
+        def y(t): return Generator.get_bezier_function(
             p1[1], i1[1], i2[1], p2[1])(t)
         def z(t): return 0
         parametric = Parametric(x, y, z)
@@ -148,7 +161,7 @@ class Generator():
             x, y, z, width, height, depth)
         for i in range(len(pointmatrix) - 1):
             for point in pointmatrix[i + 1:]:
-                if Util.get_common_values(pointmatrix[i], point) == 3:
+                if Util.count_common_values(pointmatrix[i], point) == 3:
                     edgematrix.add_edge(pointmatrix[i], point)
         return edgematrix
 

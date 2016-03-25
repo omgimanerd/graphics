@@ -5,20 +5,47 @@
 from math import pi
 
 class Util():
-    epsilon = 0.1
 
     @staticmethod
-    def in_bound(t, lower, upper):
+    def in_bound(x, lower, upper):
+        """
+        Returns whether or not a given number is in between two bounds, upper
+        bound exclusive. If the specified lower bound is greater than the upper
+        bound, they will automatically be switched.
+
+        Parameters:
+        x: int or float, the number to check
+        lower: int or float, the first bound, usually the lower bound
+        upper: int or float, the second bound, usually the upper bound
+        """
         if lower > upper:
             lower, upper = upper, lower
-        return t >= lower and t < upper
+        return x >= lower and x < upper
 
     @staticmethod
-    def is_almost_equal(a, b, epsilon=epsilon):
+    def is_almost_equal(a, b, epsilon=0.1):
+        """
+        Returns whether or not two numbers are close enough together within a
+        threshold epsilon.
+
+        Parameters:
+        a: int or float, the first number
+        b: int or float, the second number
+        epsilon: int or float (optional), the threshold under which the two
+            numbers will be considered 'close', defaults to 0.1
+        """
         return abs(a - b) <= epsilon
 
     @staticmethod
-    def get_common_values(p1, p2):
+    def count_common_values(p1, p2):
+        """
+        Given two lists of equal length, returns the number of equivalent
+        entries. Two list entries are considered equivalent if they have the
+        same value and position within the list.
+
+        p1: list, the first list
+        p2: list, the second list
+        """
         if len(p1) != len(p2):
             raise ValueError("Cannot compare %s and %s" % (p1, p2))
         equals = [p1[i] == p2[i] for i in range(len(p1))]
@@ -26,39 +53,23 @@ class Util():
 
     @staticmethod
     def r2d(theta):
+        """
+        Given an angle theta in radians, returns the equivalent degree measure.
+
+        Parameters:
+        theta: int or float, the angle in radians to convert
+        """
         return theta / pi * 180.0
 
     @staticmethod
     def d2r(theta):
+        """
+        Given an angle theta in degrees, returns the equivalent radian measure.
+
+        Parameters:
+        theta: int or float, the angle in degrees to convert
+        """
         return theta / 180.0 * pi
-
-    @staticmethod
-    def get_manhattan_distance(t1, y1, t2, y2):
-        return abs(y2 - y1) + abs(t2 - t1)
-
-    @staticmethod
-    def get_euclidean_distance_sq(t1, y1, t2, y2):
-        return ((t2 - t1) ** 2) + ((y2 - y1) ** 2)
-
-    @staticmethod
-    def get_euclidean_distance(t1, y1, t2, y2):
-        return math.sqrt(Util.get_euclidean_distance_sq(t1, y1, t2, y2))
-
-    @staticmethod
-    def are_points_closer_than(t1, y1, t2, y2, d):
-        return Util.get_euclidean_distance_sq(t1, y1, t2, y2) <= d ** 2
-
-    @staticmethod
-    def get_hermite_function(a, b, c, d):
-        return lambda t: (a * (t ** 3)) + (b * (t ** 2)) + (c * t) + d
-
-    @staticmethod
-    def get_bezier_function(a, b, c, d):
-        a_term = lambda t: a * ((1 - t) ** 3)
-        b_term = lambda t: 3 * b * ((1 - t) ** 2) * t
-        c_term = lambda t: 3 * c * (1 - t) * (t ** 2)
-        d_term = lambda t: d * (t ** 3)
-        return lambda t: a_term(t) + b_term(t) + c_term(t) + d_term(t)
 
 if __name__ == "__main__":
     print Util.has_two_points_in_common([1, 1, 2], [1, 0, 2])
