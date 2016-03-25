@@ -120,7 +120,7 @@ class Parser():
                 i += 1
             elif commands[i] == "save":
                 drawing = Drawing(self.width, self.height)
-                drawing.draw_matrix(self.edgematrix, self.color)
+                drawing.draw_edgematrix(self.edgematrix, self.color)
                 drawing.generate(commands[i + 1])
                 i += 2
             elif commands[i] == "clear":

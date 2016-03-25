@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # This is a class abstracting the Transformation and Picture classes into a
 # general Drawing class.
+# ImageMagick must be installed for the generate() and display() methods to
+# work.
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
 
 from generator import Generator
@@ -113,7 +115,7 @@ class Drawing():
         """
         if not isinstance(matrix, Matrix):
             raise ValueError("%s is not a Matrix" % matrix)
-        for point in matrix:
+        for point in matrix.get_rounded():
             self.draw_point(point[0], point[1], color)
 
     def draw_edgematrix(self, matrix, color):
@@ -213,18 +215,24 @@ class Drawing():
 
     def display(self):
         """
-        Displays the current state of the internal raster.
+        Displays the current state of the internal raster. This method will
+        create a temporary ppm file and remove it after displaying.
         """
         filename = hash(self.picture)
         self.generate(filename)
         system("display %s.ppm" % filename)
-        remove(filename)
+        remove("%s.ppm" % filename)
 
-    def generate(self, filename, ext=None):
+    def generate(self, filename, extension="ppm"):
         """
-        Generates the ppm raster image file.
+        Turns the internal raster into an image file.
 
         Parameters:
         filename: str, the name of the image file to generate
+        extension: str (optional), the extension of the image file, defaults to
+            ppm
         """
         self.picture.generate(filename)
+        full_filename = "%s.%s" % (filename, extension)
+        if extension != "ppm":
+            system("convert %s.ppm %s" % (filename, full_filename))

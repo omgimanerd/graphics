@@ -10,5 +10,6 @@ import random
 if __name__ == "__main__":
     SIZE = 300;
     d = Drawing(SIZE, SIZE)
-    d.draw_edgematrix(a, Color("#ff0000"))
+    d.draw_sphere_points(100, 100, 100, 100, Color("#FF0000"))
     d.display()
+    d.generate("test", "png")
