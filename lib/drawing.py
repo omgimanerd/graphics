@@ -132,7 +132,7 @@ class Drawing():
             self.draw_line(
                 edge[0][0], edge[0][1], edge[1][0], edge[1][1], color)
 
-    def draw_circle(self, center_x, center_y, radius, color, step=25):
+    def draw_circle(self, center_x, center_y, radius, color, step=50):
         """
         Draws a circle onto the internal raster.
 
@@ -194,8 +194,24 @@ class Drawing():
         self.draw_pointmatrix(Generator.get_box_pointmatrix(
             x, y, z, width, height, depth), color)
 
+    def draw_box_edges(self, x, y, z, width, height, depth, color):
+        """
+        Draws the edges of a box onto the internal raster.
+
+        Parameters:
+        x: int, the x coordinate of the front left bottom of the box
+        y: int, the y coordinate of the front left bottom of the box
+        z: int, the z coordinate of the front left bottom of the box
+        width: int, the width of the box
+        height: int, the height of the box
+        depth: int, the depth of the box
+        color: Color, the color of the points
+        """
+        self.draw_edgematrix(Generator.get_box_edgematrix(
+            x, y, z, width, height, depth), color)
+
     def draw_sphere_points(self, center_x, center_y, center_z, radius, color,
-                           theta_step=25, phi_step=25):
+                           theta_step=50, phi_step=50):
         """
         Draws points representing a sphere onto the internal raster.
 
@@ -204,7 +220,7 @@ class Drawing():
         center_y: int, the y coordinate of the center of the sphere
         center_z: int, the z coordinate of the center of the sphere
         radius: int, the radius of the sphere
-        color: Color, the of the points
+        color: Color, the color of the points
         theta_step: int (optional), the number of steps to use when drawing the
             circles
         phi_step: int(optional), the number of steps to use when rotating the
@@ -212,6 +228,28 @@ class Drawing():
         """
         self.draw_pointmatrix(Generator.get_sphere_pointmatrix(
             center_x, center_y, center_z, radius, theta_step, phi_step), color)
+
+    def draw_torus_points(self, center_x, center_y, center_z, radius1, radius2,
+                          color, theta_step=50, phi_step=50):
+        """
+        Generates a Matrix of points representing the points on the surface of
+        a torus.
+
+        Parameters:
+        center_x: int, the x coordinate of the center of the sphere
+        center_y: int, the y coordinate of the center of the sphere
+        center_z: int, the z coordinate of the center of the sphere
+        radius1: int, the radius of the circle being revolved to make the torus
+        radius2: int, the radius of the torus itself
+        color: Color, the color of the points
+        theta_step: int (optional), the number of steps to use when drawing the
+            circle that is revolved to make the torus
+        phi_step: int(optional), the number of steps to use when rotating the
+            circles about the center point
+        """
+        self.draw_pointmatrix(Generator.get_torus_pointmatrix(
+            center_x, center_y, center_z,
+            radius1, radius2, theta_step, phi_step), color)
 
     def display(self):
         """

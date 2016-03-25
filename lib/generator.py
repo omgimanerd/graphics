@@ -49,7 +49,7 @@ class Generator():
         return edgematrix
 
     @staticmethod
-    def get_circle_edgematrix(center_x, center_y, radius, step=25):
+    def get_circle_edgematrix(center_x, center_y, radius, step=50):
         """
         Generates an EdgeMatrix of lines representing a circle.
 
@@ -167,7 +167,7 @@ class Generator():
 
     @staticmethod
     def get_sphere_pointmatrix(center_x, center_y, center_z, radius,
-                               theta_step=25, phi_step=25):
+                               theta_step=50, phi_step=50):
         """
         Generates a Matrix of points representing the points on the
         surface of a sphere.
@@ -196,7 +196,7 @@ class Generator():
 
     @staticmethod
     def get_torus_pointmatrix(center_x, center_y, center_z, radius1, radius2,
-                              theta_step=25, phi_step=50):
+                              theta_step=50, phi_step=50):
         """
         Generates a Matrix of points representing the points on the surface of
         a torus.

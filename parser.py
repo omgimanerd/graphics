@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # This is a parser that takes a file of graphics drawing commands and runs
-# them.
+# them. Uses Mr. DW's standards.
 # Author: alvin.lin.dev@gmail.com (Alvin Lin)
 
 from lib.color import Color
@@ -42,6 +42,11 @@ class Parser():
         while i < len(commands):
             if commands[i].startswith("#") or len(commands[i]) == 0:
                 i += 1
+            elif commands[i] == "dimensions":
+                params = map(int, commands[i + 1].split())
+                self.width = params[0]
+                self.height = params[1]
+                i += 2
             elif commands[i] == "line":
                 params = map(int, commands[i + 1].split())
                 self.edgematrix.add_edge(params[:3], params[3:])
