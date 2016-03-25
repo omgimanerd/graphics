@@ -35,7 +35,7 @@ class Matrix():
             return Matrix(self.matrix + other)
         elif isinstance(other, Matrix):
             return Matrix(self.matrix + other.matrix)
-        raise ValueError('Cannot add %s to %s' % (self, other))
+        raise ValueError("Cannot add %s to %s" % (self, other))
 
     def multiply(self, other):
         if isinstance(other, (int, long, float)):
@@ -59,8 +59,8 @@ class Matrix():
                     return TransformationMatrix(result)
                 return Matrix(result)
             raise ValueError(
-                'Matrices %s and %s cannot be multipled' % (self, other))
-        raise TypeError('Cannot multiply %s and %s' % (other, self))
+                "Matrices %s and %s cannot be multipled" % (self, other))
+        raise TypeError("Cannot multiply %s and %s" % (other, self))
 
     def __str__(self):
         return str(self.matrix)
@@ -99,7 +99,7 @@ class Matrix():
             return matrix
         for i in range(len(matrix) - 1):
             if len(matrix[i]) != len(matrix[i + 1]):
-                raise ValueError('Invalid matrix: %s' % matrix)
+                raise ValueError("Invalid matrix: %s" % matrix)
         return matrix
 
     def _matrix(self):
@@ -110,7 +110,7 @@ class TransformationMatrix(Matrix):
     def _verify(self, matrix):
         if all([len(x) == 4 for x in matrix]) and len(matrix) == 4:
             return matrix
-        raise ValueError('Invalid matrix: %s' % matrix)
+        raise ValueError("Invalid matrix: %s" % matrix)
 
     def _r2d(self, theta):
         return theta / pi * 180.0
@@ -201,14 +201,14 @@ class EdgeMatrix(Matrix):
     def _verify(self, matrix):
         if len(matrix) % 2 != 0:
             raise ValueError(
-                'EdgeMatrix must be initialized with an even number of points')
+                "EdgeMatrix must be initialized with an even number of points")
         if not all([len(x) == 4 for x in matrix]):
             raise ValueError(
-                'EdgeMatrix must be initialized with point lists of length 4')
+                "EdgeMatrix must be initialized with point lists of length 4")
         return matrix
 
     def __add__(self, other):
-        raise NotImplementedError('__add__ cannot be called on an EdgeMatrix')
+        raise NotImplementedError("__add__ cannot be called on an EdgeMatrix")
 
     def _add_point(self, point):
         if len(point) == 2:
@@ -225,7 +225,7 @@ class EdgeMatrix(Matrix):
     def combine(self, edgematrix):
         self.matrix += edgematrix._matrix()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     m = EdgeMatrix()
     m.add_edge([0, 0], [1, 0, 1])
     print m

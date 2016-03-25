@@ -12,7 +12,7 @@ import argparse
 
 class Parser():
 
-    def __init__(self, width=512, height=512, color='FF0000'):
+    def __init__(self, width=512, height=512, color="FF0000"):
         self.width = width
         self.height = height
         self.color = Color(color)
@@ -25,32 +25,32 @@ class Parser():
             args = args.strip().split("\n")
         i = 0
         while i < len(args):
-            if args[i][0] == '#' or len(args[i]) == 0:
+            if args[i].startsWith("#") or len(args[i]) == 0:
                 i += 1
-            elif args[i] == 'line':
+            elif args[i] == "line":
                 params = map(int, args[i + 1].split())
                 self.edgematrix.add_edge(params[:3], params[3:])
                 i += 2
-            elif args[i] == 'circle':
+            elif args[i] == "circle":
                 params = map(int, args[i + 1].split())
                 self.edgematrix.combine(Generator.get_circle_edgematrix(
                     params[0], params[1], params[2]))
                 i += 2
-            elif args[i] == 'hermite':
+            elif args[i] == "hermite":
                 params = map(float, args[i + 1].split())
                 self.edgematrix.combine(
                     Generator.get_hermite_curve_edgematrix(
                         params[0:2], params[2:4],
                         params[4:6], params[6:8]))
                 i += 2
-            elif args[i] == 'bezier':
+            elif args[i] == "bezier":
                 params = map(float, args[i + 1].split())
                 self.edgematrix.combine(
                     Generator.get_bezier_curve_edgematrix(
                         params[0:2], params[2:4],
                         params[4:6], params[6:8]))
                 i += 2
-            elif args[i] == 'box':
+            elif args[i] == "box":
                 params = map(float, args[i + 1].split())
                 pointmatrix = Generator.get_box_pointmatrix(
                     params[0], params[1], params[2], params[3], params[4],
@@ -58,66 +58,66 @@ class Parser():
                 self.edgematrix.combine(EdgeMatrix.create_from_pointmatrix(
                     pointmatrix))
                 i += 2
-            elif args[i] == 'sphere':
+            elif args[i] == "sphere":
                 params = map(float, args[i + 1].split())
                 pointmatrix = Generator.get_sphere_pointmatrix(
                     params[0], params[1], params[2], params[3])
                 self.edgematrix.combine(EdgeMatrix.create_from_pointmatrix(
                     pointmatrix))
                 i += 2
-            elif args[i] == 'torus':
+            elif args[i] == "torus":
                 params = map(float, args[i + 1].split())
                 pointmatrix = Generator.get_torus_pointmatrix(
                     params[0], params[1], params[2], params[3], params[4])
                 self.edgematrix.combine(EdgeMatrix.create_from_pointmatrix(
                     pointmatrix))
                 i += 2
-            elif args[i] == 'ident':
+            elif args[i] == "ident":
                 self.transformation = TransformationMatrix.identity()
                 i += 1
-            elif args[i] == 'scale':
+            elif args[i] == "scale":
                 params = map(float, args[i + 1].split())
                 self.transformation.scale(params[0], params[1], params[2])
                 i += 2
-            elif args[i] == 'translate':
+            elif args[i] == "translate":
                 params = map(int, args[i + 1].split())
                 self.transformation.translate(params[0], params[1], params[2])
                 i += 2
-            elif args[i] == 'xrotate':
+            elif args[i] == "xrotate":
                 params = float(args[i + 1])
                 self.transformation.rotate_x(params)
                 i += 2
-            elif args[i] == 'yrotate':
+            elif args[i] == "yrotate":
                 params = float(args[i + 1])
                 self.transformation.rotate_y(params)
                 i += 2
-            elif args[i] == 'zrotate':
+            elif args[i] == "zrotate":
                 params = float(args[i + 1])
                 self.transformation.rotate_z(params)
                 i += 2
-            elif args[i] == 'apply':
+            elif args[i] == "apply":
                 self.edgematrix *= self.transformation
                 i += 1
-            elif args[i] == 'display':
+            elif args[i] == "display":
                 drawing = Drawing(self.width, self.height)
                 drawing.draw_edgematrix(self.edgematrix, self.color)
                 drawing.display()
                 i += 1
-            elif args[i] == 'save':
+            elif args[i] == "save":
                 drawing = Drawing(self.width, self.height)
                 drawing.draw_matrix(self.edgematrix, self.color)
                 drawing.generate(args[i + 1])
                 i += 2
-            elif args[i] == 'clear':
+            elif args[i] == "clear":
                 self.edgematrix.clear()
-            elif args[i] == 'quit':
+            elif args[i] == "quit":
                 break
             else:
-                raise TypeError('Invalid command %s' % args[i])
+                raise TypeError("Invalid command %s" % args[i])
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
-    argparser.add_argument('file', help='The file to generate an image from')
+    argparser.add_argument("file", help="The file to generate an image from")
     args = argparser.parse_args()
 
     parser = Parser()

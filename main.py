@@ -7,7 +7,7 @@ from lib.parametric import Parametric
 
 import random
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     SIZE = 300;
     d = Drawing(SIZE, SIZE)
     d.draw_edgematrix(a, Color("#ff0000"))

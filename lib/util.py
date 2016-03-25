@@ -21,7 +21,7 @@ class Util():
     @staticmethod
     def get_common_values(p1, p2):
         if len(p1) != len(p2):
-            raise ValueError('Cannot compare %s and %s' % (p1, p2))
+            raise ValueError("Cannot compare %s and %s" % (p1, p2))
         equals = [p1[i] == p2[i] for i in range(len(p1))]
         return equals.count(True)
 

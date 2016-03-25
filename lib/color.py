@@ -41,7 +41,7 @@ class Color:
                 int(self[0] + other[0]) % 256,
                 int(self[1] + other[1]) % 256,
                 int(self[2] + other[2]) % 256])
-        raise ValueError('Cannot add %s to %s:' % (self, other))
+        raise ValueError("Cannot add %s to %s:" % (self, other))
 
     def __iadd__(self, other):
         self = self + other
@@ -68,7 +68,7 @@ class Color:
 
         http://stackoverflow.com/questions/214359/converting-hex-color-to-rgb-and-vice-versa
         """
-        hex_code = hex_code.lstrip('#')
+        hex_code = hex_code.lstrip("#")
         lv = len(hex_code)
         return [int(hex_code[i:i + lv // 3], 16) for i in range(0, lv, lv // 3)]
 
