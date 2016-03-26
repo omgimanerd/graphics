@@ -39,101 +39,126 @@ class Parser():
             commands = commands_file.read()
             commands = commands.strip().split("\n")
         i = 0
-        while i < len(commands):
-            if commands[i].startswith("#") or len(commands[i]) == 0:
-                i += 1
-            elif commands[i] == "dimensions":
-                params = map(int, commands[i + 1].split())
-                self.width = params[0]
-                self.height = params[1]
-                i += 2
-            elif commands[i] == "line":
-                params = map(int, commands[i + 1].split())
-                self.edgematrix.add_edge(params[:3], params[3:])
-                i += 2
-            elif commands[i] == "circle":
-                params = map(int, commands[i + 1].split())
-                self.edgematrix.combine(Generator.get_circle_edgematrix(
-                    params[0], params[1], params[2]))
-                i += 2
-            elif commands[i] == "hermite":
-                params = map(float, commands[i + 1].split())
-                self.edgematrix.combine(
-                    Generator.get_hermite_curve_edgematrix(
-                        params[0:2], params[2:4],
-                        params[4:6], params[6:8]))
-                i += 2
-            elif commands[i] == "bezier":
-                params = map(float, commands[i + 1].split())
-                self.edgematrix.combine(
-                    Generator.get_bezier_curve_edgematrix(
-                        params[0:2], params[2:4],
-                        params[4:6], params[6:8]))
-                i += 2
-            elif commands[i] == "box":
-                params = map(float, commands[i + 1].split())
-                pointmatrix = Generator.get_box_pointmatrix(
-                    params[0], params[1], params[2], params[3], params[4],
-                    params[5])
-                self.edgematrix.combine(EdgeMatrix.create_from_pointmatrix(
-                    pointmatrix))
-                i += 2
-            elif commands[i] == "sphere":
-                params = map(float, commands[i + 1].split())
-                pointmatrix = Generator.get_sphere_pointmatrix(
-                    params[0], params[1], params[2], params[3])
-                self.edgematrix.combine(EdgeMatrix.create_from_pointmatrix(
-                    pointmatrix))
-                i += 2
-            elif commands[i] == "torus":
-                params = map(float, commands[i + 1].split())
-                pointmatrix = Generator.get_torus_pointmatrix(
-                    params[0], params[1], params[2], params[3], params[4])
-                self.edgematrix.combine(EdgeMatrix.create_from_pointmatrix(
-                    pointmatrix))
-                i += 2
-            elif commands[i] == "ident":
-                self.transformation = TransformationMatrix.identity()
-                i += 1
-            elif commands[i] == "scale":
-                params = map(float, commands[i + 1].split())
-                self.transformation.scale(params[0], params[1], params[2])
-                i += 2
-            elif commands[i] == "translate":
-                params = map(int, commands[i + 1].split())
-                self.transformation.translate(params[0], params[1], params[2])
-                i += 2
-            elif commands[i] == "xrotate":
-                params = float(commands[i + 1])
-                self.transformation.rotate_x(params)
-                i += 2
-            elif commands[i] == "yrotate":
-                params = float(commands[i + 1])
-                self.transformation.rotate_y(params)
-                i += 2
-            elif commands[i] == "zrotate":
-                params = float(commands[i + 1])
-                self.transformation.rotate_z(params)
-                i += 2
-            elif commands[i] == "apply":
-                self.edgematrix *= self.transformation
-                i += 1
-            elif commands[i] == "display":
-                drawing = Drawing(self.width, self.height)
-                drawing.draw_edgematrix(self.edgematrix, self.color)
-                drawing.display()
-                i += 1
-            elif commands[i] == "save":
-                drawing = Drawing(self.width, self.height)
-                drawing.draw_edgematrix(self.edgematrix, self.color)
-                drawing.generate(commands[i + 1])
-                i += 2
-            elif commands[i] == "clear":
-                self.edgematrix.clear()
-            elif commands[i] == "quit":
-                break
-            else:
-                raise TypeError("Invalid command %s" % commands[i])
+        try:
+            while i < len(commands):
+                if commands[i].startswith("#") or len(commands[i]) == 0:
+                    i += 1
+                elif commands[i] == "dimensions":
+                    param_type = "width<number> height<number>"
+                    params = map(int, commands[i + 1].split())
+                    self.width = params[0]
+                    self.height = params[1]
+                    i += 2
+                elif commands[i] == "line":
+                    param_type = "x1<number> y1<number> z1<number> x2<number>" "y2<number> z2<number>"
+                    params = map(int, commands[i + 1].split())
+                    self.edgematrix.add_edge(params[:3], params[3:])
+                    i += 2
+                elif commands[i] == "circle":
+                    param_type = "center_x<number> center_y<number>"
+                    "radius<number>"
+                    params = map(int, commands[i + 1].split())
+                    self.edgematrix += Generator.get_circle_edgematrix(
+                        params[0], params[1], params[2])
+                    i += 2
+                elif commands[i] == "hermite":
+                    param_type = "x1<number> y1<number> rx1<number> "
+                    "ry1<number> x2<number> y2<number> rx2<number> rx2<number>"
+                    print params[6]
+                    params = map(float, commands[i + 1].split())
+                    self.edgematrix += Generator.get_hermite_curve_edgematrix(
+                        params[0:2], params[2:4], params[4:6], params[6:8])
+                    i += 2
+                elif commands[i] == "bezier":
+                    param_type = "x1<number> y1<number> ix1<number>"
+                    "iy1<number> x2<number> y2<number> ix2<number> iy2<number>"
+                    params = map(float, commands[i + 1].split())
+                    self.edgematrix += Generator.get_bezier_curve_edgematrix(
+                        params[0:2], params[2:4], params[4:6], params[6:8])
+                    i += 2
+                elif commands[i] == "box":
+                    param_type = "x<number> y<number> z<number> width<number"
+                    "height<number> depth<number>"
+                    params = map(float, commands[i + 1].split())
+                    pointmatrix = Generator.get_box_pointmatrix(
+                        params[0], params[1], params[2], params[3], params[4],
+                        params[5])
+                    self.edgematrix += EdgeMatrix.create_from_pointmatrix(
+                        pointmatrix)
+                    i += 2
+                elif commands[i] == "sphere":
+                    param_type = "center_x<number> center_y<number>"
+                    "center_z<number> radius<number>"
+                    params = map(float, commands[i + 1].split())
+                    pointmatrix = Generator.get_sphere_pointmatrix(
+                        params[0], params[1], params[2], params[3])
+                    self.edgematrix += EdgeMatrix.create_from_pointmatrix(
+                        pointmatrix)
+                    i += 2
+                elif commands[i] == "torus":
+                    param_type = "center_x<number> center_y<number>"
+                    "center_z<number> radius1<number> radius2<number>"
+                    params = map(float, commands[i + 1].split())
+                    pointmatrix = Generator.get_torus_pointmatrix(
+                        params[0], params[1], params[2], params[3], params[4])
+                    self.edgematrix += EdgeMatrix.create_from_pointmatrix(
+                        pointmatrix)
+                    i += 2
+                elif commands[i] == "ident":
+                    self.transformation = TransformationMatrix.identity()
+                    i += 1
+                elif commands[i] == "scale":
+                    param_type = "x<number> y<number> z<number>"
+                    params = map(float, commands[i + 1].split())
+                    self.transformation.scale(params[0], params[1], params[2])
+                    i += 2
+                elif commands[i] == "translate":
+                    param_type = "x<number> y<number> z<number>"
+                    params = map(int, commands[i + 1].split())
+                    self.transformation.translate(
+                        params[0], params[1], params[2])
+                    i += 2
+                elif commands[i] == "xrotate":
+                    param_type = "theta<number>"
+                    params = float(commands[i + 1])
+                    self.transformation.rotate_x(params)
+                    i += 2
+                elif commands[i] == "yrotate":
+                    param_type = "theta<number>"
+                    params = float(commands[i + 1])
+                    self.transformation.rotate_y(params)
+                    i += 2
+                elif commands[i] == "zrotate":
+                    param_type = "theta<number>"
+                    params = float(commands[i + 1])
+                    self.transformation.rotate_z(params)
+                    i += 2
+                elif commands[i] == "apply":
+                    self.edgematrix *= self.transformation
+                    i += 1
+                elif commands[i] == "display":
+                    drawing = Drawing(self.width, self.height)
+                    drawing.draw_edgematrix(self.edgematrix, self.color)
+                    drawing.display()
+                    i += 1
+                elif commands[i] == "save":
+                    param_type = "filename<string>"
+                    drawing = Drawing(self.width, self.height)
+                    drawing.draw_edgematrix(self.edgematrix, self.color)
+                    drawing.generate(commands[i + 1])
+                    i += 2
+                elif commands[i] == "clear":
+                    self.edgematrix.clear()
+                elif commands[i] == "quit":
+                    break
+                else:
+                    print "Syntax error at line %d: %s" % (i, commands[i])
+                    print "%s takes the parameters: %s" % (
+                        commands[i], param_type)
+                    break
+        except IndexError:
+            print "Invalid parameters %s for %s" % (params, commands[i])
+            print "%s takes the parameters:\n%s" % (commands[i], param_type)
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()

@@ -1,8 +1,8 @@
-# This script displays a sphere
+# This script displays a torus
 dimensions
 500 500
-sphere
-0 0 0 100
+torus
+0 0 0 25 120
 ident
 yrotate
 30

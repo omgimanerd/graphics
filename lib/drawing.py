@@ -230,7 +230,7 @@ class Drawing():
             center_x, center_y, center_z, radius, theta_step, phi_step), color)
 
     def draw_torus_points(self, center_x, center_y, center_z, radius1, radius2,
-                          color, theta_step=50, phi_step=50):
+                          color, theta_step=100, phi_step=100):
         """
         Generates a Matrix of points representing the points on the surface of
         a torus.

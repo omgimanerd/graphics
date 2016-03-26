@@ -196,7 +196,7 @@ class Generator():
 
     @staticmethod
     def get_torus_pointmatrix(center_x, center_y, center_z, radius1, radius2,
-                              theta_step=50, phi_step=50):
+                              theta_step=100, phi_step=100):
         """
         Generates a Matrix of points representing the points on the surface of
         a torus.
@@ -223,5 +223,5 @@ class Generator():
         phi_step_range = Generator.get_step_range(0, 2 * pi, phi_step)
         for theta in theta_step_range:
             for phi in phi_step_range:
-                matrix += parametric.get_point(theta, phi)
+                matrix += Matrix(parametric.get_point(theta, phi))
         return matrix

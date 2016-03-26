@@ -3,6 +3,8 @@
 # inputs that outputs 3-tuple coordinate.
 # Author: alvin.lin.dev@gmail.com (Alvin Lin)
 
+from matrix import Matrix
+
 class Parametric():
 
     def __init__(self, x_function, y_function, z_function):
@@ -53,16 +55,17 @@ class Parametric():
 
     def get_point(self, *args):
         """
-        Calculates and returns the point given some input values.
+        Calculates and returns the point as a Matrix given some input values.
 
         Parameters:
         *args, variable number of arguments to input into the x, y, and z
             equations
         """
-        return [
+        return Matrix([[
             self.x_function(*args),
             self.y_function(*args),
-            self.z_function(*args)]
+            self.z_function(*args),
+            1]])
 
 if __name__ == "__main__":
     p = Parametric.circle_parametric()
