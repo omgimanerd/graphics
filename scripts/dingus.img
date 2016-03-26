@@ -1,3 +1,10 @@
 # This script idek
 dimensions
 500 500
+sphere
+250 250 0 200
+ident
+yrotate_about_point
+30 250 250 0
+apply
+display

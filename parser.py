@@ -64,7 +64,6 @@ class Parser():
                 elif commands[i] == "hermite":
                     param_type = "x1<number> y1<number> rx1<number> "
                     "ry1<number> x2<number> y2<number> rx2<number> rx2<number>"
-                    print params[6]
                     params = map(float, commands[i + 1].split())
                     self.edgematrix += Generator.get_hermite_curve_edgematrix(
                         params[0:2], params[2:4], params[4:6], params[6:8])
@@ -131,15 +130,33 @@ class Parser():
                     params = float(commands[i + 1])
                     self.transformation.rotate_x(params)
                     i += 2
+                elif commands[i] == "xrotate_about_point":
+                    param_type = "theta<number> x<number> y<number> z<number>"
+                    params = map(int, commands[i + 1].split())
+                    self.transformation.rotate_x_about_point(
+                        params[0], params[1], params[2], params[3])
+                    i += 2
                 elif commands[i] == "yrotate":
                     param_type = "theta<number>"
                     params = float(commands[i + 1])
                     self.transformation.rotate_y(params)
                     i += 2
+                elif commands[i] == "yrotate_about_point":
+                    param_type = "theta<number> x<number> y<number> z<number>"
+                    params = map(int, commands[i + 1].split())
+                    self.transformation.rotate_y_about_point(
+                        params[0], params[1], params[2], params[3])
+                    i += 2
                 elif commands[i] == "zrotate":
                     param_type = "theta<number>"
                     params = float(commands[i + 1])
                     self.transformation.rotate_z(params)
+                    i += 2
+                elif commands[i] == "zrotate_about_point":
+                    param_type = "theta<number> x<number> y<number> z<number>"
+                    params = map(int, commands[i + 1].split())
+                    self.transformation.rotate_z_about_point(
+                        params[0], params[1], params[2], params[3])
                     i += 2
                 elif commands[i] == "apply":
                     self.edgematrix *= self.transformation

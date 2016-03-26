@@ -121,7 +121,6 @@ class Matrix():
 
     def __mul__(self, other):
         if isinstance(other, Matrix) and len(self) > 0 and len(other) > 0:
-            print self[0]
             if len(self[0]) == len(other.matrix):
                 result = [[0 for x in range(
                     len(other.matrix[0]))] for y in range(len(self.matrix))]
@@ -214,6 +213,24 @@ class TransformationMatrix(Matrix):
             [0, 0, 0, 1]])
         return self
 
+    def rotate_x_about_point(self, theta, x, y, z, radians=False):
+        """
+        Applies an x rotation about a point to this TransformationMatrix and
+        returns itself for method chaining.
+
+        Parameters:
+        theta: float or int, the amount in degrees to rotate by, if radians is
+            set to True, then this parameter is the amount of radians to rotate
+            by
+        x: int, the x coordinate of the point to rotate about
+        y: int, the y coordinate of the point to rotate about
+        z: int, the z coordinate of the point to rotate about
+        radians: bool (optional), set this to True if the parameter theta was
+            specified in radians
+        """
+        self.translate(-x, -y, -z).rotate_x(theta, radians).translate(x, y, z)
+        return self
+
     def rotate_y(self, theta, radians=False):
         """
         Applies an y rotation to this TransformationMatrix and returns itself
@@ -235,6 +252,24 @@ class TransformationMatrix(Matrix):
             [0, 0, 0, 1]])
         return self
 
+    def rotate_y_about_point(self, theta, x, y, z, radians=False):
+        """
+        Applies an y rotation about a point to this TransformationMatrix and
+        returns itself for method chaining.
+
+        Parameters:
+        theta: float or int, the amount in degrees to rotate by, if radians is
+            set to True, then this parameter is the amount of radians to rotate
+            by
+        x: int, the x coordinate of the point to rotate about
+        y: int, the y coordinate of the point to rotate about
+        z: int, the z coordinate of the point to rotate about
+        radians: bool (optional), set this to True if the parameter theta was
+            specified in radians
+        """
+        self.translate(-x, -y, -z).rotate_y(theta, radians).translate(x, y, z)
+        return self
+
     def rotate_z(self, theta, radians=False):
         """
         Applies an z rotation to this TransformationMatrix and returns itself
@@ -254,6 +289,24 @@ class TransformationMatrix(Matrix):
             [0, cos(theta), sin(theta), 0],
             [0, -sin(theta), cos(theta), 0],
             [0, 0, 0, 1]])
+        return self
+
+    def rotate_z_about_point(self, theta, x, y, z, radians=False):
+        """
+        Applies an z rotation about a point to this TransformationMatrix and
+        returns itself for method chaining.
+
+        Parameters:
+        theta: float or int, the amount in degrees to rotate by, if radians is
+            set to True, then this parameter is the amount of radians to rotate
+            by
+        x: int, the x coordinate of the point to rotate about
+        y: int, the y coordinate of the point to rotate about
+        z: int, the z coordinate of the point to rotate about
+        radians: bool (optional), set this to True if the parameter theta was
+            specified in radians
+        """
+        self.translate(-x, -y, -z).rotate_z(theta, radians).translate(x, y, z)
         return self
 
     def translate(self, x, y, z):
@@ -355,5 +408,3 @@ class EdgeMatrix(Matrix):
 
 if __name__ == "__main__":
     m = EdgeMatrix()
-    m.add_edge([0, 0], [1, 0, 1])
-    print m
