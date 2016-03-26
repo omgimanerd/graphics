@@ -1,0 +1,14 @@
+# This script displays a box
+dimensions
+500 500
+box_edge
+0 0 0 100 200 150
+ident
+xrotate
+30
+yrotate
+30
+translate
+250 150 0
+apply
+display

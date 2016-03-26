@@ -12,7 +12,7 @@ import argparse
 
 class Parser():
 
-    def __init__(self, width=512, height=512, color="FF0000"):
+    def __init__(self, width=512, height=512, color="#FF0000"):
         """
         Constructor for the Parser class
 
@@ -86,6 +86,14 @@ class Parser():
                     self.edgematrix += EdgeMatrix.create_from_pointmatrix(
                         pointmatrix)
                     i += 2
+                elif commands[i] == "box_edge":
+                    param_type = "x<number> y<number> z<number> width<number"
+                    "height<number> depth<number>"
+                    params = map(float, commands[i + 1].split())
+                    self.edgematrix += Generator.get_box_edgematrix(
+                        params[0], params[1], params[2], params[3], params[4],
+                        params[5])
+                    i += 2
                 elif commands[i] == "sphere":
                     param_type = "center_x<number> center_y<number>"
                     "center_z<number> radius<number>"
@@ -152,12 +160,11 @@ class Parser():
                 elif commands[i] == "quit":
                     break
                 else:
-                    print "Syntax error at line %d: %s" % (i, commands[i])
-                    print "%s takes the parameters: %s" % (
-                        commands[i], param_type)
+                    print "Invalid command at line %d: %s" % (i, commands[i])
                     break
-        except IndexError:
-            print "Invalid parameters %s for %s" % (params, commands[i])
+        except (IndexError, TypeError, ValueError):
+            print "Invalid parameters %s for %s" % (commands[i + 1],
+                                                    commands[i])
             print "%s takes the parameters:\n%s" % (commands[i], param_type)
 
 if __name__ == "__main__":
