@@ -61,11 +61,11 @@ class Parametric():
         *args, variable number of arguments to input into the x, y, and z
             equations
         """
-        return Matrix([[
+        return [
             self.x_function(*args),
             self.y_function(*args),
             self.z_function(*args),
-            1]])
+            1]
 
 if __name__ == "__main__":
     p = Parametric.circle_parametric()

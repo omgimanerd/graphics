@@ -191,7 +191,7 @@ class Generator():
         phi_step_range = Generator.get_step_range(0, pi, phi_step)
         for theta in theta_step_range:
             for phi in phi_step_range:
-                matrix += parametric.get_point(theta, phi)
+                matrix += Matrix([parametric.get_point(theta, phi)])
         return matrix
 
     @staticmethod
@@ -223,5 +223,5 @@ class Generator():
         phi_step_range = Generator.get_step_range(0, 2 * pi, phi_step)
         for theta in theta_step_range:
             for phi in phi_step_range:
-                matrix += Matrix(parametric.get_point(theta, phi))
+                matrix += Matrix([parametric.get_point(theta, phi)])
         return matrix

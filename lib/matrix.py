@@ -30,7 +30,7 @@ class Matrix():
             self.matrix = self._check_matrix(matrix)
 
     @staticmethod
-    def sanitize_point(point):
+    def _sanitize_point(point):
         """
         Sanitizes an input into a standard 4-tuple point.
 
@@ -38,7 +38,8 @@ class Matrix():
         point: list, the point to sanitize
         """
         if (len(point) > 4 or len(point) < 1) or (
-            len(point) == 4 and point[3] == 0):
+            len(point) == 4 and point[3] != 1) or (
+            not all([isinstance(x, (int, float)) for x in point])):
             raise ValueError("%s is not a valid point" % point)
         elif len(point) == 2:
             point += [0, 1]
@@ -53,11 +54,12 @@ class Matrix():
         Parameters:
         matrix: list, the list to check
         """
-        if len(matrix) == 0:
+        if len(matrix) == 0 or all([len(x) == 4 for x in matrix]):
             return matrix
-        if all([len(x) == 4 for x in matrix]):
-            return matrix
-        raise ValueError("%s is not a valid matrix representation" % matrix)
+        try:
+            return map(self._sanitize_point, matrix)
+        except ValueError:
+            raise ValueError("%s is not a valid matrix representation" % matrix)
 
     def _matrix(self):
         """
@@ -72,7 +74,7 @@ class Matrix():
         Parameters:
         point: list, the point to the add to this Matrix
         """
-        self.matrix += [Matrix.sanitize_point(point)]
+        self.matrix += [Matrix._sanitize_point(point)]
         return self
 
     def clear(self):
@@ -338,6 +340,10 @@ class TransformationMatrix(Matrix):
             [0, 0, 0, 1]])
         return self
 
+    def __add__(self, other):
+        raise NotImplementedError(
+            "You cannot call __add__ on a TransformationMatrix")
+
 
 class EdgeMatrix(Matrix):
 
@@ -391,9 +397,12 @@ class EdgeMatrix(Matrix):
         p2: list, a list representing the second endpoint of the line to add,
             can be in the form [x, y] or [x, y, z]
         """
-        self.matrix += [Matrix.sanitize_point(p1)]
-        self.matrix += [Matrix.sanitize_point(p2)]
+        self.matrix += [Matrix._sanitize_point(p1)]
+        self.matrix += [Matrix._sanitize_point(p2)]
         return self
+
+    def __add__(self, other):
+        raise NotImplementedError("You cannot call __add__() on an EdgeMatrix")
 
     def __iter__(self):
         return self

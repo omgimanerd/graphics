@@ -9,6 +9,7 @@ from lib.generator import Generator
 from lib.matrix import Matrix, TransformationMatrix, EdgeMatrix
 
 import argparse
+import sys
 
 class Parser():
 
@@ -50,34 +51,35 @@ class Parser():
                     self.height = params[1]
                     i += 2
                 elif commands[i] == "line":
-                    param_type = "x1<number> y1<number> z1<number> x2<number>" "y2<number> z2<number>"
+                    param_type = "x1<number> y1<number> z1<number>" + \
+                    "x2<number> y2<number> z2<number>"
                     params = map(int, commands[i + 1].split())
                     self.edgematrix.add_edge(params[:3], params[3:])
                     i += 2
                 elif commands[i] == "circle":
-                    param_type = "center_x<number> center_y<number>"
+                    param_type = "center_x<number> center_y<number>" + \
                     "radius<number>"
                     params = map(int, commands[i + 1].split())
                     self.edgematrix += Generator.get_circle_edgematrix(
                         params[0], params[1], params[2])
                     i += 2
                 elif commands[i] == "hermite":
-                    param_type = "x1<number> y1<number> rx1<number> "
-                    "ry1<number> x2<number> y2<number> rx2<number> rx2<number>"
+                    param_type = "x1<number> y1<number> rx1<number> " + \
+                    "ry1<number> x2<number> y2<number> rx2<number> ry2<number>"
                     params = map(float, commands[i + 1].split())
                     self.edgematrix += Generator.get_hermite_curve_edgematrix(
                         params[0:2], params[2:4], params[4:6], params[6:8])
                     i += 2
                 elif commands[i] == "bezier":
-                    param_type = "x1<number> y1<number> ix1<number>"
+                    param_type = "x1<number> y1<number> ix1<number>" + \
                     "iy1<number> x2<number> y2<number> ix2<number> iy2<number>"
                     params = map(float, commands[i + 1].split())
                     self.edgematrix += Generator.get_bezier_curve_edgematrix(
                         params[0:2], params[2:4], params[4:6], params[6:8])
                     i += 2
                 elif commands[i] == "box":
-                    param_type = "x<number> y<number> z<number> width<number"
-                    "height<number> depth<number>"
+                    param_type = "x<number> y<number> z<number>" + \
+                    "width<number height<number> depth<number>"
                     params = map(float, commands[i + 1].split())
                     pointmatrix = Generator.get_box_pointmatrix(
                         params[0], params[1], params[2], params[3], params[4],
@@ -86,15 +88,15 @@ class Parser():
                         pointmatrix)
                     i += 2
                 elif commands[i] == "box_edge":
-                    param_type = "x<number> y<number> z<number> width<number"
-                    "height<number> depth<number>"
+                    param_type = "x<number> y<number> z<number>" + \
+                    "width<number height<number> depth<number>"
                     params = map(float, commands[i + 1].split())
                     self.edgematrix += Generator.get_box_edgematrix(
                         params[0], params[1], params[2], params[3], params[4],
                         params[5])
                     i += 2
                 elif commands[i] == "sphere":
-                    param_type = "center_x<number> center_y<number>"
+                    param_type = "center_x<number> center_y<number>" + \
                     "center_z<number> radius<number>"
                     params = map(float, commands[i + 1].split())
                     pointmatrix = Generator.get_sphere_pointmatrix(
@@ -103,7 +105,7 @@ class Parser():
                         pointmatrix)
                     i += 2
                 elif commands[i] == "torus":
-                    param_type = "center_x<number> center_y<number>"
+                    param_type = "center_x<number> center_y<number>" + \
                     "center_z<number> radius1<number> radius2<number>"
                     params = map(float, commands[i + 1].split())
                     pointmatrix = Generator.get_torus_pointmatrix(
@@ -112,6 +114,7 @@ class Parser():
                         pointmatrix)
                     i += 2
                 elif commands[i] == "ident":
+                    param_type = "none"
                     self.transformation = TransformationMatrix.identity()
                     i += 1
                 elif commands[i] == "scale":
@@ -179,10 +182,11 @@ class Parser():
                 else:
                     print "Invalid command at line %d: %s" % (i, commands[i])
                     break
-        except (IndexError, TypeError, ValueError):
+        except (IndexError):
             print "Invalid parameters %s for %s" % (commands[i + 1],
                                                     commands[i])
             print "%s takes the parameters:\n%s" % (commands[i], param_type)
+            print sys.exc_info()[0]
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
