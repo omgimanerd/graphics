@@ -55,7 +55,7 @@ class Parametric():
 
     def get_point(self, *args):
         """
-        Calculates and returns the point as a Matrix given some input values.
+        Calculates and returns a point given some input values.
 
         Parameters:
         *args, variable number of arguments to input into the x, y, and z
@@ -68,5 +68,4 @@ class Parametric():
             1]
 
 if __name__ == "__main__":
-    p = Parametric.circle_parametric()
-    print p.get_point(1)
+    pass

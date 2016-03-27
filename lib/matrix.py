@@ -416,4 +416,4 @@ class EdgeMatrix(Matrix):
         return edge
 
 if __name__ == "__main__":
-    m = EdgeMatrix()
+    pass

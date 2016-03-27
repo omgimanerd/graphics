@@ -84,4 +84,4 @@ class Color:
         return color
 
 if __name__ == "__main__":
-    c = Color("#FFFC3F")
+    pass
