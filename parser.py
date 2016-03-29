@@ -177,14 +177,15 @@ class Parser():
                     i += 2
                 elif commands[i] == "clear":
                     self.edgematrix.clear()
+                    i += 1
                 elif commands[i] == "quit":
                     break
                 else:
                     print "Invalid command at line %d: %s" % (i, commands[i])
                     break
         except (IndexError):
-            print "Invalid parameters %s for %s" % (commands[i + 1],
-                                                    commands[i])
+            print "Invalid parameters %s for %s at line %d" % (
+                commands[i + 1], commands[i], i)
             print "%s takes the parameters:\n%s" % (commands[i], param_type)
             print sys.exc_info()[0]
 
