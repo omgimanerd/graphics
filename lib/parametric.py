@@ -65,7 +65,8 @@ class Parametric():
             self.x_function(*args),
             self.y_function(*args),
             self.z_function(*args),
-            1]
+            1
+        ]
 
 if __name__ == "__main__":
     pass

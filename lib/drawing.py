@@ -6,7 +6,7 @@
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
 
 from generator import Generator
-from matrix import Matrix, EdgeMatrix
+from matrix import Matrix, EdgeMatrix, PolygonMatrix
 from picture import Picture
 from util import Util
 
@@ -131,6 +131,27 @@ class Drawing():
         for edge in matrix.get_rounded():
             self.draw_line(
                 edge[0][0], edge[0][1], edge[1][0], edge[1][1], color)
+
+    def draw_polygonmatrix(self, matrix, color):
+        """
+        Draws the given PolygonMatrix onto the internal raster.
+
+        Parameters:
+        matrix: PolygonMatrix, the matrix of triangles to draw
+        color: Color, the color to draw the matrix with
+        """
+        if not isinstance(matrix, PolygonMatrix):
+            raise ValueError("%s is not a PolygonMatrix" % matrix)
+        for triangle in matrix.get_rounded():
+            self.draw_line(
+                triangle[0][0], triangle[0][1], triangle[1][0], triangle[1][1],
+                color)
+            self.draw_line(
+                triangle[1][0], triangle[1][1], triangle[2][0], triangle[2][1],
+                color)
+            self.draw_line(
+                triangle[2][0], triangle[2][1], triangle[0][0], triangle[0][1],
+                color)
 
     def draw_circle(self, center_x, center_y, radius, color, step=50):
         """

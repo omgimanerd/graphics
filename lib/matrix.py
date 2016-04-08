@@ -2,10 +2,8 @@
 # This class encapsulates matrixes for graphics programming. The Matrix class
 # handles the base arithmetic operations associated with matrices while the
 # TransformationMatrix class generates transformation matrices to be applied
-# to sets of points. The EdgeMatrix class is a bit special and must have an even
-# number of elements where every set of two elements represents an edge. when
-# iterated through, the elements are returned in sets of two since they are used
-# for drawing lines.
+# to sets of points. EdgeMatrix and PolygonMatrix are special subclasses of
+# the Matrix class that hold lines and polygons respectively.
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
 
 from util import Util
@@ -96,6 +94,8 @@ class Matrix():
             return TransformationMatrix(c)
         elif isinstance(self, EdgeMatrix):
             return EdgeMatrix(c)
+        elif isinstance(self, PolygonMatrix):
+            return PolygonMatrix(c)
         return Matrix(c)
 
     def __str__(self):
@@ -136,6 +136,8 @@ class Matrix():
                     return EdgeMatrix(result)
                 elif isinstance(self, TransformationMatrix):
                     return TransformationMatrix(result)
+                elif isinstance(self, PolygonMatrix):
+                    return PolygonMatrix(result)
                 return Matrix(result)
             raise ValueError(
                 "Matrices %s and %s cannot be multipled" % (self, other))
@@ -349,7 +351,7 @@ class EdgeMatrix(Matrix):
 
     def __init__(self, matrix=None):
         """
-        Constructor for the Matrix class.
+        Constructor for the EdgeMatrix class.
 
         Parameters:
         matrix, list (optional), a list of lists representing the internal state
@@ -413,6 +415,71 @@ class EdgeMatrix(Matrix):
             raise StopIteration
         edge = self.matrix[self.counter:self.counter + 2]
         self.counter += 2
+        return edge
+
+
+class PolygonMatrix(Matrix):
+
+    def __init__(self, matrix=None):
+        """
+        Constructor for the PolygonMatrix class.
+
+        Parameters:
+        matrix, list (optional), a list of lists representing the internal state
+            of a PolygonMatrix
+        """
+        Matrix.__init__(self, matrix)
+        self.counter = 0
+
+    def _check_matrix(self, matrix):
+        """
+        Checks if a given list is a valid representation of a PolygonMatrix.
+
+        Parameters:
+        matrix: list, the list to check
+        """
+        if len(matrix) % 3 != 0:
+            raise ValueError(
+                "The number of points in a PolygonMatrix must be a multiple" +
+                " of 3")
+        if not all([len(x) == 4 for x in matrix]):
+            raise ValueError(
+                "PolygonMatrix must be initialized with lists of length 4")
+        return matrix
+
+    def add_point(self, point):
+        raise NotImplementedError(
+            "You cannot call add_point() on a PolygonMatrix")
+
+    def add_polygon(self, p1, p2, p3):
+        """
+        Adds a triangle to this PolygonMatrix.
+
+        p1: list, a list representing the first corner to add, can
+            be in the form [x, y] or [x, y, z]
+        p2: list, a list representing the second corner to add, can
+            be in the form [x, y] or [x, y, z]
+        p3: list, a list representing the third corner to add, can
+            be in the form [x, y] or [x, y, z]
+        """
+        self.matrix += [Matrix._sanitize_point(p1)]
+        self.matrix += [Matrix._sanitize_point(p2)]
+        self.matrix += [Matrix._sanitize_point(p3)]
+        return self
+
+    def __add__(self, other):
+        raise NotImplementedError("You cannot call __add__() on a " +
+                                  "PolygonMatrix")
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self.counter > len(self) - 3:
+            self.counter = 0
+            raise StopIteration
+        edge = self.matrix[self.counter:self.counter + 3]
+        self.counter += 3
         return edge
 
 if __name__ == "__main__":

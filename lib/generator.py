@@ -3,7 +3,7 @@
 # Author: alvin.lin.dev@gmail.com (Alvin Lin)
 
 from parametric import Parametric
-from matrix import Matrix, EdgeMatrix
+from matrix import Matrix, EdgeMatrix, PolygonMatrix
 from util import Util
 
 from math import ceil, cos, sin, pi
@@ -21,8 +21,8 @@ class Generator():
         max: float, the maximum to generate to, inclusive
         step: float, the number of steps to break up the interval into
         """
-        increment = (max - min) / float(step)
-        return [x * increment + min for x in range(step + 1)]
+        increment = (max - min) / float(step - 1)
+        return [x * increment + min for x in range(step)]
 
     @staticmethod
     def get_polygon_edgematrix(center_x, center_y, radius, sides):
@@ -166,7 +166,7 @@ class Generator():
         return edgematrix
 
     @staticmethod
-    def get_sphere_pointmatrix(center_x, center_y, center_z, radius,
+    def get_sphere_polygonmatrix(center_x, center_y, center_z, radius,
                                theta_step=50, phi_step=50):
         """
         Generates a Matrix of points representing the points on the
@@ -186,16 +186,29 @@ class Generator():
         def y(theta, phi): return radius * sin(theta) * cos(phi) + center_y
         def z(theta, phi): return radius * sin(theta) * sin(phi) + center_z
         parametric = Parametric(x, y, z)
-        matrix = Matrix()
+        matrix = PolygonMatrix()
         theta_step_range = Generator.get_step_range(0, 2 * pi, theta_step)
         phi_step_range = Generator.get_step_range(0, pi, phi_step)
-        for theta in theta_step_range:
-            for phi in phi_step_range:
-                matrix += Matrix([parametric.get_point(theta, phi)])
+        for i in range(theta_step):
+            for j in range(phi_step):
+                p1 = parametric.get_point(
+                    theta_step_range[i],
+                    phi_step_range[j])
+                p2 = parametric.get_point(
+                    theta_step_range[(i + 1) % theta_step],
+                    phi_step_range[j])
+                p3 = parametric.get_point(
+                    theta_step_range[i],
+                    phi_step_range[(j + 1) % phi_step])
+                p4 = parametric.get_point(
+                    theta_step_range[(i + 1) % theta_step],
+                    phi_step_range[(j + 1) % phi_step])
+                matrix.add_polygon(p1, p2, p3)
+                matrix.add_polygon(p2, p3, p4)
         return matrix
 
     @staticmethod
-    def get_torus_pointmatrix(center_x, center_y, center_z, radius1, radius2,
+    def get_torus_polygonmatrix(center_x, center_y, center_z, radius1, radius2,
                               theta_step=100, phi_step=100):
         """
         Generates a Matrix of points representing the points on the surface of
@@ -218,10 +231,23 @@ class Generator():
         def z(theta, phi): return sin(phi) * (
             radius1 * sin(theta) + radius2) + center_z
         parametric = Parametric(x, y, z)
-        matrix = Matrix()
+        matrix = PolygonMatrix()
         theta_step_range = Generator.get_step_range(0, 2 * pi, theta_step)
         phi_step_range = Generator.get_step_range(0, 2 * pi, phi_step)
-        for theta in theta_step_range:
-            for phi in phi_step_range:
-                matrix += Matrix([parametric.get_point(theta, phi)])
+        for i in range(theta_step):
+            for j in range(phi_step):
+                p1 = parametric.get_point(
+                    theta_step_range[i],
+                    phi_step_range[j])
+                p2 = parametric.get_point(
+                    theta_step_range[(i + 1) % theta_step],
+                    phi_step_range[j])
+                p3 = parametric.get_point(
+                    theta_step_range[i],
+                    phi_step_range[(j + 1) % phi_step])
+                p4 = parametric.get_point(
+                    theta_step_range[(i + 1) % theta_step],
+                    phi_step_range[(j + 1) % phi_step])
+                matrix.add_polygon(p1, p2, p3)
+                matrix.add_polygon(p2, p3, p4)
         return matrix

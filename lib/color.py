@@ -29,6 +29,22 @@ class Color:
         """
         return Color([random.randint(0, 256) for x in range(3)])
 
+    @staticmethod
+    def _hex_to_rgb(hex_code):
+        """
+        Given the hexdecimal representation of a color, this returns the rgb
+        representation of the given color.
+
+        Parameters:
+        hex_code: str, the hex code to convert to rgb
+
+        http://stackoverflow.com/questions/214359/converting-hex-color-to-rgb-and-vice-versa
+        """
+        hex_code = hex_code.lstrip("#")
+        lv = len(hex_code)
+        return [
+            int(hex_code[i:i + lv // 3], 16) for i in range(0, lv, lv // 3)]
+
     def __iter__(self):
         return self
 
@@ -59,21 +75,6 @@ class Color:
         if index >= 0 and index <= 2:
             self.color[index] = value
         raise IndexError("Index out of range.")
-
-    @staticmethod
-    def _hex_to_rgb(hex_code):
-        """
-        Given the hexdecimal representation of a color, this returns the rgb
-        representation of the given color.
-
-        Parameters:
-        hex_code: str, the hex code to convert to rgb
-
-        http://stackoverflow.com/questions/214359/converting-hex-color-to-rgb-and-vice-versa
-        """
-        hex_code = hex_code.lstrip("#")
-        lv = len(hex_code)
-        return [int(hex_code[i:i + lv // 3], 16) for i in range(0, lv, lv // 3)]
 
     def next(self):
         if self.counter == 3:
