@@ -65,6 +65,15 @@ class Generator():
 
     @staticmethod
     def get_hermite_function(a, b, c, d):
+        """
+        Generates a function used for determining the points on a hermite curve.
+
+        Parameters:
+        a: int or float, the a coefficient of the equation
+        b: int or float, the b coefficient of the equation
+        c: int or float, the c coefficient of the equation
+        d: int or float, the d coefficient of the equation
+        """
         def hermite_function(t): return (a * (t ** 3)) + (b * (t ** 2)) + (
             c * t) + d
         return hermite_function
@@ -82,10 +91,10 @@ class Generator():
         """
         points = Matrix([p1, p2, r1, r2])
         inverse = Matrix([
-        [2, -2, 1, 1],
-        [-3, 3, -2, -1],
-        [0, 0, 1, 0],
-        [1, 0, 0, 0]])
+            [2, -2, 1, 1],
+            [-3, 3, -2, -1],
+            [0, 0, 1, 0],
+            [1, 0, 0, 0]])
         c = inverse * points
         def x(t): return Generator.get_hermite_function(
             c[0][0], c[1][0], c[2][0], c[3][0])(t)
@@ -102,6 +111,15 @@ class Generator():
 
     @staticmethod
     def get_bezier_function(a, b, c, d):
+        """
+        Generates a function used for determining the points on a bezier curve.
+
+        Parameters:
+        a: int or float, the a coefficient of the equation
+        b: int or float, the b coefficient of the equation
+        c: int or float, the c coefficient of the equation
+        d: int or float, the d coefficient of the equation
+        """
         def bezier_function(t):
             return (a * ((1 - t) ** 3)) + (3 * b * ((1 - t) ** 2) * t) + (
                 3 * c * (1 - t) * (t ** 2)) + (d * (t ** 3))
@@ -135,6 +153,13 @@ class Generator():
     def get_box_pointmatrix(x, y, z, width, height, depth):
         """
         Generates a Matrix of points representing the vertices of a box.
+           7-------6
+          /|      /|
+         / |     / |
+        3--|----2  |
+        |  4----|--5
+        | /     | /
+        0-------1
 
         Parameters:
         x: int, the x coordinate of the front left bottom of the box
@@ -147,30 +172,83 @@ class Generator():
         return Matrix([
             [x, y, z, 1],
             [x + width, y, z, 1],
+            [x + width, y + height, z, 1],
             [x, y + height, z, 1],
             [x, y, z + depth, 1],
-            [x + width, y + height, z, 1],
             [x + width, y, z + depth, 1],
-            [x, y + height, z + depth, 1],
-            [x + width, y + height, z + depth, 1]])
+            [x + width, y + height, z + depth, 1],
+            [x, y + height, z + depth, 1]])
 
     @staticmethod
-    def get_box_edgematrix(x, y, z, width, height, depth):
-        edgematrix = EdgeMatrix()
+    def get_box_polygonmatrix(x, y, z, width, height, depth):
+        """
+        Generates a PolygonMatrix representing the mesh surface of a box.
+
+        Parameters:
+        x: int, the x coordinate of the front left bottom of the box
+        y: int, the y coordinate of the front left bottom of the box
+        z: int, the z coordinate of the front left bottom of the box
+        width: int, the width of the box
+        height: int, the height of the box
+        depth: int, the depth of the box
+        """
         pointmatrix = Generator.get_box_pointmatrix(
             x, y, z, width, height, depth)
-        for i in range(len(pointmatrix) - 1):
-            for point in pointmatrix[i + 1:]:
-                if Util.count_common_values(pointmatrix[i], point) == 3:
-                    edgematrix.add_edge(pointmatrix[i], point)
-        return edgematrix
+        return PolygonMatrix([
+            # Front
+            pointmatrix[3], pointmatrix[1], pointmatrix[0],
+            pointmatrix[3], pointmatrix[2], pointmatrix[1],
+            # Right
+            pointmatrix[2], pointmatrix[5], pointmatrix[1],
+            pointmatrix[2], pointmatrix[6], pointmatrix[5],
+            # Back
+            pointmatrix[6], pointmatrix[4], pointmatrix[5],
+            pointmatrix[6], pointmatrix[7], pointmatrix[4],
+            # Left
+            pointmatrix[7], pointmatrix[0], pointmatrix[4],
+            pointmatrix[7], pointmatrix[3], pointmatrix[0],
+            # Top
+            pointmatrix[7], pointmatrix[2], pointmatrix[3],
+            pointmatrix[7], pointmatrix[6], pointmatrix[2],
+            # Bottom
+            pointmatrix[0], pointmatrix[5], pointmatrix[4],
+            pointmatrix[0], pointmatrix[1], pointmatrix[5]
+        ])
+
+    @staticmethod
+    def get_sphere_pointmatrix(center_x, center_y, center_z, radius,
+                               theta_step=50, phi_step=50):
+        """
+        Generates a Matrix of points representing the points on the
+        surface of a sphere.
+
+        Parameters:
+        center_x: int, the x coordinate of the center of the sphere
+        center_y: int, the y coordinate of the center of the sphere
+        center_z: int, the z coordinate of the center of the sphere
+        radius: int, the radius of the sphere
+        theta_step: int (optional), the number of steps to use when drawing the
+            circles
+        phi_step: int(optional), the number of steps to use when rotating the
+            circles about the center point
+        """
+        def x(theta, phi): return radius * cos(theta) + center_x
+        def y(theta, phi): return radius * sin(theta) * cos(phi) + center_y
+        def z(theta, phi): return radius * sin(theta) * sin(phi) + center_z
+        parametric = Parametric(x, y, z)
+        matrix = Matrix()
+        theta_step_range = Generator.get_step_range(0, 2 * pi, theta_step)
+        phi_step_range = Generator.get_step_range(0, pi, phi_step)
+        for i in theta_step_range:
+            for j in phi_step_range:
+                matrix += Matrix([parametric.get_point(i, j)])
+        return matrix
 
     @staticmethod
     def get_sphere_polygonmatrix(center_x, center_y, center_z, radius,
                                theta_step=50, phi_step=50):
         """
-        Generates a Matrix of points representing the points on the
-        surface of a sphere.
+        Generates a PolygonMatrix representing the mesh surface of a sphere.
 
         Parameters:
         center_x: int, the x coordinate of the center of the sphere
@@ -205,6 +283,37 @@ class Generator():
                     phi_step_range[(j + 1) % phi_step])
                 matrix.add_polygon(p1, p2, p3)
                 matrix.add_polygon(p2, p3, p4)
+        return matrix
+
+    @staticmethod
+    def get_torus_pointmatrix(center_x, center_y, center_z, radius1, radius2,
+                              theta_step=100, phi_step=100):
+        """
+        Generates a PolygonMatrix representing the mesh surface of a torus.
+
+        Parameters:
+        center_x: int, the x coordinate of the center of the sphere
+        center_y: int, the y coordinate of the center of the sphere
+        center_z: int, the z coordinate of the center of the sphere
+        radius1: int, the radius of the circle being revolved to make the torus
+        radius2: int, the radius of the torus itself
+        theta_step: int (optional), the number of steps to use when drawing the
+            circle that is revolved to make the torus
+        phi_step: int(optional), the number of steps to use when rotating the
+            circles about the center point
+        """
+        def x(theta, phi): return radius1 * cos(theta) + center_x
+        def y(theta, phi): return cos(phi) * (
+            radius1 * sin(theta) + radius2) + center_y
+        def z(theta, phi): return sin(phi) * (
+            radius1 * sin(theta) + radius2) + center_z
+        parametric = Parametric(x, y, z)
+        matrix = Matrix()
+        theta_step_range = Generator.get_step_range(0, 2 * pi, theta_step)
+        phi_step_range = Generator.get_step_range(0, 2 * pi, phi_step)
+        for i in theta_step_range:
+            for j in phi_step_range:
+                matrix += Matrix([parametric.get_point(i, j)])
         return matrix
 
     @staticmethod
