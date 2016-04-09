@@ -7,6 +7,7 @@
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
 
 from util import Util
+from vector import Vector
 
 from copy import deepcopy
 from math import pi, sin, cos
@@ -481,6 +482,28 @@ class PolygonMatrix(Matrix):
         edge = self.matrix[self.counter:self.counter + 3]
         self.counter += 3
         return edge
+
+    def cull_backfaces(self, view_vector):
+        if not isinstance(view_vector, Vector):
+            raise TypeError("%s is not valid view Vector" % view_vector)
+        culled_polygonmatrix = PolygonMatrix()
+        for polygon in self:
+            v1 = Vector([
+                polygon[2][0] - polygon[0][0],
+                polygon[2][1] - polygon[0][1],
+                polygon[2][2] - polygon[0][2]
+            ])
+            v2 = Vector([
+                polygon[1][0] - polygon[0][0],
+                polygon[1][1] - polygon[0][1],
+                polygon[1][2] - polygon[0][2]
+            ])
+            normal = Vector.cross(v1, v2)
+            theta = Vector.get_angle_between(normal, view_vector)
+            if Util.in_bound(theta, pi / 2, 3 * pi / 2):
+                culled_polygonmatrix.add_polygon(
+                    polygon[0], polygon[1], polygon[2])
+        return culled_polygonmatrix
 
 if __name__ == "__main__":
     pass

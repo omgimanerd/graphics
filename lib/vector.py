@@ -48,7 +48,7 @@ class Vector():
         raise TypeError("%s or %s cannot be crossed" % (v1, v2))
 
     @staticmethod
-    def angleBetween(v1, v2):
+    def get_angle_between(v1, v2):
         return acos(Vector.dot(v1, v2) / (v1.mag() * v2.mag()))
 
     def __str__(self):
@@ -86,4 +86,3 @@ if __name__ == "__main__":
     print a.magSquared()
     print a.mag()
     print Vector.dot(a, b)
-    print Vector.angleBetween(a, b)

@@ -2,7 +2,7 @@
 # This class holds static methods for generating matrices of objects.
 # Author: alvin.lin.dev@gmail.com (Alvin Lin)
 
-from decorators import *
+from decorators import accepts
 from parametric import Parametric
 from matrix import Matrix, EdgeMatrix, PolygonMatrix
 from util import Util
