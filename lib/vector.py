@@ -3,6 +3,8 @@
 # in the graphics engine.
 # Author: alvin.lin.dev@gmail.com (Alvin Lin)
 
+from math import acos, sqrt
+
 class Vector():
 
     def __init__(self, vector=None):
@@ -24,10 +26,30 @@ class Vector():
         Parameters:
         vector: list, the vector to sanitize.
         """
-        if not isinstance(vector, list) or len(list) < 3:
+        if not isinstance(vector, list) or len(vector) < 3:
             raise TypeError("%s is not a valid Vector representation" % vector)
         else:
             return vector[:3]
+
+    @staticmethod
+    def dot(v1, v2):
+        if isinstance(v1, Vector) and isinstance(v2, Vector):
+            return sum([v1[i] * v2[i] for i in range(3)])
+        raise TypeError("%s or %s cannot be dotted" % (v1, v2))
+
+    @staticmethod
+    def cross(v1, v2):
+        if isinstance(v1, Vector) and isinstance(v2, Vector):
+            return Vector([
+                v1[1] * v2[2] - v1[2] * v2[1],
+                v1[2] * v2[0] - v1[0] * v2[2],
+                v1[0] * v2[1] - v1[1] * v2[0]
+            ])
+        raise TypeError("%s or %s cannot be crossed" % (v1, v2))
+
+    @staticmethod
+    def angleBetween(v1, v2):
+        return acos(Vector.dot(v1, v2) / (v1.mag() * v2.mag()))
 
     def __str__(self):
         return str(self.vector)
@@ -36,20 +58,32 @@ class Vector():
         if isinstance(other, Vector):
             return Vector([self.vector[0] + other.vector[0],
                            self.vector[1] + other.vector[1],
-                           self.vector[2] + other.vector[2]]
+                           self.vector[2] + other.vector[2]])
         raise TypeError("%s is not a Vector" % other)
 
     def __iadd__(self, other):
         if isinstance(other, Vector):
             for i in range(3):
-                self.vector[i] += other.vector[i]
+                self[i] += other[i]
             return self
         raise TypeError("%s is not a Vector" % other)
 
-    def dot(self, other):
-        return sum([self.vector[i] + other.vector[i] for i in range(3)])
+    def __getitem__(self, index):
+        return self.vector[index]
 
-    def cross(self, other):
-        pass
+    def __setitem__(self, index, value):
+        self.vector[index] = value
 
-    
+    def magSquared(self):
+        return sum([self[i] * self[i] for i in range(3)])
+
+    def mag(self):
+        return sqrt(self.magSquared())
+
+if __name__ == "__main__":
+    a = Vector([3, 4, 0])
+    b = Vector([5, 12, 0])
+    print a.magSquared()
+    print a.mag()
+    print Vector.dot(a, b)
+    print Vector.angleBetween(a, b)
