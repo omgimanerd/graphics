@@ -114,7 +114,7 @@ class Drawing():
         color: Color, the color to draw the matrix with
         """
         if not isinstance(matrix, Matrix):
-            raise ValueError("%s is not a Matrix" % matrix)
+            raise TypeError("%s is not a Matrix" % matrix)
         for point in matrix.get_rounded():
             self.draw_point(point[0], point[1], color)
 
@@ -127,7 +127,7 @@ class Drawing():
         color: Color, the color to draw the matrix with
         """
         if not isinstance(matrix, EdgeMatrix):
-            raise ValueError("%s is not an EdgeMatrix" % matrix)
+            raise TypeError("%s is not an EdgeMatrix" % matrix)
         for edge in matrix.get_rounded():
             self.draw_line(
                 edge[0][0], edge[0][1], edge[1][0], edge[1][1], color)
@@ -141,7 +141,7 @@ class Drawing():
         color: Color, the color to draw the matrix with
         """
         if not isinstance(matrix, PolygonMatrix):
-            raise ValueError("%s is not a PolygonMatrix" % matrix)
+            raise TypeError("%s is not a PolygonMatrix" % matrix)
         for triangle in matrix.get_rounded():
             self.draw_line(
                 triangle[0][0], triangle[0][1], triangle[1][0], triangle[1][1],

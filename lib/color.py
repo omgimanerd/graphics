@@ -19,7 +19,7 @@ class Color:
         elif type(color) is str:
             self.color = self._hex_to_rgb(color)
         else:
-            raise ValueError(
+            raise TypeError(
                 "Invalid color, only hex or a list of RGB values are allowed.")
 
     @staticmethod
@@ -60,7 +60,7 @@ class Color:
                 int(self[0] + other[0]) % 256,
                 int(self[1] + other[1]) % 256,
                 int(self[2] + other[2]) % 256])
-        raise ValueError("Cannot add %s to %s:" % (self, other))
+        raise TypeError("Cannot add %s to %s:" % (self, other))
 
     def __iadd__(self, other):
         self = self + other

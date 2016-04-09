@@ -28,7 +28,7 @@ class Parametric():
         x_function, function, the function that determines the x coordinate
         """
         if not hasattr(x_function, "__call__"):
-            raise ValueError("%s is not a function" % x_function)
+            raise TypeError("%s is not a function" % x_function)
         self.x_function = x_function
 
     def set_y_function(self, y_function):
@@ -39,7 +39,7 @@ class Parametric():
         y_function, function, the function that determines the y coordinate
         """
         if (not hasattr(y_function, "__call__")):
-            raise ValueError("%s is not a function" % y_function)
+            raise TypeError("%s is not a function" % y_function)
         self.y_function = y_function
 
     def set_z_function(self, z_function):
@@ -50,7 +50,7 @@ class Parametric():
         z_function, function, the function that determines the z coordinate
         """
         if (not hasattr(z_function, "__call__")):
-            raise ValueError("%s is not a function" % z_function)
+            raise TypeError("%s is not a function" % z_function)
         self.z_function = z_function
 
     def get_point(self, *args):

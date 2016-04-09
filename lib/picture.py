@@ -40,7 +40,7 @@ class Picture():
         if Util.in_bound(x, 0, self.height) and Util.in_bound(y, 0, self.width):
             self.grid[x][y] = color
         elif not suppress_error:
-            raise ValueError("Invalid coordinate %d %d." % (x, y))
+            raise TypeError("Invalid coordinate %d %d." % (x, y))
 
     def map(self, function, section=None):
         """

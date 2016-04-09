@@ -38,7 +38,7 @@ class Matrix():
         if (len(point) > 4 or len(point) < 1) or (
             len(point) == 4 and point[3] != 1) or (
             not all([isinstance(x, (int, float)) for x in point])):
-            raise ValueError("%s is not a valid point" % point)
+            raise TypeError("%s is not a valid point" % point)
         elif len(point) == 2:
             point += [0, 1]
         elif len(point) == 3:
@@ -56,8 +56,8 @@ class Matrix():
             return matrix
         try:
             return map(self._sanitize_point, matrix)
-        except ValueError:
-            raise ValueError("%s is not a valid matrix representation" % matrix)
+        except TypeError:
+            raise TypeError("%s is not a valid matrix representation" % matrix)
 
     def _matrix(self):
         """
@@ -119,7 +119,7 @@ class Matrix():
     def __add__(self, other):
         if isinstance(other, Matrix):
             return Matrix(self.matrix + other.matrix)
-        raise ValueError("Cannot add %s to %s" % (self, other))
+        raise TypeError("Cannot add %s to %s" % (self, other))
 
     def __mul__(self, other):
         if isinstance(other, Matrix) and len(self) > 0 and len(other) > 0:
@@ -139,7 +139,7 @@ class Matrix():
                 elif isinstance(self, PolygonMatrix):
                     return PolygonMatrix(result)
                 return Matrix(result)
-            raise ValueError(
+            raise TypeError(
                 "Matrices %s and %s cannot be multipled" % (self, other))
         raise TypeError("Cannot multiply %s and %s" % (other, self))
 
@@ -147,7 +147,7 @@ class Matrix():
         if isinstance(other, Matrix):
             self.matrix += other.matrix
             return self
-        raise ValueError("Cannot add %s to %s" % (self, other))
+        raise TypeError("Cannot add %s to %s" % (self, other))
 
     def __imul__(self, other):
         if isinstance(other, Matrix) and len(self) > 0 and len(other) > 0:
@@ -162,7 +162,7 @@ class Matrix():
                         result[i][j] = result_row
                 self.matrix = result
                 return self
-            raise ValueError(
+            raise TypeError(
                 "Matrices %s and %s cannot be multipled" % (self, other))
         raise TypeError("Cannot multiply %s and %s" % (other, self))
 
@@ -190,7 +190,7 @@ class TransformationMatrix(Matrix):
         """
         if all([len(x) == 4 for x in matrix]) and len(matrix) == 4:
             return matrix
-        raise ValueError("Invalid matrix: %s" % matrix)
+        raise TypeError("Invalid matrix: %s" % matrix)
 
     def add_point(self, point):
         raise NotImplementedError(
@@ -379,10 +379,10 @@ class EdgeMatrix(Matrix):
         matrix: list, the list to check
         """
         if len(matrix) % 2 != 0:
-            raise ValueError(
+            raise TypeError(
                 "EdgeMatrix must be initialized with an even number of points")
         if not all([len(x) == 4 for x in matrix]):
-            raise ValueError(
+            raise TypeError(
                 "EdgeMatrix must be initialized with point lists of length 4")
         return matrix
 
@@ -439,11 +439,11 @@ class PolygonMatrix(Matrix):
         matrix: list, the list to check
         """
         if len(matrix) % 3 != 0:
-            raise ValueError(
+            raise TypeError(
                 "The number of points in a PolygonMatrix must be a multiple" +
                 " of 3")
         if not all([len(x) == 4 for x in matrix]):
-            raise ValueError(
+            raise TypeError(
                 "PolygonMatrix must be initialized with lists of length 4")
         return matrix
 
