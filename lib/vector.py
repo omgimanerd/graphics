@@ -45,3 +45,11 @@ class Vector():
                 self.vector[i] += other.vector[i]
             return self
         raise TypeError("%s is not a Vector" % other)
+
+    def dot(self, other):
+        return sum([self.vector[i] + other.vector[i] for i in range(3)])
+
+    def cross(self, other):
+        pass
+
+    

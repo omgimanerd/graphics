@@ -2,6 +2,7 @@
 # This class holds static methods for generating matrices of objects.
 # Author: alvin.lin.dev@gmail.com (Alvin Lin)
 
+from decorators import *
 from parametric import Parametric
 from matrix import Matrix, EdgeMatrix, PolygonMatrix
 from util import Util
@@ -11,20 +12,22 @@ from math import ceil, cos, sin, pi
 class Generator():
 
     @staticmethod
+    @accepts((int, float), (int, float), int)
     def get_step_range(min, max, step):
         """
         Generates a list of floats for iterating through when generating
         splines.
 
         Parameters:
-        min: float, the minimum to generate from, inclusive
-        max: float, the maximum to generate to, inclusive
-        step: float, the number of steps to break up the interval into
+        min: int or float, the minimum to generate from, inclusive
+        max: int or float, the maximum to generate to, inclusive
+        step: int, the number of steps to break up the interval into
         """
         increment = (max - min) / float(step - 1)
         return [x * increment + min for x in range(step)]
 
     @staticmethod
+    @accepts(int, int, int, int)
     def get_polygon_edgematrix(center_x, center_y, radius, sides):
         """
         Generates an EdgeMatrix of lines representing a regular polygon
@@ -64,6 +67,7 @@ class Generator():
             center_x, center_y, radius, step)
 
     @staticmethod
+    @accepts((int, float), (int, float), (int, float), (int, float))
     def get_hermite_function(a, b, c, d):
         """
         Generates a function used for determining the points on a hermite curve.
@@ -88,6 +92,8 @@ class Generator():
         r1: list, the rate of change at p1
         p2: list, the second point of the hermite curve
         r2: list, the rate of change at p2
+        step: int (optional), the number of steps to use when drawing splines
+            for the hermite curve
         """
         points = Matrix([p1, p2, r1, r2])
         inverse = Matrix([
@@ -110,6 +116,7 @@ class Generator():
         return edgematrix
 
     @staticmethod
+    @accepts((int, float), (int, float), (int, float), (int, float))
     def get_bezier_function(a, b, c, d):
         """
         Generates a function used for determining the points on a bezier curve.
@@ -135,6 +142,8 @@ class Generator():
         i1: list, the first influence point of the bezier curve
         i2: list, the second influence point of the bezier curve
         p2: list, the second endpoint of the bezier curve
+        step: int (optional), the number of steps to use when drawing splines
+            for the hermite curve
         """
         def x(t): return Generator.get_bezier_function(
             p1[0], i1[0], i2[0], p2[0])(t)
@@ -150,6 +159,7 @@ class Generator():
         return edgematrix
 
     @staticmethod
+    @accepts(int, int, int, int, int, int)
     def get_box_pointmatrix(x, y, z, width, height, depth):
         """
         Generates a Matrix of points representing the vertices of a box.
@@ -180,6 +190,7 @@ class Generator():
             [x, y + height, z + depth, 1]])
 
     @staticmethod
+    @accepts(int, int, int, int, int, int)
     def get_box_polygonmatrix(x, y, z, width, height, depth):
         """
         Generates a PolygonMatrix representing the mesh surface of a box.
@@ -265,24 +276,15 @@ class Generator():
         def z(theta, phi): return radius * sin(theta) * sin(phi) + center_z
         parametric = Parametric(x, y, z)
         matrix = PolygonMatrix()
-        theta_step_range = Generator.get_step_range(0, 2 * pi, theta_step)
-        phi_step_range = Generator.get_step_range(0, pi, phi_step)
-        for i in range(theta_step):
-            for j in range(phi_step):
-                p1 = parametric.get_point(
-                    theta_step_range[i],
-                    phi_step_range[j])
-                p2 = parametric.get_point(
-                    theta_step_range[(i + 1) % theta_step],
-                    phi_step_range[j])
-                p3 = parametric.get_point(
-                    theta_step_range[i],
-                    phi_step_range[(j + 1) % phi_step])
-                p4 = parametric.get_point(
-                    theta_step_range[(i + 1) % theta_step],
-                    phi_step_range[(j + 1) % phi_step])
-                matrix.add_polygon(p1, p2, p3)
-                matrix.add_polygon(p2, p3, p4)
+        points = Generator.get_sphere_pointmatrix(center_x, center_y, center_z,
+                                                  radius, theta_step, phi_step)
+        for i in range(len(points) - phi_step - 1):
+            matrix.add_polygon(points[i],
+                               points[i + phi_step + 1],
+                               points[i + phi_step])
+            matrix.add_polygon(points[i],
+                               points[i + 1],
+                               points[i + phi_step + 1])
         return matrix
 
     @staticmethod
@@ -318,7 +320,7 @@ class Generator():
 
     @staticmethod
     def get_torus_polygonmatrix(center_x, center_y, center_z, radius1, radius2,
-                              theta_step=100, phi_step=100):
+                                theta_step=100, phi_step=100):
         """
         Generates a Matrix of points representing the points on the surface of
         a torus.
@@ -341,22 +343,14 @@ class Generator():
             radius1 * sin(theta) + radius2) + center_z
         parametric = Parametric(x, y, z)
         matrix = PolygonMatrix()
-        theta_step_range = Generator.get_step_range(0, 2 * pi, theta_step)
-        phi_step_range = Generator.get_step_range(0, 2 * pi, phi_step)
-        for i in range(theta_step):
-            for j in range(phi_step):
-                p1 = parametric.get_point(
-                    theta_step_range[i],
-                    phi_step_range[j])
-                p2 = parametric.get_point(
-                    theta_step_range[(i + 1) % theta_step],
-                    phi_step_range[j])
-                p3 = parametric.get_point(
-                    theta_step_range[i],
-                    phi_step_range[(j + 1) % phi_step])
-                p4 = parametric.get_point(
-                    theta_step_range[(i + 1) % theta_step],
-                    phi_step_range[(j + 1) % phi_step])
-                matrix.add_polygon(p1, p2, p3)
-                matrix.add_polygon(p2, p3, p4)
+        points = Generator.get_torus_pointmatrix(center_x, center_y, center_z,
+                                                 radius1, radius2,
+                                                 theta_step, phi_step)
+        for i in range(len(points) - phi_step - 1):
+            matrix.add_polygon(points[i],
+                               points[i + phi_step + 1],
+                               points[i + phi_step])
+            matrix.add_polygon(points[i],
+                               points[i + 1],
+                               points[i + phi_step + 1])
         return matrix

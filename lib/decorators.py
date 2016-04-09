@@ -4,6 +4,7 @@
 # Author: alvin.lin.dev@gmail.com (Alvin Lin)
 
 from functools import wraps
+from time import time
 
 def accepts(*arg_types):
     """
@@ -52,8 +53,11 @@ def accepts(*arg_types):
 def debug(fn):
     @wraps(fn)
     def wrapped_fn(*args, **kwargs):
+        start_time = time()
         print "%s%s" % (fn.func_name, args)
-        return fn(*args, **kwargs)
+        result = fn(*args, **kwargs)
+        print "Runtime: %s" % (time() - start_time)
+        return result
     return wrapped_fn
 
 
