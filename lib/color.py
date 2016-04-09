@@ -13,7 +13,6 @@ class Color:
         Parameters:
         color: str or list, the hexadecimal or rgb representation of the color
         """
-        self.counter = 0
         if type(color) is list and len(color) == 3:
             self.color = color
         elif type(color) is str:
@@ -46,7 +45,8 @@ class Color:
             int(hex_code[i:i + lv // 3], 16) for i in range(0, lv, lv // 3)]
 
     def __iter__(self):
-        return self
+        for c in self.color:
+            yield c
 
     def __str__(self):
         return str(self.color)
@@ -76,13 +76,8 @@ class Color:
             self.color[index] = value
         raise IndexError("Index out of range.")
 
-    def next(self):
-        if self.counter == 3:
-            self.counter = 0
-            raise StopIteration
-        color = self.color[self.counter]
-        self.counter += 1
-        return color
-
 if __name__ == "__main__":
-    pass
+    a = Color("FF0000")
+    print a
+    for c in a:
+        print c
