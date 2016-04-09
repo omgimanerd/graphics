@@ -2,13 +2,10 @@
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
 # This is a class that manages colors for the Picture and Drawing class.
 
-from decorators import accepts
-
 import random
 
 class Color:
 
-    @accepts(object, (list, str))
     def __init__(self, color):
         """
         Constructor for the Color class.
@@ -33,7 +30,6 @@ class Color:
         return Color([random.randint(0, 256) for x in range(3)])
 
     @staticmethod
-    @accepts(str)
     def _hex_to_rgb(hex_code):
         """
         Given the hexdecimal representation of a color, this returns the rgb
@@ -58,7 +54,6 @@ class Color:
     def __len__(self):
         return len(self.color)
 
-    @accepts(object, object)
     def __add__(self, other):
         if isinstance(other, (list, Color)) and len(other) == 3:
             return Color([
@@ -67,18 +62,15 @@ class Color:
                 int(self[2] + other[2]) % 256])
         raise TypeError("Cannot add %s to %s:" % (self, other))
 
-    @accepts(object, object)
     def __iadd__(self, other):
         self = self + other
         return self
 
-    @accepts(object, int)
     def __getitem__(self, index):
         if index >= 0 and index <= 2:
             return self.color[index]
         raise IndexError("Index out of range.")
 
-    @accepts(object, int, object)
     def __setitem__(self, index, value):
         if index >= 0 and index <= 2:
             self.color[index] = value

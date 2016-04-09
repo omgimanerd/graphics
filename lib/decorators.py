@@ -72,7 +72,10 @@ if __name__ == "__main__":
     def bar(a, b):
         pass
 
-    foo(1, 2.0)
-    #foo(1, [3])
-    bar([1, 2, 3], 4)
-    # bar(1, 3)
+    from color import Color
+
+    @accepts(Color)
+    def baz(a):
+        print a
+
+    baz(Color("445566"))
