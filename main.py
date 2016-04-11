@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from lib.color import Color
+from lib.decorators import debug
 from lib.drawing import Drawing
 from lib.generator import Generator
 from lib.matrix import Matrix, TransformationMatrix, EdgeMatrix
@@ -9,7 +10,7 @@ from lib.vector import Vector
 
 import random
 
-if __name__ == "__main__":
+def main():
     SIZE = 400;
     t = TransformationMatrix.identity().rotate_y_about_point(
         45, 200, 200, 0).rotate_z_about_point(0, 200, 200, 0).translate(
@@ -32,3 +33,6 @@ if __name__ == "__main__":
     drawing.draw_polygonmatrix((f * t).cull_backfaces(view), Color("0000FF"))
     drawing.display()
     drawing.generate("test", "png")
+
+if __name__ == "__main__":
+    main()

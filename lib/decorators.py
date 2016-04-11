@@ -4,6 +4,7 @@
 # Author: alvin.lin.dev@gmail.com (Alvin Lin)
 
 from functools import wraps
+from sys import stderr
 from time import time
 
 def accepts(*arg_types):
@@ -56,10 +57,16 @@ def debug(fn):
         start_time = time()
         print "%s%s" % (fn.func_name, args)
         result = fn(*args, **kwargs)
-        print "Runtime: %s" % (time() - start_time)
+        print "Runtime of %s: %s" % (fn.func_name, (time() - start_time))
         return result
     return wrapped_fn
 
+def deprecated(fn):
+    @wraps(fn)
+    def wrapped_fn(*args, **kwargs):
+        print >> stderr, "WARNING: %s() is deprecated" % fn.func_name
+        return fn(*args, **kwargs)
+    return wrapped_fn
 
 if __name__ == "__main__":
     @debug
