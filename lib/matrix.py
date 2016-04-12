@@ -46,6 +46,21 @@ class Matrix():
             point += [1]
         return point
 
+    def _preserve_type(self, matrix):
+        """
+        Casts a list of lists to the type that this Matrix object is.
+
+        Parameters:
+        matrix: list, a representation of a Matrix to cast
+        """
+        if isinstance(self, TransformationMatrix):
+            return TransformationMatrix(matrix)
+        elif isinstance(self, EdgeMatrix):
+            return EdgeMatrix(matrix)
+        elif isinstance(self, PolygonMatrix):
+            return PolygonMatrix(matrix)
+        return Matrix(matrix)
+
     def _check_matrix(self, matrix):
         """
         Checks if a given list is a valid representation of a Matrix.
@@ -91,13 +106,7 @@ class Matrix():
         for i in range(len(self.matrix)):
             for j in range(len(self.matrix[i])):
                 c[i][j] = int(round(self.matrix[i][j]))
-        if isinstance(self, TransformationMatrix):
-            return TransformationMatrix(c)
-        elif isinstance(self, EdgeMatrix):
-            return EdgeMatrix(c)
-        elif isinstance(self, PolygonMatrix):
-            return PolygonMatrix(c)
-        return Matrix(c)
+        return self._preserve_type(c)
 
     def __str__(self):
         return str(self.matrix)
@@ -133,13 +142,7 @@ class Matrix():
                         for k in range(len(other.matrix)):
                             result_row += self.matrix[i][k] * other.matrix[k][j]
                         result[i][j] = result_row
-                if isinstance(self, EdgeMatrix):
-                    return EdgeMatrix(result)
-                elif isinstance(self, TransformationMatrix):
-                    return TransformationMatrix(result)
-                elif isinstance(self, PolygonMatrix):
-                    return PolygonMatrix(result)
-                return Matrix(result)
+                return self._preserve_type(result)
             raise TypeError(
                 "Matrices %s and %s cannot be multipled" % (self, other))
         raise TypeError("Cannot multiply %s and %s" % (other, self))
@@ -506,4 +509,4 @@ class PolygonMatrix(Matrix):
         return culled_polygonmatrix
 
 if __name__ == "__main__":
-    pass
+    a = Matrix()
