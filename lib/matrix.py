@@ -241,7 +241,7 @@ class TransformationMatrix(Matrix):
 
     def rotate_y(self, theta, radians=False):
         """
-        Applies an y rotation to this TransformationMatrix and returns itself
+        Applies a y rotation to this TransformationMatrix and returns itself
         for method chaining.
 
         Parameters:
@@ -262,7 +262,7 @@ class TransformationMatrix(Matrix):
 
     def rotate_y_about_point(self, theta, x, y, z, radians=False):
         """
-        Applies an y rotation about a point to this TransformationMatrix and
+        Applies a y rotation about a point to this TransformationMatrix and
         returns itself for method chaining.
 
         Parameters:
@@ -280,7 +280,7 @@ class TransformationMatrix(Matrix):
 
     def rotate_z(self, theta, radians=False):
         """
-        Applies an z rotation to this TransformationMatrix and returns itself
+        Applies a z rotation to this TransformationMatrix and returns itself
         for method chaining.
 
         Parameters:
@@ -301,7 +301,7 @@ class TransformationMatrix(Matrix):
 
     def rotate_z_about_point(self, theta, x, y, z, radians=False):
         """
-        Applies an z rotation about a point to this TransformationMatrix and
+        Applies a z rotation about a point to this TransformationMatrix and
         returns itself for method chaining.
 
         Parameters:
@@ -338,6 +338,11 @@ class TransformationMatrix(Matrix):
         """
         Applies a scale transformation to this TransformationMatrix and returns
         itself for method chaining.
+
+        Parameters:
+        x: int or float, the amount to scale in the x direction
+        y: int or float, the amount to scale in the y direction
+        z: int or float, the amount to scale in the z direction
         """
         self *= TransformationMatrix([
             [x, 0, 0, 0],
@@ -486,7 +491,7 @@ class PolygonMatrix(Matrix):
         self.counter += 3
         return edge
 
-    def cull_backfaces(self, view_vector):
+    def cull_faces(self, view_vector):
         if not isinstance(view_vector, Vector):
             raise TypeError("%s is not valid view Vector" % view_vector)
         culled_polygonmatrix = PolygonMatrix()

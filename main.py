@@ -25,12 +25,12 @@ def main():
     e = Generator.get_torus_polygonmatrix(250, 240, 0, 15, 30, 20, 20)
     f = Generator.get_torus_polygonmatrix(350, 290, 0, 20, 40, 20, 20)
 
-    drawing.draw_polygonmatrix((a * t).cull_backfaces(view), Color("FF0000"))
-    drawing.draw_polygonmatrix((b * t).cull_backfaces(view), Color("00FF00"))
-    drawing.draw_polygonmatrix((c * t).cull_backfaces(view), Color("0000FF"))
-    drawing.draw_polygonmatrix((d * t).cull_backfaces(view), Color("FF0000"))
-    drawing.draw_polygonmatrix((e * t).cull_backfaces(view), Color("00FF00"))
-    drawing.draw_polygonmatrix((f * t).cull_backfaces(view), Color("0000FF"))
+    drawing.draw_polygonmatrix((a * t).cull_faces(view), Color("FF0000"))
+    drawing.draw_polygonmatrix((b * t).cull_faces(view), Color("00FF00"))
+    drawing.draw_polygonmatrix((c * t).cull_faces(view), Color("0000FF"))
+    drawing.draw_polygonmatrix((d * t).cull_faces(view), Color("FF0000"))
+    drawing.draw_polygonmatrix((e * t).cull_faces(view), Color("00FF00"))
+    drawing.draw_polygonmatrix((f * t).cull_faces(view), Color("0000FF"))
     drawing.display()
     drawing.generate("test", "png")
 

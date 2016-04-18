@@ -4,6 +4,7 @@
 # X increases down and y increases across.
 
 from color import Color
+from decorators import deprecated
 from util import Util
 
 HEADER = "P3 %d %d %d\n"
@@ -42,6 +43,7 @@ class Picture():
         elif not suppress_error:
             raise TypeError("Invalid coordinate %d %d." % (x, y))
 
+    @deprecated
     def map(self, function, section=None):
         """
         Applies the given function transformation to a section of the grid.
