@@ -159,7 +159,6 @@ class Generator():
         return edgematrix
 
     @staticmethod
-    @accepts(int, int, int, int, int, int)
     def get_box_pointmatrix(x, y, z, width, height, depth):
         """
         Generates a Matrix of points representing the vertices of a box.
@@ -190,7 +189,6 @@ class Generator():
             [x, y + height, z + depth, 1]])
 
     @staticmethod
-    @accepts(int, int, int, int, int, int)
     def get_box_polygonmatrix(x, y, z, width, height, depth):
         """
         Generates a PolygonMatrix representing the mesh surface of a box.

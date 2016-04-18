@@ -127,6 +127,13 @@ class Drawing():
             raise TypeError("%s is not a TransformationMatrix" % matrix)
         self.matrix_stack[-1] *= matrix
 
+    def identity(self):
+        """
+        Sets the current TransformationMatrix on the stack to the identity
+        matrix.
+        """
+        self.matrix_stack[-1] = TransformationMatrix.identity()
+
     def rotate_x(self, theta, radians=False):
         """
         Applies an x rotation to the current TransformationMatrix on the stack.
@@ -220,7 +227,7 @@ class Drawing():
         self.matrix_stack[-1].rotate_z_about_point(theta, x, y, z,
                                                    radians=radians)
 
-    def translate(x, y, z):
+    def translate(self, x, y, z):
         """
         Applies a translation to the current TransformationMatrix on the stack.
 
@@ -231,7 +238,7 @@ class Drawing():
         """
         self.matrix_stack[-1].translate(x, y, z)
 
-    def scale(x, y, z):
+    def scale(self, x, y, z):
         """
         Applies a scale transformation to this TransformationMatrix and returns
         itself for method chaining.
@@ -243,14 +250,14 @@ class Drawing():
         """
         self.matrix_stack[-1].scale(x, y, z)
 
-    def push_matrix():
+    def push_matrix(self):
         """
         Pushes a copy of the current TransformationMatrix to the top of the
         stack.
         """
         self.matrix_stack.append(self.get_transformation())
 
-    def pop_matrix():
+    def pop_matrix(self):
         """
         Pops the current TransformationMatrix from the top of the stack.
         """
@@ -309,7 +316,7 @@ class Drawing():
                 triangle[2][0], triangle[2][1], triangle[0][0], triangle[0][1],
                 color)
 
-    def draw_line(self, x1, y1, z1, x2, y2, z2):
+    def draw_line(self, x1, y1, z1, x2, y2, z2, color):
         """
         Draws the a line onto the internal raster after applying the current
         TransformationMatrix on the stack.
@@ -321,10 +328,11 @@ class Drawing():
         x1: int, the x coordinate of the second endpoint of the line
         y1: int, the y coordinate of the second endpoint of the line
         z1: int, the z coordinate of the second endpoint of the line
+        color: Color, the color of the line
         """
-        self.draw_edgematrix(EdgeMatrix([
-            [x1, y1, z1, 1], [x2, y2, z2, 1]
-        ]))
+        line = EdgeMatrix([[x1, y1, z1, 1], [x2, y2, z2, 1]])
+        self.draw_edgematrix((line * self.get_transformation()).get_rounded(),
+                             color)
 
     def draw_circle(self, center_x, center_y, radius, color, step=50):
         """
