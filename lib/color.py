@@ -37,7 +37,8 @@ class Color:
         Parameters:
         hex_code: str, the hex code to convert to rgb
 
-        http://stackoverflow.com/questions/214359/converting-hex-color-to-rgb-and-vice-versa
+        http://stackoverflow.com/questions/214359/
+        converting-hex-color-to-rgb-and-vice-versa
         """
         hex_code = hex_code.lstrip("#")
         lv = len(hex_code)

@@ -34,7 +34,7 @@ def main():
     drawing.push_matrix()
     drawing.rotate_x_about_point(20, 200, 200, 100)
     drawing.rotate_z_about_point(80, 200, 200, 100)
-    drawing.draw_torus(200, 200, 100, 20, 80, c, 10, 10)
+    drawing.draw_torus(200, 200, 100, 20, 80, c, theta_step=10, phi_step=10)
     drawing.pop_matrix()
     drawing.display()
     drawing.generate("test", "png")

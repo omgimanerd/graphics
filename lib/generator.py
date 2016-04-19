@@ -27,7 +27,7 @@ class Generator():
         return [x * increment + min for x in range(step)]
 
     @staticmethod
-    @accepts(int, int, int, int)
+    @accepts((int, float), (int, float), (int, float), (int, float))
     def get_polygon_edgematrix(center_x, center_y, radius, sides):
         """
         Generates an EdgeMatrix of lines representing a regular polygon
@@ -52,6 +52,7 @@ class Generator():
         return edgematrix
 
     @staticmethod
+    @accepts((int, float), (int, float), (int, float))
     def get_circle_edgematrix(center_x, center_y, radius, step=50):
         """
         Generates an EdgeMatrix of lines representing a circle.
@@ -83,6 +84,7 @@ class Generator():
         return hermite_function
 
     @staticmethod
+    @accepts(list, list, list, list)
     def get_hermite_curve_edgematrix(p1, r1, p2, r2, step=50):
         """
         Generates an EdgeMatrix of lines representing a hermite curve.
@@ -133,6 +135,7 @@ class Generator():
         return bezier_function
 
     @staticmethod
+    @accepts(list, list, list, list)
     def get_bezier_curve_edgematrix(p1, i1, i2, p2, step=50):
         """
         Generates an EdgeMatrix of lines representing a bezier curve.
@@ -159,6 +162,8 @@ class Generator():
         return edgematrix
 
     @staticmethod
+    @accepts((int, float), (int, float), (int, float), (int, float),
+             (int, float), (int, float))
     def get_box_pointmatrix(x, y, z, width, height, depth):
         """
         Generates a Matrix of points representing the vertices of a box.
@@ -189,6 +194,8 @@ class Generator():
             [x, y + height, z + depth, 1]])
 
     @staticmethod
+    @accepts((int, float), (int, float), (int, float), (int, float),
+             (int, float), (int, float))
     def get_box_polygonmatrix(x, y, z, width, height, depth):
         """
         Generates a PolygonMatrix representing the mesh surface of a box.
@@ -225,6 +232,7 @@ class Generator():
         ])
 
     @staticmethod
+    @accepts((int, float), (int, float), (int, float), (int, float))
     def get_sphere_pointmatrix(center_x, center_y, center_z, radius,
                                theta_step=50, phi_step=50):
         """
@@ -254,6 +262,7 @@ class Generator():
         return matrix
 
     @staticmethod
+    @accepts((int, float), (int, float), (int, float), (int, float))
     def get_sphere_polygonmatrix(center_x, center_y, center_z, radius,
                                theta_step=50, phi_step=50):
         """
@@ -274,8 +283,9 @@ class Generator():
         def z(theta, phi): return radius * sin(theta) * sin(phi) + center_z
         parametric = Parametric(x, y, z)
         matrix = PolygonMatrix()
-        points = Generator.get_sphere_pointmatrix(center_x, center_y, center_z,
-                                                  radius, theta_step, phi_step)
+        points = Generator.get_sphere_pointmatrix(
+            center_x, center_y, center_z, radius,
+            theta_step=theta_step, phi_step=phi_step)
         for i in range(len(points) - phi_step - 1):
             matrix.add_polygon(points[i],
                                points[i + phi_step + 1],
@@ -286,6 +296,8 @@ class Generator():
         return matrix
 
     @staticmethod
+    @accepts((int, float), (int, float), (int, float), (int, float),
+             (int, float))
     def get_torus_pointmatrix(center_x, center_y, center_z, radius1, radius2,
                               theta_step=50, phi_step=50):
         """
@@ -317,6 +329,8 @@ class Generator():
         return matrix
 
     @staticmethod
+    @accepts((int, float), (int, float), (int, float), (int, float),
+             (int, float))
     def get_torus_polygonmatrix(center_x, center_y, center_z, radius1, radius2,
                                 theta_step=50, phi_step=50):
         """
@@ -341,9 +355,9 @@ class Generator():
             radius1 * sin(theta) + radius2) + center_z
         parametric = Parametric(x, y, z)
         matrix = PolygonMatrix()
-        points = Generator.get_torus_pointmatrix(center_x, center_y, center_z,
-                                                 radius1, radius2,
-                                                 theta_step, phi_step)
+        points = Generator.get_torus_pointmatrix(
+            center_x, center_y, center_z, radius1, radius2,
+            theta_step=theta_step, phi_step=phi_step)
         for i in range(len(points) - phi_step - 1):
             matrix.add_polygon(points[i],
                                points[i + phi_step + 1],

@@ -33,12 +33,26 @@ class Vector():
 
     @staticmethod
     def dot(v1, v2):
+        """
+        Returns the dot product of two Vectors.
+
+        Parameters:
+        v1: Vector, the first Vector to dot
+        v2: Vector, the second Vector to dot
+        """
         if isinstance(v1, Vector) and isinstance(v2, Vector):
             return sum([v1[i] * v2[i] for i in range(3)])
         raise TypeError("%s or %s cannot be dotted" % (v1, v2))
 
     @staticmethod
     def cross(v1, v2):
+        """
+        Returns the cross product of two Vectors.
+
+        Parameters:
+        v1: Vector, the first Vector to cross
+        v2: Vector, the second Vector to cross
+        """
         if isinstance(v1, Vector) and isinstance(v2, Vector):
             return Vector([
                 v1[1] * v2[2] - v1[2] * v2[1],
@@ -49,6 +63,13 @@ class Vector():
 
     @staticmethod
     def get_angle_between(v1, v2):
+        """
+        Returns the angle between two Vectors.
+
+        Parameters:
+        v1: Vector, the first Vector of the angle
+        v2: Vector, the second Vector of the angle
+        """
         return acos(Vector.dot(v1, v2) / (v1.mag() * v2.mag()))
 
     def __str__(self):
@@ -75,9 +96,15 @@ class Vector():
         self.vector[index] = value
 
     def magSquared(self):
+        """
+        Returns the squared magnitude of this Vector.
+        """
         return sum([self[i] * self[i] for i in range(3)])
 
     def mag(self):
+        """
+        Returns the magnitude of this Vector.
+        """
         return sqrt(self.magSquared())
 
 if __name__ == "__main__":
