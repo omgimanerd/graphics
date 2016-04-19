@@ -70,7 +70,10 @@ class Vector():
         v1: Vector, the first Vector of the angle
         v2: Vector, the second Vector of the angle
         """
-        return acos(Vector.dot(v1, v2) / (v1.mag() * v2.mag()))
+        mags = v1.mag() * v2.mag()
+        if mags == 0:
+            return 0
+        return acos(Vector.dot(v1, v2) / mags)
 
     def __str__(self):
         return str(self.vector)

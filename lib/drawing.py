@@ -305,8 +305,7 @@ class Drawing():
         """
         if not isinstance(matrix, PolygonMatrix):
             raise TypeError("%s is not a PolygonMatrix" % matrix)
-        culled_matrix = (matrix * self.get_transformation()).cull_faces(
-            Vector([0, 0, 1]))
+        culled_matrix = (matrix * self.get_transformation())
         for triangle in culled_matrix.get_rounded():
             self._draw_line(
                 triangle[0][0], triangle[0][1], triangle[1][0], triangle[1][1],

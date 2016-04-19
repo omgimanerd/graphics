@@ -1,11 +1,9 @@
 push
 translate
 256 256 0
+
 push
-yrotate
-25
-torus
-0 0 0 50 150
-pop
-pop
+sphere
+0 0 0 100
+
 display
