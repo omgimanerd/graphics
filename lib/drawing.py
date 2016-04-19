@@ -20,7 +20,6 @@ class Drawing():
         Constructors for the Drawing class.
 
         Parameters:
-        filename: str, the name of the new image file
         width: int, the width of the image in pixels
         height: int, the height of the image in pixels
         """
@@ -109,11 +108,26 @@ class Drawing():
                 y1 += 1
                 d += dx
 
+    def push_matrix(self):
+        """
+        Pushes a copy of the current TransformationMatrix to the top of the
+        stack.
+        """
+        self.matrix_stack.append(self.get_transformation())
+
+    def pop_matrix(self):
+        """
+        Pops the current TransformationMatrix from the top of the stack.
+        """
+        if len(self.matrix_stack) == 1:
+            raise Exception("There is no pushed matrix for you to pop.")
+        self.matrix_stack.pop()
+
     def get_transformation(self):
         """
         Returns the current TransformationMatrix on the stack.
         """
-        return self.matrix_stack[-1]
+        return self.matrix_stack[-1].copy()
 
     def apply_transformation(self, matrix):
         """
@@ -250,21 +264,6 @@ class Drawing():
         """
         self.matrix_stack[-1].scale(x, y, z)
 
-    def push_matrix(self):
-        """
-        Pushes a copy of the current TransformationMatrix to the top of the
-        stack.
-        """
-        self.matrix_stack.append(self.get_transformation())
-
-    def pop_matrix(self):
-        """
-        Pops the current TransformationMatrix from the top of the stack.
-        """
-        if len(self.matrix_stack) == 1:
-            raise Exception("There is no pushed matrix for you to pop.")
-        self.matrix_stack.pop()
-
     def draw_pointmatrix(self, matrix, color):
         """
         Draws the given Matrix of points onto the internal raster after
@@ -330,8 +329,7 @@ class Drawing():
         z1: int, the z coordinate of the second endpoint of the line
         color: Color, the color of the line
         """
-        line = EdgeMatrix([[x1, y1, z1, 1], [x2, y2, z2, 1]])
-        self.draw_edgematrix((line * self.get_transformation()).get_rounded(),
+        self.draw_edgematrix(EdgeMatrix([[x1, y1, z1, 1], [x2, y2, z2, 1]]),
                              color)
 
     def draw_circle(self, center_x, center_y, radius, color, step=50):
@@ -500,6 +498,12 @@ class Drawing():
         self.draw_polygonmatrix(Generator.get_torus_polygonmatrix(
             center_x, center_y, center_z, radius1, radius2,
             theta_step=theta_step, phi_step=phi_step), color)
+
+    def clear(self):
+        """
+        Clears the internal raster, setting all pixels back to white.
+        """
+        self.picture.clear()
 
     def display(self):
         """

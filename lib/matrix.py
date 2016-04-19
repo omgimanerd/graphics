@@ -97,6 +97,12 @@ class Matrix():
         """
         self.matrix = []
 
+    def copy(self):
+        """
+        Returns a copy of the matrix.
+        """
+        return Matrix(self.matrix)
+
     def get_rounded(self):
         """
         Returns a copy of this Matrix where every value is rounded to the
@@ -199,6 +205,12 @@ class TransformationMatrix(Matrix):
     def add_point(self, point):
         raise NotImplementedError(
             "You cannot call add_point on a TransformationMatrix")
+
+    def copy(self):
+        """
+        Returns a copy of the matrix.
+        """
+        return TransformationMatrix(self.matrix)
 
     def rotate_x(self, theta, radians=False):
         """
@@ -399,6 +411,13 @@ class EdgeMatrix(Matrix):
         raise NotImplementedError(
             "You cannot call add_point() on an EdgeMatrix")
 
+
+    def copy(self):
+        """
+        Returns a copy of the matrix.
+        """
+        return EdgeMatrix(self.matrix)
+
     def add_edge(self, p1, p2):
         """
         Adds a line/edge to this EdgeMatrix.
@@ -459,6 +478,12 @@ class PolygonMatrix(Matrix):
     def add_point(self, point):
         raise NotImplementedError(
             "You cannot call add_point() on a PolygonMatrix")
+
+    def copy(self):
+        """
+        Returns a copy of the matrix.
+        """
+        return PolygonMatrix(self.matrix)
 
     def add_polygon(self, p1, p2, p3):
         """

@@ -7,9 +7,9 @@ from color import Color
 from decorators import deprecated
 from util import Util
 
-HEADER = "P3 %d %d %d\n"
-
 class Picture():
+
+    HEADER = "P3 %d %d %d\n"
 
     def __init__(self, width, height, max_color_value=255):
         """
@@ -26,6 +26,13 @@ class Picture():
         self.max_color_value = max_color_value
         self.grid = [[Color("#FFFFFF") for x in range(
             width)] for y in range(height)]
+
+    def clear(self):
+        """
+        Sets all the pixels back to white.
+        """
+        self.grid = [[Color("#FFFFFF") for x in range(
+            self.width)] for y in range(self.height)]
 
     def set_pixel(self, x, y, color, suppress_error=True):
         """
@@ -74,7 +81,7 @@ class Picture():
         filename: str, the name of the image file, excluding the extension
         """
         with open("%s.ppm" % filename, "w") as picture:
-            picture.write(HEADER % (
+            picture.write(Picture.HEADER % (
                 self.width, self.height, self.max_color_value))
             for row in self.grid:
                 for pixel in row:

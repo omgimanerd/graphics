@@ -11,15 +11,23 @@ from lib.vector import Vector
 import random
 
 def main():
-    SIZE = 400;
+    SIZE = 512;
     c = Color("FF0000")
     drawing = Drawing(SIZE, SIZE)
 
-    args = [100, 100, 0, 300, 300, 0, c]
+    args = [0, 0, 0, 300, 0, 0, c]
 
-    drawing.push_matrix();
+    drawing.push_matrix()
     drawing.draw_line(*args)
-    drawing.translate(30, -10, 0)
+    drawing.translate(75, 50, 0)
+    drawing.push_matrix()
+    drawing.translate(50, 50, 0)
+    drawing.push_matrix()
+    drawing.translate(50, 50, 0)
+    drawing.draw_line(*args)
+    drawing.pop_matrix()
+    drawing.draw_line(*args)
+    drawing.pop_matrix()
     drawing.draw_line(*args)
     drawing.pop_matrix()
 

@@ -44,64 +44,18 @@ class Parser():
             while i < len(commands):
                 if commands[i].startswith("#") or len(commands[i]) == 0:
                     i += 1
-                elif commands[i] == "line":
-                    param_type = "x1<number> y1<number> z1<number> " + \
-                    "x2<number> y2<number> z2<number>"
-                    params = map(int, commands[i + 1].split())
-                    self.drawing.draw_line(*params + [self.color])
-                    i += 2
-                elif commands[i] == "circle":
-                    param_type = "center_x<number> center_y<number> " + \
-                    "radius<number>"
-                    params = map(int, commands[i + 1].split())
-                    self.drawing.draw_circle(*params + [self.color])
-                    i += 2
-                elif commands[i] == "hermite":
-                    param_type = "x1<number> y1<number> rx1<number> " + \
-                    "ry1<number> x2<number> y2<number> rx2<number> ry2<number>"
-                    params = map(float, commands[i + 1].split())
-                    # self.edgematrix += Generator.get_hermite_curve_edgematrix(
-                    #     params[0:2], params[2:4], params[4:6], params[6:8])
-                    i += 2
-                elif commands[i] == "bezier":
-                    param_type = "x1<number> y1<number> ix1<number> " + \
-                    "iy1<number> x2<number> y2<number> ix2<number> iy2<number>"
-                    params = map(float, commands[i + 1].split())
-                    # self.edgematrix += Generator.get_bezier_curve_edgematrix(
-                    #     params[0:2], params[2:4], params[4:6], params[6:8])
-                    i += 2
-                elif commands[i] == "box":
-                    param_type = "x<number> y<number> z<number> " + \
-                    "width<number height<number> depth<number>"
-                    params = map(float, commands[i + 1].split())
-                    self.drawing.draw_box(*params + [self.color])
-                    i += 2
-                elif commands[i] == "sphere":
-                    param_type = "center_x<number> center_y<number> " + \
-                    "center_z<number> radius<number>"
-                    params = map(float, commands[i + 1].split())
-                    self.drawing.draw_sphere(*params + [self.color])
-                    i += 2
-                elif commands[i] == "torus":
-                    param_type = "center_x<number> center_y<number> " + \
-                    "center_z<number> radius1<number> radius2<number>"
-                    params = map(float, commands[i + 1].split())
-                    self.drawing.draw_torus(*params + [self.color])
-                    i += 2
+                elif commands[i] == "push":
+                    param_type = "none"
+                    self.drawing.push_matrix()
+                    i += 1
+                elif commands[i] == "pop":
+                    param_type = "none"
+                    self.drawing.pop_matrix()
+                    i += 1
                 elif commands[i] == "ident":
                     param_type = "none"
                     self.drawing.identity()
                     i += 1
-                elif commands[i] == "scale":
-                    param_type = "x<number> y<number> z<number>"
-                    params = map(float, commands[i + 1].split())
-                    self.drawing.scale(*params);
-                    i += 2
-                elif commands[i] == "translate":
-                    param_type = "x<number> y<number> z<number>"
-                    params = map(int, commands[i + 1].split())
-                    self.drawing.translate(*params)
-                    i += 2
                 elif commands[i] == "xrotate":
                     param_type = "theta<number>"
                     params = float(commands[i + 1])
@@ -132,7 +86,64 @@ class Parser():
                     params = map(int, commands[i + 1].split())
                     self.drawing.rotate_z_about_point(*params)
                     i += 2
-                elif commands[i] == "apply":
+                elif commands[i] == "translate":
+                    param_type = "x<number> y<number> z<number>"
+                    params = map(int, commands[i + 1].split())
+                    self.drawing.translate(*params)
+                    i += 2
+                elif commands[i] == "scale":
+                    param_type = "x<number> y<number> z<number>"
+                    params = map(float, commands[i + 1].split())
+                    self.drawing.scale(*params);
+                    i += 2
+                elif commands[i] == "line":
+                    param_type = "x1<number> y1<number> z1<number> " + \
+                    "x2<number> y2<number> z2<number>"
+                    params = map(int, commands[i + 1].split())
+                    self.drawing.draw_line(*params + [self.color])
+                    i += 2
+                elif commands[i] == "circle":
+                    param_type = "center_x<number> center_y<number> " + \
+                    "radius<number>"
+                    params = map(int, commands[i + 1].split())
+                    self.drawing.draw_circle(*params + [self.color])
+                    i += 2
+                elif commands[i] == "hermite":
+                    param_type = "x1<number> y1<number> rx1<number> " + \
+                    "ry1<number> x2<number> y2<number> rx2<number> ry2<number>"
+                    params = map(float, commands[i + 1].split())
+                    self.draw_hermite_curve(
+                        params[0:2], params[2:4], params[4:6], params[6:8],
+                        self.color)
+                    i += 2
+                elif commands[i] == "bezier":
+                    param_type = "x1<number> y1<number> ix1<number> " + \
+                    "iy1<number> x2<number> y2<number> ix2<number> iy2<number>"
+                    params = map(float, commands[i + 1].split())
+                    self.draw_bezier_curve(
+                        params[0:2], params[2:4], params[4:6], params[6:8],
+                        self.color)
+                    i += 2
+                elif commands[i] == "box":
+                    param_type = "x<number> y<number> z<number> " + \
+                    "width<number height<number> depth<number>"
+                    params = map(float, commands[i + 1].split())
+                    self.drawing.draw_box(*params + [self.color])
+                    i += 2
+                elif commands[i] == "sphere":
+                    param_type = "center_x<number> center_y<number> " + \
+                    "center_z<number> radius<number>"
+                    params = map(float, commands[i + 1].split())
+                    self.drawing.draw_sphere(*params + [self.color])
+                    i += 2
+                elif commands[i] == "torus":
+                    param_type = "center_x<number> center_y<number> " + \
+                    "center_z<number> radius1<number> radius2<number>"
+                    params = map(float, commands[i + 1].split())
+                    self.drawing.draw_torus(*params + [self.color])
+                    i += 2
+                elif commands[i] == "clear":
+                    self.drawing.clear();
                     i += 1
                 elif commands[i] == "display":
                     self.drawing.display()
@@ -141,8 +152,6 @@ class Parser():
                     param_type = "filename<string>"
                     self.drawing.generate(commands[i + 1])
                     i += 2
-                elif commands[i] == "clear":
-                    i += 1
                 elif commands[i] == "quit":
                     break
                 else:
