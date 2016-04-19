@@ -83,7 +83,7 @@ class Generator():
         return hermite_function
 
     @staticmethod
-    def get_hermite_curve_edgematrix(p1, r1, p2, r2, step=100):
+    def get_hermite_curve_edgematrix(p1, r1, p2, r2, step=50):
         """
         Generates an EdgeMatrix of lines representing a hermite curve.
 
@@ -133,7 +133,7 @@ class Generator():
         return bezier_function
 
     @staticmethod
-    def get_bezier_curve_edgematrix(p1, i1, i2, p2, step=100):
+    def get_bezier_curve_edgematrix(p1, i1, i2, p2, step=50):
         """
         Generates an EdgeMatrix of lines representing a bezier curve.
 
@@ -287,7 +287,7 @@ class Generator():
 
     @staticmethod
     def get_torus_pointmatrix(center_x, center_y, center_z, radius1, radius2,
-                              theta_step=100, phi_step=100):
+                              theta_step=50, phi_step=50):
         """
         Generates a PolygonMatrix representing the mesh surface of a torus.
 
@@ -318,7 +318,7 @@ class Generator():
 
     @staticmethod
     def get_torus_polygonmatrix(center_x, center_y, center_z, radius1, radius2,
-                                theta_step=100, phi_step=100):
+                                theta_step=50, phi_step=50):
         """
         Generates a Matrix of points representing the points on the surface of
         a torus.

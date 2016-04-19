@@ -9,6 +9,7 @@ from generator import Generator
 from matrix import Matrix, TransformationMatrix, EdgeMatrix, PolygonMatrix
 from picture import Picture
 from util import Util
+from vector import Vector
 
 from math import pi
 from os import system, remove
@@ -304,7 +305,9 @@ class Drawing():
         """
         if not isinstance(matrix, PolygonMatrix):
             raise TypeError("%s is not a PolygonMatrix" % matrix)
-        for triangle in (matrix * self.get_transformation()).get_rounded():
+        culled_matrix = (matrix * self.get_transformation()).cull_faces(
+            Vector([0, 0, 1]))
+        for triangle in culled_matrix.get_rounded():
             self._draw_line(
                 triangle[0][0], triangle[0][1], triangle[1][0], triangle[1][1],
                 color)
@@ -348,7 +351,7 @@ class Drawing():
         self.draw_edgematrix(Generator.get_circle_edgematrix(
             center_x, center_y, radius, step=step), color)
 
-    def draw_hermite_curve(self, p1, r1, p2, r2, color, step=100):
+    def draw_hermite_curve(self, p1, r1, p2, r2, color, step=50):
         """
         Draws a hermite curve onto the internal raster after applying the
         current TransformationMatrix on the stack.
@@ -364,7 +367,7 @@ class Drawing():
         self.draw_edgematrix(Generator.get_hermite_curve_edgematrix(
             p1, r1, p2, r2, step=step), color)
 
-    def draw_bezier_curve(self, p1, i1, i2, p2, color, step=100):
+    def draw_bezier_curve(self, p1, i1, i2, p2, color, step=50):
         """
         Draws a bezier curve onto the internal raster after applying the
         current TranformationMatrix on the stack.
@@ -456,7 +459,7 @@ class Drawing():
             theta_step=theta_step, phi_step=phi_step), color)
 
     def draw_torus_points(self, center_x, center_y, center_z, radius1, radius2,
-                          color, theta_step=100, phi_step=100):
+                          color, theta_step=50, phi_step=50):
         """
         Draws points representing a torus onto the internal raster after
         applying the current TransformationMatrix on the stack.
@@ -478,7 +481,7 @@ class Drawing():
             theta_step=theta_step, phi_step=phi_step), color)
 
     def draw_torus(self, center_x, center_y, center_z, radius1, radius2,
-                   color, theta_step=100, phi_step=100):
+                   color, theta_step=50, phi_step=50):
         """
         Draws the polygons of a sphere onto the internal raster after
         applying the current TransformationMatrix on the stack.
