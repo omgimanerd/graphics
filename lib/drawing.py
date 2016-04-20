@@ -530,3 +530,4 @@ class Drawing():
         full_filename = "%s.%s" % (filename, extension)
         if extension != "ppm":
             system("convert %s.ppm %s" % (filename, full_filename))
+            remove("%s.ppm" % filename)
