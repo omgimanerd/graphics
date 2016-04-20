@@ -11,31 +11,36 @@ from lib.vector import Vector
 import random
 
 def main():
-    SIZE = 512;
-    c = Color("FF0000")
+    SIZE = 500;
     drawing = Drawing(SIZE, SIZE)
 
-    args = [0, 0, 0, 300, 0, 0, c]
+    drawing.push_matrix()
+    drawing.translate(400, 400, 0)
 
-    drawing.push_matrix()
-    drawing.draw_line(*args)
-    drawing.translate(75, 50, 0)
-    drawing.push_matrix()
-    drawing.translate(50, 50, 0)
-    drawing.push_matrix()
-    drawing.translate(50, 50, 0)
-    drawing.draw_line(*args)
-    drawing.pop_matrix()
-    drawing.draw_line(*args)
-    drawing.pop_matrix()
-    drawing.draw_line(*args)
+    for i in range(10):
+        drawing.rotate_x_about_point(36, 250, 250, 0)
+        drawing.push_matrix()
+        drawing.rotate_z(10)
+        drawing.draw_torus(0, 0, 0, 20, 40, Color.random(), theta_step=20,
+                           phi_step=20)
+        drawing.pop_matrix()
+
     drawing.pop_matrix()
 
     drawing.push_matrix()
-    drawing.rotate_x_about_point(20, 200, 200, 100)
-    drawing.rotate_z_about_point(80, 200, 200, 100)
-    drawing.draw_torus(200, 200, 100, 20, 80, c, theta_step=10, phi_step=10)
+    drawing.translate(400, 100, 0)
+    for i in range(10):
+        drawing.rotate_x_about_point(36, 250, 250, 0)
+        drawing.push_matrix()
+        drawing.rotate_y(10)
+        drawing.draw_torus(0, 0, 0, 20, 40, Color.random(), theta_step=20,
+                           phi_step=20)
+        drawing.pop_matrix()
+
     drawing.pop_matrix()
+    drawing.draw_sphere(250, 250, 0, 50, Color.random())
+
+
     drawing.display()
     drawing.generate("test", "png")
 

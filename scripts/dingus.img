@@ -1,9 +1,8 @@
-push
-translate
-256 256 0
-
-push
 sphere
-0 0 0 100
+400 400 100 100
+sphere
+300 300 -400 80
+sphere
+250 250 -800 50
 
 display
