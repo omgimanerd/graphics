@@ -3,10 +3,10 @@
 # them. Uses Mr. DW's standards.
 # Author: alvin.lin.dev@gmail.com (Alvin Lin)
 
-from lib.color import Color
-from lib.drawing import Drawing
-from lib.generator import Generator
-from lib.matrix import Matrix, TransformationMatrix, EdgeMatrix
+from graphics.lib.color import Color
+from graphics.lib.drawing import Drawing
+from graphics.lib.generator import Generator
+from graphics.lib.matrix import Matrix, TransformationMatrix, EdgeMatrix
 
 import argparse
 import traceback
