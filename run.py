@@ -13,7 +13,7 @@ import traceback
 
 class Runner():
 
-    def __init__(self, width=512, height=512, color="#FF0000"):
+    def __init__(self, width=800, height=512, color="#FF0000"):
         """
         Constructor for the Runner class.
 
@@ -40,6 +40,7 @@ class Runner():
             'pop': self.drawing.pop_matrix,
             'move': self.drawing.translate,
             'rotate': self.drawing.rotate,
+            'line': self.drawing.draw_line,
             'box': self.drawing.draw_box,
             'sphere': self.drawing.draw_sphere,
             'display': self.drawing.display
@@ -51,6 +52,7 @@ class Runner():
         except:
             print "Parsing failed."
             print traceback.format_exc()
+            return
 
         try:
             for command in commands:
@@ -64,7 +66,7 @@ class Runner():
 
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
-    argparser.add_argument("file", help="The file to generate an image from")
+    argparser.add_argument("file", help="The mdl file to run")
     args = argparser.parse_args()
 
     runner = Runner()

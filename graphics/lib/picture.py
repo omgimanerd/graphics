@@ -46,9 +46,11 @@ class Picture():
             error if the point is out of bounds
         """
         if Util.in_bound(x, 0, self.height) and Util.in_bound(y, 0, self.width):
-            self.grid[x][y] = color
+            # The coordinates are reversed because of the way lists of lists
+            # work in Python.
+            self.grid[y][x] = color
         elif not suppress_error:
-            raise TypeError("Invalid coordinate %d %d." % (x, y))
+            raise ValueError("Invalid coordinate %d %d." % (x, y))
 
     @deprecated
     def map(self, function, section=None):

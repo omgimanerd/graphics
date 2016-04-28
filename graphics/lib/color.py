@@ -53,6 +53,18 @@ class Color:
     def WHITE():
         return Color("FFFFFF")
 
+    @staticmethod
+    def RED():
+        return Color("FF0000")
+
+    @staticmethod
+    def GREEN():
+        return Color("00FF00")
+
+    @staticmethod
+    def BLUE():
+        return Color("0000FF")
+
     def __iter__(self):
         for c in self.color:
             yield c

@@ -12,6 +12,7 @@ from picture import Picture
 from util import Util
 from vector import Vector
 
+from copy import copy
 from math import pi
 from os import system, remove
 
@@ -28,6 +29,7 @@ class Drawing():
         self.width = width
         self.height = height
         self.picture = Picture(width, height)
+        self.origin_stack = [[0, 0, 0]]
         self.matrix_stack = [TransformationMatrix.identity()]
 
     def _set_pixel(self, x, y, color, suppress_error=True):
@@ -115,6 +117,7 @@ class Drawing():
         Pushes a copy of the current TransformationMatrix to the top of the
         stack.
         """
+        self.origin_stack.append(copy(self.origin_stack[-1]))
         self.matrix_stack.append(self.get_transformation())
 
     def pop_matrix(self):
@@ -124,6 +127,7 @@ class Drawing():
         if len(self.matrix_stack) == 1:
             raise Exception("There is no pushed matrix for you to pop.")
         self.matrix_stack.pop()
+        self.origin_stack.pop()
 
     def get_transformation(self):
         """
@@ -182,7 +186,7 @@ class Drawing():
         radians: bool (optional), set this to True if the parameter theta was
             specified in radians
         """
-        self.matrix_stack[-1].rotate_x(theta, radians=radians)
+        self.rotate_x_about_point(theta, 0, 0, 0, radians=radians)
 
     def rotate_x_about_point(self, theta, x, y, z, radians=False):
         """
@@ -199,6 +203,9 @@ class Drawing():
         radians: bool (optional), set this to True if the parameter theta was
             specified in radians
         """
+        x += self.origin_stack[-1][0]
+        y += self.origin_stack[-1][1]
+        z += self.origin_stack[-1][2]
         self.matrix_stack[-1].rotate_x_about_point(theta, x, y, z,
                                                    radians=radians)
 
@@ -213,7 +220,7 @@ class Drawing():
         radians: bool (optional), set this to True if the parameter theta was
             specified in radians
         """
-        self.matrix_stack[-1].rotate_y(theta, radians=radians)
+        self.rotate_y_about_point(theta, 0, 0, 0, radians=radians)
 
     def rotate_y_about_point(self, theta, x, y, z, radians=False):
         """
@@ -230,6 +237,9 @@ class Drawing():
         radians: bool (optional), set this to True if the parameter theta was
             specified in radians
         """
+        x += self.origin_stack[-1][0]
+        y += self.origin_stack[-1][1]
+        z += self.origin_stack[-1][2]
         self.matrix_stack[-1].rotate_y_about_point(theta, x, y, z,
                                                    radians=radians)
 
@@ -244,7 +254,7 @@ class Drawing():
         radians: bool (optional), set this to True if the parameter theta was
             specified in radians
         """
-        self.matrix_stack[-1].rotate_z(theta, radians=radians)
+        self.rotate_z_about_point(theta, 0, 0, 0, radians=radians)
 
     def rotate_z_about_point(self, theta, x, y, z, radians=False):
         """
@@ -261,6 +271,9 @@ class Drawing():
         radians: bool (optional), set this to True if the parameter theta was
             specified in radians
         """
+        x += self.origin_stack[-1][0]
+        y += self.origin_stack[-1][1]
+        z += self.origin_stack[-1][2]
         self.matrix_stack[-1].rotate_z_about_point(theta, x, y, z,
                                                    radians=radians)
 
@@ -273,6 +286,9 @@ class Drawing():
         y: int, the amount to translate in the y direction
         z: int, the amount to translate in the z direction
         """
+        self.origin_stack[-1][0] += x
+        self.origin_stack[-1][1] += y
+        self.origin_stack[-1][2] += z
         self.matrix_stack[-1].translate(x, y, z)
 
     def scale(self, x, y, z):
@@ -327,8 +343,7 @@ class Drawing():
         """
         if not isinstance(matrix, PolygonMatrix):
             raise TypeError("%s is not a PolygonMatrix" % matrix)
-        culled_matrix = (matrix * self.get_transformation())
-        for triangle in culled_matrix.get_rounded():
+        for triangle in (matrix * self.get_transformation()).get_rounded():
             self._draw_line(
                 triangle[0][0], triangle[0][1], triangle[1][0], triangle[1][1],
                 color)
@@ -461,10 +476,11 @@ class Drawing():
             circles about the center point
         """
         self.draw_pointmatrix(Generator.get_sphere_pointmatrix(
-            center_x, center_y, center_z, radius, theta_step, phi_step), color)
+            center_x, center_y, center_z, radius,
+            theta_step=theta_step, phi_step=phi_step), color)
 
     def draw_sphere(self, center_x, center_y, center_z, radius,
-                    color=Color.BLACK(), theta_step=50, phi_step=50):
+                    color=Color.BLACK(), theta_step=10, phi_step=10):
         """
         Draws the polygons of a sphere onto the internal raster after
         applying the current TransformationMatrix on the stack.
