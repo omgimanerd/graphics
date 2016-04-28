@@ -45,6 +45,14 @@ class Color:
         return [
             int(hex_code[i:i + lv // 3], 16) for i in range(0, lv, lv // 3)]
 
+    @staticmethod
+    def BLACK():
+        return Color("000000")
+
+    @staticmethod
+    def WHITE():
+        return Color("FFFFFF")
+
     def __iter__(self):
         for c in self.color:
             yield c
@@ -79,6 +87,4 @@ class Color:
 
 if __name__ == "__main__":
     a = Color("FF0000")
-    print a
-    for c in a:
-        print c
+    print Color.BLACK()

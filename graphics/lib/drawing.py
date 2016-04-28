@@ -5,6 +5,7 @@
 # work.
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
 
+from color import Color
 from generator import Generator
 from matrix import Matrix, TransformationMatrix, EdgeMatrix, PolygonMatrix
 from picture import Picture
@@ -149,6 +150,27 @@ class Drawing():
         """
         self.matrix_stack[-1] = TransformationMatrix.identity()
 
+    def rotate(self, axis, theta, radians=False):
+        """
+        Applies a rotation to the current TransformationMatrix on the stack.
+
+        Parameters:
+        axis: string, the axis to rotate about
+        theta: float or int, the amount in degrees to rotate by, if radians is
+            set to True, then this parameter is the amount of radians to rotate
+            by
+        radians: bool (optional), set this to True if the parameter theta was
+            specified in radians
+        """
+        if axis.lower() == "x":
+            self.rotate_x(theta, radians=radians)
+        elif axis.lower() == "y":
+            self.rotate_y(theta, radians=radians)
+        elif axis.lower() == "z":
+            self.rotate_z(theta, radians=radians)
+        else:
+            raise ValueError("%s is not a valid axis to rotate about!" % axis)
+
     def rotate_x(self, theta, radians=False):
         """
         Applies an x rotation to the current TransformationMatrix on the stack.
@@ -265,28 +287,28 @@ class Drawing():
         """
         self.matrix_stack[-1].scale(x, y, z)
 
-    def draw_pointmatrix(self, matrix, color):
+    def draw_pointmatrix(self, matrix, color=Color.BLACK()):
         """
         Draws the given Matrix of points onto the internal raster after
         applying the current TransformationMatrix on the stack.
 
         Parameters:
         matrix: Matrix, the matrix of points to draw
-        color: Color, the color to draw the matrix with
+        color: Color (optional), the color to draw the matrix with
         """
         if not isinstance(matrix, Matrix):
             raise TypeError("%s is not a Matrix" % matrix)
         for point in (matrix * self.get_transformation()).get_rounded():
             self._set_pixel(point[0], point[1], color)
 
-    def draw_edgematrix(self, matrix, color):
+    def draw_edgematrix(self, matrix, color=Color.BLACK()):
         """
         Draws the given EdgeMatrix onto the internal raster as lines after
         applying the current TransformationMatrix on the stack.
 
         Parameters:
         matrix: EdgeMatrix, the matrix of lines to draw
-        color: Color, the color to draw the matrix with
+        color: Color (optional), the color to draw the matrix with
         """
         if not isinstance(matrix, EdgeMatrix):
             raise TypeError("%s is not an EdgeMatrix" % matrix)
@@ -294,14 +316,14 @@ class Drawing():
             self._draw_line(
                 edge[0][0], edge[0][1], edge[1][0], edge[1][1], color)
 
-    def draw_polygonmatrix(self, matrix, color):
+    def draw_polygonmatrix(self, matrix, color=Color.BLACK()):
         """
         Draws the given PolygonMatrix onto the internal raster after applying
         the current TransformationMatrix on the stack.
 
         Parameters:
         matrix: PolygonMatrix, the matrix of triangles to draw
-        color: Color, the color to draw the matrix with
+        color: Color (optional), the color to draw the matrix with
         """
         if not isinstance(matrix, PolygonMatrix):
             raise TypeError("%s is not a PolygonMatrix" % matrix)
@@ -317,7 +339,7 @@ class Drawing():
                 triangle[2][0], triangle[2][1], triangle[0][0], triangle[0][1],
                 color)
 
-    def draw_line(self, x1, y1, z1, x2, y2, z2, color):
+    def draw_line(self, x1, y1, z1, x2, y2, z2, color=Color.BLACK()):
         """
         Draws the a line onto the internal raster after applying the current
         TransformationMatrix on the stack.
@@ -329,12 +351,13 @@ class Drawing():
         x1: int, the x coordinate of the second endpoint of the line
         y1: int, the y coordinate of the second endpoint of the line
         z1: int, the z coordinate of the second endpoint of the line
-        color: Color, the color of the line
+        color: Color (optional), the color of the line
         """
         self.draw_edgematrix(EdgeMatrix([[x1, y1, z1, 1], [x2, y2, z2, 1]]),
                              color)
 
-    def draw_circle(self, center_x, center_y, radius, color, step=50):
+    def draw_circle(self, center_x, center_y, radius,
+                    color=Color.BLACK(), step=50):
         """
         Draws a circle onto the internal raster after applying the current
         TransformationMatrix on the stack.
@@ -343,14 +366,15 @@ class Drawing():
         center_x: int, the x coordinate of the center of the circle
         center_y: int, the y coordinate of the center of the circle
         radius: int, the radius of the circle
-        color: Color, the color of the circle
+        color: Color (optional), the color of the circle
         step: int (optional), the number of steps to use when drawing splines
         for the circle
         """
         self.draw_edgematrix(Generator.get_circle_edgematrix(
             center_x, center_y, radius, step=step), color)
 
-    def draw_hermite_curve(self, p1, r1, p2, r2, color, step=50):
+    def draw_hermite_curve(self, p1, r1, p2, r2,
+                           color=Color.BLACK(), step=50):
         """
         Draws a hermite curve onto the internal raster after applying the
         current TransformationMatrix on the stack.
@@ -360,13 +384,14 @@ class Drawing():
         r1: list, the rate of change at p1
         p2: list, the second point of the hermite curve
         r2: list, the rate of change at p2
-        color: Color, the color of the curve
+        color: Color (optional), the color of the curve
         step: int (optional), the number of steps to use for drawing the curve
         """
         self.draw_edgematrix(Generator.get_hermite_curve_edgematrix(
             p1, r1, p2, r2, step=step), color)
 
-    def draw_bezier_curve(self, p1, i1, i2, p2, color, step=50):
+    def draw_bezier_curve(self, p1, i1, i2, p2,
+                          color=Color.BLACK(), step=50):
         """
         Draws a bezier curve onto the internal raster after applying the
         current TranformationMatrix on the stack.
@@ -376,13 +401,14 @@ class Drawing():
         i1: list, the first influence point of the bezier curve
         i2: list, the second influence point of the bezier curve
         p2: list, the second endpoint of the bezier curve
-        color: Color, the color of the curve
+        color: Color (optional), the color of the curve
         step: int (optional), the number of steps to use for drawing the curve
         """
         self.draw_edgematrix(Generator.get_bezier_curve_edgematrix(
             p1, i1, i2, p2, step=step), color)
 
-    def draw_box_points(self, x, y, z, width, height, depth, color):
+    def draw_box_points(self, x, y, z, width, height, depth,
+                        color=Color.BLACK()):
         """
         Draws points representing the vertices of a box onto the internal
         raster after applying the current TransformationMatrix on the stack.
@@ -394,12 +420,13 @@ class Drawing():
         width: int, the width of the box
         height: int, the height of the box
         depth: int, the depth of the box
-        color: Color, the color of the points
+        color: Color (optional), the color of the points
         """
         self.draw_pointmatrix(Generator.get_box_pointmatrix(
             x, y, z, width, height, depth), color)
 
-    def draw_box(self, x, y, z, width, height, depth, color):
+    def draw_box(self, x, y, z, width, height, depth,
+                 color=Color.BLACK()):
         """
         Draws the polygons of a box onto the internal raster after applying the
         current TransformationMatrix on the stack.
@@ -411,13 +438,13 @@ class Drawing():
         width: int, the width of the box
         height: int, the height of the box
         depth: int, the depth of the box
-        color: Color, the color of the points
+        color: Color (optional), the color of the points
         """
         self.draw_polygonmatrix(Generator.get_box_polygonmatrix(
             x, y, z, width, height, depth), color)
 
-    def draw_sphere_points(self, center_x, center_y, center_z, radius, color,
-                           theta_step=50, phi_step=50):
+    def draw_sphere_points(self, center_x, center_y, center_z, radius,
+                           color=Color.BLACK(), theta_step=50, phi_step=50):
         """
         Draws points representing a sphere onto the internal raster after
         applying the current TransformationMatrix on the stack.
@@ -427,7 +454,7 @@ class Drawing():
         center_y: int, the y coordinate of the center of the sphere
         center_z: int, the z coordinate of the center of the sphere
         radius: int, the radius of the sphere
-        color: Color, the color of the points
+        color: Color (optional), the color of the points
         theta_step: int (optional), the number of steps to use when drawing the
             circles
         phi_step: int (optional), the number of steps to use when rotating the
@@ -436,8 +463,8 @@ class Drawing():
         self.draw_pointmatrix(Generator.get_sphere_pointmatrix(
             center_x, center_y, center_z, radius, theta_step, phi_step), color)
 
-    def draw_sphere(self, center_x, center_y, center_z, radius, color,
-                    theta_step=50, phi_step=50):
+    def draw_sphere(self, center_x, center_y, center_z, radius,
+                    color=Color.BLACK(), theta_step=50, phi_step=50):
         """
         Draws the polygons of a sphere onto the internal raster after
         applying the current TransformationMatrix on the stack.
@@ -447,7 +474,7 @@ class Drawing():
         center_y: int, the y coordinate of the center of the sphere
         center_z: int, the z coordinate of the center of the sphere
         radius: int, the radius of the sphere
-        color: Color, the color of the points
+        color: Color (optional), the color of the points
         theta_step: int (optional), the number of steps to use when drawing the
         circles
         phi_step: int (optional), the number of steps to use when rotating the
@@ -458,7 +485,7 @@ class Drawing():
             theta_step=theta_step, phi_step=phi_step), color)
 
     def draw_torus_points(self, center_x, center_y, center_z, radius1, radius2,
-                          color, theta_step=50, phi_step=50):
+                          color=Color.BLACK(), theta_step=50, phi_step=50):
         """
         Draws points representing a torus onto the internal raster after
         applying the current TransformationMatrix on the stack.
@@ -469,7 +496,7 @@ class Drawing():
         center_z: int, the z coordinate of the center of the sphere
         radius1: int, the radius of the circle being revolved to make the torus
         radius2: int, the radius of the torus itself
-        color: Color, the color of the points
+        color: Color (optional), the color of the points
         theta_step: int (optional), the number of steps to use when drawing the
             circle that is revolved to make the torus
         phi_step: int (optional), the number of steps to use when rotating the
@@ -480,7 +507,7 @@ class Drawing():
             theta_step=theta_step, phi_step=phi_step), color)
 
     def draw_torus(self, center_x, center_y, center_z, radius1, radius2,
-                   color, theta_step=50, phi_step=50):
+                   color=Color.BLACK(), theta_step=50, phi_step=50):
         """
         Draws the polygons of a sphere onto the internal raster after
         applying the current TransformationMatrix on the stack.
@@ -491,7 +518,7 @@ class Drawing():
         center_z: int, the z coordinate of the center of the sphere
         radius1: int, the radius of the circle being revolved to make the torus
         radius2: int, the radius of the torus itself
-        color: Color, the color of the points
+        color: Color (optional), the color of the points
         theta_step: int (optional), the number of steps to use when drawing the
             circle that is revolved to make the torus
         phi_step: int (optional), the number of steps to use when rotating the
