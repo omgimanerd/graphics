@@ -15,34 +15,10 @@ def main():
     drawing = Drawing(SIZE, SIZE)
 
     drawing.push_matrix()
-    drawing.translate(400, 400, 0)
-
-    for i in range(10):
-        drawing.rotate_x_about_point(36, 250, 250, 0)
-        drawing.push_matrix()
-        drawing.rotate_z(10)
-        drawing.draw_torus(0, 0, 0, 20, 40, Color.random(), theta_step=20,
-                           phi_step=20)
-        drawing.pop_matrix()
-
-    drawing.pop_matrix()
-
-    drawing.push_matrix()
-    drawing.translate(400, 100, 0)
-    for i in range(10):
-        drawing.rotate_x_about_point(36, 250, 250, 0)
-        drawing.push_matrix()
-        drawing.rotate_y(10)
-        drawing.draw_torus(0, 0, 0, 20, 40, Color.random(), theta_step=20,
-                           phi_step=20)
-        drawing.pop_matrix()
-
-    drawing.pop_matrix()
-    drawing.draw_sphere(250, 250, 0, 50, Color.random())
-
-
+    drawing.translate(250, 250, 0)
+    drawing.rotate('x', 45)
+    drawing.draw_sphere(0, 0, 0, 200)
     drawing.display()
-    drawing.generate("test", "png")
 
 if __name__ == "__main__":
     main()

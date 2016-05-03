@@ -13,7 +13,7 @@ import traceback
 
 class Runner():
 
-    def __init__(self, width=800, height=512, color="#FF0000"):
+    def __init__(self, width=512, height=512, color="#FF0000"):
         """
         Constructor for the Runner class.
 
@@ -38,12 +38,20 @@ class Runner():
         command_translate = {
             'push': self.drawing.push_matrix,
             'pop': self.drawing.pop_matrix,
-            'move': self.drawing.translate,
+            'identity': self.drawing.identity,
             'rotate': self.drawing.rotate,
+            'translate': self.drawing.translate,
+            'move': self.drawing.translate,
+            'scale': self.drawing.scale,
             'line': self.drawing.draw_line,
+            'circle': self.drawing.draw_circle,
+            'hermite': self.drawing.draw_hermite_curve,
+            'bezier': self.drawing.draw_bezier_curve,
             'box': self.drawing.draw_box,
             'sphere': self.drawing.draw_sphere,
-            'display': self.drawing.display
+            'torus': self.drawing.draw_torus,
+            'display': self.drawing.display,
+            'generate': self.drawing.generate
         }
         commands = None
         symbols = None

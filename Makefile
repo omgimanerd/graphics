@@ -1,3 +1,3 @@
 all:
 	. ./env
-	python main.py
+	./run.py mdl/test.mdl

@@ -240,8 +240,11 @@ class Drawing():
         x += self.origin_stack[-1][0]
         y += self.origin_stack[-1][1]
         z += self.origin_stack[-1][2]
+        print self.matrix_stack[-1]
+        print x, y, z
         self.matrix_stack[-1].rotate_y_about_point(theta, x, y, z,
                                                    radians=radians)
+        print self.matrix_stack[-1]
 
     def rotate_z(self, theta, radians=False):
         """
@@ -480,7 +483,7 @@ class Drawing():
             theta_step=theta_step, phi_step=phi_step), color)
 
     def draw_sphere(self, center_x, center_y, center_z, radius,
-                    color=Color.BLACK(), theta_step=10, phi_step=10):
+                    color=Color.BLACK(), theta_step=50, phi_step=50):
         """
         Draws the polygons of a sphere onto the internal raster after
         applying the current TransformationMatrix on the stack.
