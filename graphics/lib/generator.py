@@ -53,7 +53,7 @@ class Generator():
 
     @staticmethod
     @accepts((int, float), (int, float), (int, float))
-    def get_circle_edgematrix(center_x, center_y, radius, step=50):
+    def get_circle_edgematrix(center_x, center_y, radius, step=30):
         """
         Generates an EdgeMatrix of lines representing a circle.
 
@@ -85,7 +85,7 @@ class Generator():
 
     @staticmethod
     @accepts(list, list, list, list)
-    def get_hermite_curve_edgematrix(p1, r1, p2, r2, step=50):
+    def get_hermite_curve_edgematrix(p1, r1, p2, r2, step=30):
         """
         Generates an EdgeMatrix of lines representing a hermite curve.
 
@@ -136,7 +136,7 @@ class Generator():
 
     @staticmethod
     @accepts(list, list, list, list)
-    def get_bezier_curve_edgematrix(p1, i1, i2, p2, step=50):
+    def get_bezier_curve_edgematrix(p1, i1, i2, p2, step=30):
         """
         Generates an EdgeMatrix of lines representing a bezier curve.
 
@@ -234,7 +234,7 @@ class Generator():
     @staticmethod
     @accepts((int, float), (int, float), (int, float), (int, float))
     def get_sphere_pointmatrix(center_x, center_y, center_z, radius,
-                               theta_step=50, phi_step=50):
+                               theta_step=30, phi_step=30):
         """
         Generates a Matrix of points representing the points on the
         surface of a sphere.
@@ -264,7 +264,7 @@ class Generator():
     @staticmethod
     @accepts((int, float), (int, float), (int, float), (int, float))
     def get_sphere_polygonmatrix(center_x, center_y, center_z, radius,
-                               theta_step=50, phi_step=50):
+                               theta_step=30, phi_step=30):
         """
         Generates a PolygonMatrix representing the mesh surface of a sphere.
 
@@ -299,7 +299,7 @@ class Generator():
     @accepts((int, float), (int, float), (int, float), (int, float),
              (int, float))
     def get_torus_pointmatrix(center_x, center_y, center_z, radius1, radius2,
-                              theta_step=50, phi_step=50):
+                              theta_step=30, phi_step=30):
         """
         Generates a PolygonMatrix representing the mesh surface of a torus.
 
@@ -332,7 +332,7 @@ class Generator():
     @accepts((int, float), (int, float), (int, float), (int, float),
              (int, float))
     def get_torus_polygonmatrix(center_x, center_y, center_z, radius1, radius2,
-                                theta_step=50, phi_step=50):
+                                theta_step=30, phi_step=30):
         """
         Generates a Matrix of points representing the points on the surface of
         a torus.

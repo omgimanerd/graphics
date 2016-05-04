@@ -240,11 +240,8 @@ class Drawing():
         x += self.origin_stack[-1][0]
         y += self.origin_stack[-1][1]
         z += self.origin_stack[-1][2]
-        print self.matrix_stack[-1]
-        print x, y, z
         self.matrix_stack[-1].rotate_y_about_point(theta, x, y, z,
                                                    radians=radians)
-        print self.matrix_stack[-1]
 
     def rotate_z(self, theta, radians=False):
         """
@@ -304,6 +301,9 @@ class Drawing():
         y: int or float, the amount to scale in the y direction
         z: int or float, the amount to scale in the z direction
         """
+        # x += self.origin_stack[-1][0]
+        # y += self.origin_stack[-1][1]
+        # z += self.origin_stack[-1][2]
         self.matrix_stack[-1].scale(x, y, z)
 
     def draw_pointmatrix(self, matrix, color=Color.BLACK()):
@@ -375,7 +375,7 @@ class Drawing():
                              color)
 
     def draw_circle(self, center_x, center_y, radius,
-                    color=Color.BLACK(), step=50):
+                    color=Color.BLACK(), step=30):
         """
         Draws a circle onto the internal raster after applying the current
         TransformationMatrix on the stack.
@@ -392,7 +392,7 @@ class Drawing():
             center_x, center_y, radius, step=step), color)
 
     def draw_hermite_curve(self, p1, r1, p2, r2,
-                           color=Color.BLACK(), step=50):
+                           color=Color.BLACK(), step=30):
         """
         Draws a hermite curve onto the internal raster after applying the
         current TransformationMatrix on the stack.
@@ -409,7 +409,7 @@ class Drawing():
             p1, r1, p2, r2, step=step), color)
 
     def draw_bezier_curve(self, p1, i1, i2, p2,
-                          color=Color.BLACK(), step=50):
+                          color=Color.BLACK(), step=30):
         """
         Draws a bezier curve onto the internal raster after applying the
         current TranformationMatrix on the stack.
@@ -462,7 +462,7 @@ class Drawing():
             x, y, z, width, height, depth), color)
 
     def draw_sphere_points(self, center_x, center_y, center_z, radius,
-                           color=Color.BLACK(), theta_step=50, phi_step=50):
+                           color=Color.BLACK(), theta_step=30, phi_step=30):
         """
         Draws points representing a sphere onto the internal raster after
         applying the current TransformationMatrix on the stack.
@@ -483,7 +483,7 @@ class Drawing():
             theta_step=theta_step, phi_step=phi_step), color)
 
     def draw_sphere(self, center_x, center_y, center_z, radius,
-                    color=Color.BLACK(), theta_step=50, phi_step=50):
+                    color=Color.BLACK(), theta_step=30, phi_step=30):
         """
         Draws the polygons of a sphere onto the internal raster after
         applying the current TransformationMatrix on the stack.
@@ -504,7 +504,7 @@ class Drawing():
             theta_step=theta_step, phi_step=phi_step), color)
 
     def draw_torus_points(self, center_x, center_y, center_z, radius1, radius2,
-                          color=Color.BLACK(), theta_step=50, phi_step=50):
+                          color=Color.BLACK(), theta_step=30, phi_step=30):
         """
         Draws points representing a torus onto the internal raster after
         applying the current TransformationMatrix on the stack.
@@ -526,7 +526,7 @@ class Drawing():
             theta_step=theta_step, phi_step=phi_step), color)
 
     def draw_torus(self, center_x, center_y, center_z, radius1, radius2,
-                   color=Color.BLACK(), theta_step=50, phi_step=50):
+                   color=Color.BLACK(), theta_step=30, phi_step=30):
         """
         Draws the polygons of a sphere onto the internal raster after
         applying the current TransformationMatrix on the stack.
