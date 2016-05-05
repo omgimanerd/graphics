@@ -11,8 +11,9 @@ from graphics.lib.vector import Vector
 import random
 
 def main():
-    SIZE = 500;
-    drawing = Drawing(SIZE, SIZE)
+    drawing = Drawing(800, 500)
+
+    drawing.draw_line(0, 0, 0, 100, 600, 0)
 
     drawing.push_matrix()
     drawing.translate(250, 250, 0)

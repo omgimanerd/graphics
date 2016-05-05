@@ -45,7 +45,7 @@ class Picture():
         suppress_error: bool (optional), when set to True, will suppress the
             error if the point is out of bounds
         """
-        if Util.in_bound(x, 0, self.height) and Util.in_bound(y, 0, self.width):
+        if Util.in_bound(x, 0, self.width) and Util.in_bound(y, 0, self.height):
             # The coordinates are reversed because of the way lists of lists
             # work in Python.
             self.grid[y][x] = color
