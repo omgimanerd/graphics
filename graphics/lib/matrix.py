@@ -75,6 +75,24 @@ class Matrix():
         except TypeError:
             raise TypeError("%s is not a valid matrix representation" % matrix)
 
+    def _left_multiply(self, other):
+        """
+        Returns the result when other is multiplied by this Matrix.
+
+        Parameters:
+        matrix: Matrix, the matrix to multiply this matrix into.
+        """
+        return other * self
+
+    def _ileft_multiply(self, other):
+        """
+        Sets the result of _left_multiply() back to this object.
+
+        Parameters:
+        matrix: Matrix, the matrix to multiply this matrix into.
+        """
+        self.matrix = self._left_multiply(other).matrix
+
     def _matrix(self):
         """
         Returns the internal representation of this matrix as a list of lists.
@@ -226,11 +244,11 @@ class TransformationMatrix(Matrix):
         """
         if not radians:
             theta = Util.d2r(theta)
-        self *= TransformationMatrix([
+        self._ileft_multiply(TransformationMatrix([
             [cos(theta), sin(theta), 0, 0],
             [-sin(theta), cos(theta), 0, 0],
             [0, 0, 1, 0],
-            [0, 0, 0, 1]])
+            [0, 0, 0, 1]]))
         return self
 
     def rotate_x_about_point(self, theta, x, y, z, radians=False):
@@ -265,11 +283,11 @@ class TransformationMatrix(Matrix):
         """
         if not radians:
             theta = Util.d2r(theta)
-        self *= TransformationMatrix([
+        self._ileft_multiply(TransformationMatrix([
             [cos(theta), 0, sin(theta), 0],
             [0, 1, 0, 0],
             [-sin(theta), 0, cos(theta), 0],
-            [0, 0, 0, 1]])
+            [0, 0, 0, 1]]))
         return self
 
     def rotate_y_about_point(self, theta, x, y, z, radians=False):
@@ -304,11 +322,11 @@ class TransformationMatrix(Matrix):
         """
         if not radians:
             theta = Util.d2r(theta)
-        self *= TransformationMatrix([
+        self._ileft_multiply(TransformationMatrix([
             [1, 0, 0, 0],
             [0, cos(theta), sin(theta), 0],
             [0, -sin(theta), cos(theta), 0],
-            [0, 0, 0, 1]])
+            [0, 0, 0, 1]]))
         return self
 
     def rotate_z_about_point(self, theta, x, y, z, radians=False):
@@ -339,11 +357,11 @@ class TransformationMatrix(Matrix):
         y: int, the amount to translate in the y direction
         z: int, the amount to translate in the z direction
         """
-        self *= TransformationMatrix([
+        self._ileft_multiply(TransformationMatrix([
             [1, 0, 0, 0],
             [0, 1, 0, 0],
             [0, 0, 1, 0],
-            [x, y, z, 1]])
+            [x, y, z, 1]]))
         return self
 
     def scale(self, x, y, z):
@@ -356,11 +374,11 @@ class TransformationMatrix(Matrix):
         y: int or float, the amount to scale in the y direction
         z: int or float, the amount to scale in the z direction
         """
-        self *= TransformationMatrix([
+        self._ileft_multiply(TransformationMatrix([
             [x, 0, 0, 0],
             [0, y, 0, 0],
             [0, 0, z, 0],
-            [0, 0, 0, 1]])
+            [0, 0, 0, 1]]))
         return self
 
     def __add__(self, other):
