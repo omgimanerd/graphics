@@ -12,7 +12,6 @@ from picture import Picture
 from util import Util
 from vector import Vector
 
-from copy import copy
 from math import pi
 from os import system, remove
 
@@ -29,7 +28,6 @@ class Drawing():
         self.width = width
         self.height = height
         self.picture = Picture(width, height)
-        self.origin_stack = [[0, 0, 0]]
         self.matrix_stack = [TransformationMatrix.identity()]
 
     def _set_pixel(self, x, y, color, suppress_error=True):
@@ -117,7 +115,6 @@ class Drawing():
         Pushes a copy of the current TransformationMatrix to the top of the
         stack.
         """
-        self.origin_stack.append(copy(self.origin_stack[-1]))
         self.matrix_stack.append(self.get_transformation())
 
     def pop_matrix(self):
@@ -125,9 +122,8 @@ class Drawing():
         Pops the current TransformationMatrix from the top of the stack.
         """
         if len(self.matrix_stack) == 1:
-            raise Exception("There is no pushed matrix for you to pop.")
+            self.matrix_stack = [TranformationMatrix.identity()]
         self.matrix_stack.pop()
-        self.origin_stack.pop()
 
     def get_transformation(self):
         """
@@ -186,7 +182,7 @@ class Drawing():
         radians: bool (optional), set this to True if the parameter theta was
             specified in radians
         """
-        self.rotate_x_about_point(theta, 0, 0, 0, radians=radians)
+        self.matrix_stack[-1].rotate_x(theta, radians=radians)
 
     def rotate_x_about_point(self, theta, x, y, z, radians=False):
         """
@@ -203,9 +199,6 @@ class Drawing():
         radians: bool (optional), set this to True if the parameter theta was
             specified in radians
         """
-        x += self.origin_stack[-1][0]
-        y += self.origin_stack[-1][1]
-        z += self.origin_stack[-1][2]
         self.matrix_stack[-1].rotate_x_about_point(theta, x, y, z,
                                                    radians=radians)
 
@@ -220,7 +213,7 @@ class Drawing():
         radians: bool (optional), set this to True if the parameter theta was
             specified in radians
         """
-        self.rotate_y_about_point(theta, 0, 0, 0, radians=radians)
+        self.matrix_stack[-1].rotate_y(theta, radians=radians)
 
     def rotate_y_about_point(self, theta, x, y, z, radians=False):
         """
@@ -237,9 +230,6 @@ class Drawing():
         radians: bool (optional), set this to True if the parameter theta was
             specified in radians
         """
-        x += self.origin_stack[-1][0]
-        y += self.origin_stack[-1][1]
-        z += self.origin_stack[-1][2]
         self.matrix_stack[-1].rotate_y_about_point(theta, x, y, z,
                                                    radians=radians)
 
@@ -254,7 +244,7 @@ class Drawing():
         radians: bool (optional), set this to True if the parameter theta was
             specified in radians
         """
-        self.rotate_z_about_point(theta, 0, 0, 0, radians=radians)
+        self.matrix_stack[-1].rotate_y(theta, radians=radians)
 
     def rotate_z_about_point(self, theta, x, y, z, radians=False):
         """
@@ -271,9 +261,6 @@ class Drawing():
         radians: bool (optional), set this to True if the parameter theta was
             specified in radians
         """
-        x += self.origin_stack[-1][0]
-        y += self.origin_stack[-1][1]
-        z += self.origin_stack[-1][2]
         self.matrix_stack[-1].rotate_z_about_point(theta, x, y, z,
                                                    radians=radians)
 
@@ -286,9 +273,6 @@ class Drawing():
         y: int, the amount to translate in the y direction
         z: int, the amount to translate in the z direction
         """
-        self.origin_stack[-1][0] += x
-        self.origin_stack[-1][1] += y
-        self.origin_stack[-1][2] += z
         self.matrix_stack[-1].translate(x, y, z)
 
     def scale(self, x, y, z):
@@ -301,9 +285,6 @@ class Drawing():
         y: int or float, the amount to scale in the y direction
         z: int or float, the amount to scale in the z direction
         """
-        # x += self.origin_stack[-1][0]
-        # y += self.origin_stack[-1][1]
-        # z += self.origin_stack[-1][2]
         self.matrix_stack[-1].scale(x, y, z)
 
     def draw_pointmatrix(self, matrix, color=Color.BLACK()):
@@ -356,6 +337,19 @@ class Drawing():
             self._draw_line(
                 triangle[2][0], triangle[2][1], triangle[0][0], triangle[0][1],
                 color)
+
+    def draw_point(self, x, y, z, color=Color.BLACK()):
+        """
+        Draws the given point onto the internal raster after applying the
+        current TransformationMatrix on the stack.
+
+        Parameters:
+        x: int, the x coordinate of the point
+        y: int, the y coordinate of the point
+        z: int, the z coordinate of the point
+        color: Color (optional), the color of the line
+        """
+        self.draw_pointmatrix(Matrix(matrix=[[x, y, z]]), color=color)
 
     def draw_line(self, x1, y1, z1, x2, y2, z2, color=Color.BLACK()):
         """

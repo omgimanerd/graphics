@@ -11,15 +11,24 @@ from graphics.lib.vector import Vector
 import random
 
 def main():
-    drawing = Drawing(800, 500)
+    drawing = Drawing(300, 300)
 
-    drawing.draw_line(0, 0, 0, 100, 600, 0)
+    print map(str, drawing.matrix_stack)
 
     drawing.push_matrix()
-    drawing.translate(250, 250, 0)
-    drawing.rotate('x', 45)
-    drawing.draw_sphere(0, 0, 0, 200)
+    drawing.translate(150, 150, 0)
+    drawing.draw_line(0, 0, 0, 100, 100, 0, Color.GREEN())
+    drawing.pop_matrix()
+
+    drawing.push_matrix()
+    drawing.translate(150, 150, 0)
+    drawing.rotate_x(30);
+    print drawing.get_transformation()
+    drawing.draw_line(0, 0, 0, 100, 100, 0, Color.RED())
+    drawing.pop_matrix()
+
     drawing.display()
+
 
 if __name__ == "__main__":
     main()
