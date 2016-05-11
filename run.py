@@ -55,7 +55,7 @@ class Runner():
         Parameters:
         basename: str, the basename of the animation frames
         """
-        self.basename = "%s/%s" % (basename, self.directory.strip("/"))
+        self.basename = "%s/%s" % (self.directory.strip("/"), basename)
 
     def set_knob(self, knob_name, from_frame, to_frame, from_value, to_value):
         """
@@ -173,7 +173,7 @@ if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument("file", help="The mdl file to run")
     argparser.add_argument("--verbose", action="store_true")
-    argparser.add_argument("--dir", type=str)
+    argparser.add_argument("--dir", type=str, default=".")
     args = argparser.parse_args()
 
     runner = Runner(directory=args.dir, verbose=args.verbose)

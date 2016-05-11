@@ -6,11 +6,17 @@ vary spin2 0 29 1 0
 push
 move 250 250 0
 sphere 0 0 0 50
+rotate x 30
+rotate z 45
+
+push
 rotate y 360 spin1
-rotate x 360 spin2
 torus 0 0 0 20 200
-rotate x 90
+pop
+
+push
+rotate x 360 spin2
 torus 0 0 0 20 320
 pop
 
-save test
+pop
