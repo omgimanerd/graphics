@@ -19,4 +19,9 @@ rotate x 360 spin2
 torus 0 0 0 20 320
 pop
 
+push
+rotate z 360 spin1
+box -100 -100 -100 100 100 100
+pop
+
 pop

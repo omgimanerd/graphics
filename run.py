@@ -158,11 +158,14 @@ class Runner():
             else:
                 for command in commands:
                     name = command[0]
-                    args = command[1:-1]
-                    functions = Util.merge_dicts(variable_commands,
-                                                drawing_commands)
-                    if name in functions:
-                        functions[name](*args)
+                    print command
+                    print self.drawing
+                    if name in variable_commands:
+                        args = command[1:-1]
+                        variable_commands[name](*args)
+                    elif name in drawing_commands:
+                        args = command[1:]
+                        drawing_commands[name](*args)
         except:
             print "Execution failed."
             print traceback.format_exc()
