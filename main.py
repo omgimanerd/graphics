@@ -13,18 +13,12 @@ import random
 def main():
     drawing = Drawing(300, 300)
 
-    print map(str, drawing.matrix_stack)
-
     drawing.push_matrix()
     drawing.translate(150, 150, 0)
-    drawing.draw_line(0, 0, 0, 100, 100, 0, Color.GREEN())
-    drawing.pop_matrix()
-
-    drawing.push_matrix()
-    drawing.translate(150, 150, 0)
-    drawing.rotate_x(30);
-    print drawing.get_transformation()
-    drawing.draw_line(0, 0, 0, 100, 100, 0, Color.RED())
+    drawing.rotate_x(45)
+    drawing.rotate_y(80)
+    drawing.rotate_z(70)
+    drawing.draw_box(0, 0, 0, 100, 100, 100)
     drawing.pop_matrix()
 
     drawing.display()

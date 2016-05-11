@@ -11,11 +11,13 @@ rotate z 45
 
 push
 rotate y 360 spin1
+rotate z 360 spin1
 torus 0 0 0 20 200
 pop
 
 push
 rotate x 360 spin2
+rotate y 360 spin2
 torus 0 0 0 20 320
 pop
 

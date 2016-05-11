@@ -75,24 +75,6 @@ class Matrix():
         except TypeError:
             raise TypeError("%s is not a valid matrix representation" % matrix)
 
-    def _left_multiply(self, other):
-        """
-        Returns the result when other is multiplied by this Matrix.
-
-        Parameters:
-        matrix: Matrix, the matrix to multiply this matrix into.
-        """
-        return other * self
-
-    def _ileft_multiply(self, other):
-        """
-        Sets the result of _left_multiply() back to this object.
-
-        Parameters:
-        matrix: Matrix, the matrix to multiply this matrix into.
-        """
-        self.matrix = self._left_multiply(other).matrix
-
     def _matrix(self):
         """
         Returns the internal representation of this matrix as a list of lists.
@@ -219,6 +201,24 @@ class TransformationMatrix(Matrix):
         if all([len(x) == 4 for x in matrix]) and len(matrix) == 4:
             return matrix
         raise TypeError("Invalid matrix: %s" % matrix)
+
+    def _left_multiply(self, other):
+        """
+        Returns the result when other is multiplied by this Matrix.
+
+        Parameters:
+        matrix: Matrix, the matrix to multiply this matrix into.
+        """
+        return other * self
+
+    def _ileft_multiply(self, other):
+        """
+        Sets the result of _left_multiply() back to this object.
+
+        Parameters:
+        matrix: Matrix, the matrix to multiply this matrix into.
+        """
+        self.matrix = self._left_multiply(other).matrix
 
     def add_point(self, point):
         raise NotImplementedError(
@@ -429,7 +429,6 @@ class EdgeMatrix(Matrix):
         raise NotImplementedError(
             "You cannot call add_point() on an EdgeMatrix")
 
-
     def copy(self):
         """
         Returns a copy of the matrix.
@@ -535,6 +534,12 @@ class PolygonMatrix(Matrix):
         return edge
 
     def cull_faces(self, view_vector):
+        """
+        Given a Vector representing the view, this method culls all the faces
+        from this PolygonMatrix that are not visible to the view.
+
+        view_vector: Vector, the view vector to cull in relation to.
+        """
         if not isinstance(view_vector, Vector):
             raise TypeError("%s is not valid view Vector" % view_vector)
         culled_polygonmatrix = PolygonMatrix()

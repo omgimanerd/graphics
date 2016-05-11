@@ -3,3 +3,5 @@
 *.jpg
 *.png
 *.gif
+parsetab.py
+parser.out

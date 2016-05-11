@@ -113,7 +113,7 @@ class Generator():
         step: int (optional), the number of steps to use when drawing splines
             for the hermite curve
         """
-        points = Matrix([p1, p2, r1, r2])
+        points = Matrix(matrix=[p1, p2, r1, r2])
         inverse = Matrix([
             [2, -2, 1, 1],
             [-3, 3, -2, -1],
@@ -199,7 +199,7 @@ class Generator():
         height: int, the height of the box
         depth: int, the depth of the box
         """
-        return Matrix([
+        return Matrix(matrix=[
             [x, y, z, 1],
             [x + width, y, z, 1],
             [x + width, y + height, z, 1],
@@ -226,7 +226,7 @@ class Generator():
         """
         pointmatrix = Generator.get_box_pointmatrix(
             x, y, z, width, height, depth)
-        return PolygonMatrix([
+        return PolygonMatrix(matrix=[
             # Front
             pointmatrix[3], pointmatrix[1], pointmatrix[0],
             pointmatrix[3], pointmatrix[2], pointmatrix[1],

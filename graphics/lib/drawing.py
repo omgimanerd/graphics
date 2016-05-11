@@ -244,7 +244,7 @@ class Drawing():
         radians: bool (optional), set this to True if the parameter theta was
             specified in radians
         """
-        self.matrix_stack[-1].rotate_y(theta, radians=radians)
+        self.matrix_stack[-1].rotate_z(theta, radians=radians)
 
     def rotate_z_about_point(self, theta, x, y, z, radians=False):
         """

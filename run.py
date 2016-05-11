@@ -81,38 +81,36 @@ class Runner():
         Parameters:
         filename: str, the name of the file to read from
         """
+        # These objects store link the mdl function with the internal function
+        # and store the number of parameters each function requires.
         animation_commands = {
-            "frames": self.set_frames,
-            "basename": self.set_basename,
-            "vary": self.set_knob
+            "frames": { "function": self.set_frames, "params": 1 },
+            "basename": { "function": self.set_basename, "params": 1 },
+            "vary": { "function": self.set_knob, "params": 5 }
         }
         variable_commands = {
-            "rotate": self.drawing.rotate,
-            "translate": self.drawing.translate,
-            "move": self.drawing.translate,
-            "scale": self.drawing.scale
-        }
-        # Represents the index of the parameters that should be affected by
-        # the vary commands.
-        scaled_parameter_indices = {
-            "rotate": [1],
-            "translate": [0, 1, 2],
-            "move": [0, 1, 2],
-            "scale": [0, 1, 2]
+            "rotate": { "function": self.drawing.rotate, "params": 2,
+                        "indices": [1] },
+            "move": { "function": self.drawing.translate, "params": 3,
+                      "indices": [0, 1, 2] },
+            "scale": { "function": self.drawing.scale, "params": 3,
+                       "indices": [0, 1, 2] }
         }
         drawing_commands = {
-            "push": self.drawing.push_matrix,
-            "pop": self.drawing.pop_matrix,
-            "identity": self.drawing.identity,
-            "line": self.drawing.draw_line,
-            "circle": self.drawing.draw_circle,
-            "hermite": self.drawing.draw_hermite_curve,
-            "bezier": self.drawing.draw_bezier_curve,
-            "box": self.drawing.draw_box,
-            "sphere": self.drawing.draw_sphere,
-            "torus": self.drawing.draw_torus,
-            "display": self.drawing.display,
-            "save": self.drawing.generate
+            "push": { "function": self.drawing.push_matrix, "params": 0 },
+            "pop": { "function": self.drawing.pop_matrix, "params": 0 },
+            "identity": { "function": self.drawing.identity, "params": 0 },
+            "line": { "function": self.drawing.draw_line, "params": 6 },
+            "circle": { "function": self.drawing.draw_circle, "params": 3 },
+            "hermite": { "function": self.drawing.draw_hermite_curve,
+                         "params": 8 },
+            "bezier": { "function": self.drawing.draw_bezier_curve,
+                        "params": 8 },
+            "box": { "function": self.drawing.draw_box, "params": 6 },
+            "sphere": { "function": self.drawing.draw_sphere, "params": 4 },
+            "torus": { "function": self.drawing.draw_torus, "params": 5 },
+            "display": { "function": self.drawing.display, "params": 0 },
+            "save": { "function": self.drawing.generate, "params": 1 }
         }
         commands = None
         symbols = None
@@ -127,8 +125,8 @@ class Runner():
             for command in commands:
                 name = command[0]
                 if name in animation_commands:
-                    args = command[1:]
-                    animation_commands[name](*args)
+                    args = command[1:][:animation_commands[name]["params"]]
+                    animation_commands[name]["function"](*args)
         except:
             print "Animation commands invalid!"
             print traceback.format_exc()
@@ -136,19 +134,31 @@ class Runner():
 
         try:
             if self.knobs:
+                # If we are animating, then save is no longer a valid command.
                 del drawing_commands["save"]
                 for frame in range(self.frames):
                     for command in commands:
                         name = command[0]
-                        args = list(command[1:-1])
-                        knob = command[-1]
+                        # If the command is a matrix transformation that a
+                        # varying knob can be applied to, then modify the
+                        # appropriate argument with the vary amount. The
+                        # position of the argument to vary is stored in
+                        # the variable_commands dictionary under the key
+                        # indices for each variable command.
                         if name in variable_commands:
+                            knob = command[-1]
+                            args = list(command[1:-1])
                             if knob:
-                                for index in scaled_parameter_indices[name]:
+                                for index in variable_commands[name]["indices"]:
                                     args[index] *= self.knobs[knob][frame]
-                            variable_commands[name](*args)
+                            variable_commands[name]["function"](*args)
+                        # Otherwise, if the command is a drawing command,
+                        # isolate the necessary parameters and run it.
                         elif name in drawing_commands:
-                            drawing_commands[name](*args)
+                            args = command[1:][
+                                :drawing_commands[name]["params"]]
+                            drawing_commands[name]["function"](*args)
+                    # Generate an image file for each frame.
                     filename = "%s_%s" % (self.basename, str(frame).zfill(
                         len(str(self.frames))))
                     self.drawing.generate(filename)
@@ -156,15 +166,17 @@ class Runner():
                     if self.verbose:
                         print "Generated %s" % filename
             else:
+                # If we are not animating, then just run all the commands.
                 for command in commands:
                     name = command[0]
-                    print command
-                    print self.drawing
                     if name in variable_commands:
                         args = command[1:-1]
-                        variable_commands[name](*args)
+                        variable_commands[name]["function"](*args)
                     elif name in drawing_commands:
-                        args = command[1:]
+                        # This line extracts the necessary parameters from the
+                        # command by checking how many parameters this function
+                        # takes.
+                        args = command[1:][:drawing_commands][name]["params"]
                         drawing_commands[name](*args)
         except:
             print "Execution failed."
