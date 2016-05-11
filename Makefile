@@ -1,3 +1,3 @@
 all:
 	. ./env
-	./run.py mdl/test.mdl
+	./run.py mdl/atom.mdl --verbose
