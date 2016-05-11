@@ -136,6 +136,19 @@ def p_statement_comment(p):
     'statement : COMMENT'
     pass
 
+def p_statement_frames(p):
+    """statement : FRAMES INT"""
+    commands.append(p[1:])
+
+def p_statement_basename(p):
+    """statement : BASENAME TEXT"""
+    commands.append(p[1:])
+
+def p_statement_vary(p):
+    """statement : VARY SYMBOL INT INT NUMBER NUMBER"""
+    commands.append(p[1:])
+    symbols.append(('knob', p[2]))
+
 def p_statement_stack(p):
     """statement : POP
                  | PUSH"""

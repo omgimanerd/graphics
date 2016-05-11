@@ -7,6 +7,20 @@ from math import pi
 class Util():
 
     @staticmethod
+    def merge_dicts(*args):
+        """
+        Returns a dictionary of all the merged key value pairs of the
+        dictionaries passed in the parameters.
+
+        Parameters:
+        args: dict. the dictionaries to merge
+        """
+        result = {}
+        for dictionary in args:
+            result.update(dictionary)
+        return result
+
+    @staticmethod
     def in_bound(x, lower, upper):
         """
         Returns whether or not a given number is in between two bounds, upper

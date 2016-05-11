@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # This class holds static methods for generating matrices of objects.
 # Author: alvin.lin.dev@gmail.com (Alvin Lin)
+#
+from __future__ import division
 
 from decorators import accepts
 from parametric import Parametric
@@ -25,6 +27,20 @@ class Generator():
         """
         increment = (max - min) / float(step - 1)
         return [x * increment + min for x in range(step)]
+
+    @staticmethod
+    @accepts(int, int, int, int, int)
+    def get_knob_range(max_frame, from_frame, to_frame, from_value, to_value):
+        knob_range = []
+        for i in range(max_frame):
+            if i <= from_frame:
+                knob_range.append(from_value)
+            elif i > to_frame:
+                knob_range.append(to_value)
+            else:
+                knob_range.append(((i - from_frame) * (to_value - from_value) /
+                                    (to_frame - from_frame)) + from_value)
+        return knob_range
 
     @staticmethod
     @accepts((int, float), (int, float), (int, float), (int, float))
@@ -366,3 +382,6 @@ class Generator():
                                points[i + 1],
                                points[i + phi_step + 1])
         return matrix
+
+if __name__ == "__main__":
+    print Generator.get_knob_range(60, 10, 30, 0, 1)
