@@ -21,6 +21,20 @@ class Util():
         return result
 
     @staticmethod
+    def linear_scale(x, a1, a2, b1, b2):
+        """
+        Linearly scales a number from one range to another.
+
+        Parameters:
+        x: int or float, the number to scale
+        a1: int or float, the lower bound of the range to scale from
+        a2: int or float, the upper bound of the range to scale from
+        b1: int or float, the lower bound of the range to scale to
+        b2: int or float, the upper bound of the range to scale to
+        """
+        return ((x - a1) * (b2 - b1) / (a2 - a1)) + b1
+
+    @staticmethod
     def in_bound(x, lower, upper):
         """
         Returns whether or not a given number is in between two bounds, upper

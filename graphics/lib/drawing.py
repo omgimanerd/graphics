@@ -316,17 +316,22 @@ class Drawing():
             self._draw_line(
                 edge[0][0], edge[0][1], edge[1][0], edge[1][1], color)
 
-    def draw_polygonmatrix(self, matrix, color=Color.BLACK()):
+    def draw_polygonmatrix(self, matrix, cull_view_vector=None,
+                           color=Color.BLACK()):
         """
         Draws the given PolygonMatrix onto the internal raster after applying
         the current TransformationMatrix on the stack.
 
         Parameters:
         matrix: PolygonMatrix, the matrix of triangles to draw
+        cull_view_vector: Vector (optional), the view vector that the faces
+          should be culled with, None if the faces should not be culled.
         color: Color (optional), the color to draw the matrix with
         """
         if not isinstance(matrix, PolygonMatrix):
             raise TypeError("%s is not a PolygonMatrix" % matrix)
+        if cull_view_vector:
+            matrix = matrix.cull_faces(cull_view_vector)
         for triangle in (matrix * self.get_transformation()).get_rounded():
             self._draw_line(
                 triangle[0][0], triangle[0][1], triangle[1][0], triangle[1][1],
@@ -337,6 +342,39 @@ class Drawing():
             self._draw_line(
                 triangle[2][0], triangle[2][1], triangle[0][0], triangle[0][1],
                 color)
+
+    def fill_polygonmatrix(self, matrix, cull_view_vector=None,
+                           color=Color.BLACK()):
+        """
+        Draws and fills the current PolygonMatrix onto the internal raster
+        after applying the current TransformationMatrix on the stack.
+
+        Parameters:
+        matrix: PolygonMatrix, the matrix of triangles to draw
+        cull_view_vector: Vector (optional), the view vector that the faces
+          should be culled with, None if the faces should not be culled.
+        color: Color (optional), the color to draw the matrix with
+        """
+        if not isinstance(matrix, PolygonMatrix):
+            raise TypeError("%s is not a PolygonMatrix" % matrix)
+        if cull_view_vector:
+            matrix = matrix.cull_faces(cull_view_vector)
+        for triangle in (matrix * self.get_transformation()).get_rounded():
+            b = min(triangle, key=lambda point: point[1])
+            m = sorted(triangle, key=lambda point: point[1])[1]
+            t = max(triangle, key=lambda point: point[1])
+            x1, x2 = b[0], b[0]
+            dx1 = (t[0] - b[0]) / float(t[1] - b[1]) if t[1] - b[1] else 0
+            dx2bm = (m[0] - b[0]) / float(m[1] - b[1]) if m[1] - b[1] else 0
+            dx2mt = (t[0] - m[0]) / float(t[1] - m[1]) if t[1] - m[1] else 0
+            for y in range(b[1], m[1]):
+                self._draw_line(int(x1), y, int(x2), y, color)
+                x1 += dx1
+                x2 += dx2bm
+            for y in range(m[1], t[1]):
+                self._draw_line(int(x1), y, int(x2), y, color)
+                x1 += dx1
+                x2 += dx2mt
 
     def draw_point(self, x, y, z, color=Color.BLACK()):
         """

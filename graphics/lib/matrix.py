@@ -535,8 +535,8 @@ class PolygonMatrix(Matrix):
 
     def cull_faces(self, view_vector):
         """
-        Given a Vector representing the view, this method culls all the faces
-        from this PolygonMatrix that are not visible to the view.
+        Given a Vector representing the view, this method returns a copy of
+        this PolygonMatrix minus all the faces that are not visible to the view.
 
         view_vector: Vector, the view vector to cull in relation to.
         """

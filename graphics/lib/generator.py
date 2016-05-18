@@ -38,8 +38,8 @@ class Generator():
             elif i > to_frame:
                 knob_range.append(to_value)
             else:
-                knob_range.append(((i - from_frame) * (to_value - from_value) /
-                                    (to_frame - from_frame)) + from_value)
+                knob_range.append(Util.linear_scale(
+                    i, from_frame, to_frame, from_value, to_value))
         return knob_range
 
     @staticmethod
