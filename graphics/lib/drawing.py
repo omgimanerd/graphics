@@ -28,9 +28,13 @@ class Drawing():
         self.width = width
         self.height = height
         self.picture = Picture(width, height)
+        self.pixel_depths = [[float("-inf") for x in range(
+            width)] for y in range(height)]
         self.matrix_stack = [TransformationMatrix.identity()]
+        self.view_vector = None
 
-    def _set_pixel(self, x, y, color, suppress_error=True):
+    def _set_pixel(self, x, y, color, suppress_error=True,
+                   z_depth=float("-inf")):
         """
         Sets a pixel on the internal raster with reference to the original
         origin (ignoring the current TransformationMatrix).
@@ -41,10 +45,20 @@ class Drawing():
         color: Color, the color to set the pixel to
         suppress_error: bool (optional), when set to True, will suppress
         the error if the pixel is out of bounds
+        z_depth: float (optional), the depth of the pixel, if this pixel is
+        lower in depth than the current pixel, then it will not be drawn
         """
-        self.picture.set_pixel(x, y, color, suppress_error=suppress_error)
+        # The coordinates are reversed because of the way lists of lists
+        # work in Python.
+        try:
+            if z_depth >= self.pixel_depths[y][x]:
+                self.pixel_depths[y][x] = z_depth
+                self.picture.set_pixel(x, y, color)
+        except IndexError, exception:
+            if not suppress_error:
+                raise exception
 
-    def _draw_line(self, x1, y1, x2, y2, color):
+    def _draw_line(self, x1, y1, x2, y2, color, z_depth=float("-inf")):
         """
         Uses the Bresenham line algorithm to draw a line on the internal
         raster with reference to the original origin (ignoring the current
@@ -56,6 +70,8 @@ class Drawing():
         x2: int, the x coordinate of the other endpoint of the line
         y2: int, the y coordinate of the other endpoint of the line
         color: Color, the color of the line
+        z_depth: float (optional), the depth of the line, if this line is lower
+        in depth than the pixels that it goes over, then it will not be drawn
         """
         dx = x2 - x1
         dy = y2 - y1
@@ -64,19 +80,18 @@ class Drawing():
             dy *= -1
             x1, x2 = x2, x1
             y1, y2 = y2, y1
-
         if dx == 0:
             while y1 <= y2:
-                self._set_pixel(x1, y1, color)
+                self._set_pixel(x1, y1, color, z_depth=z_depth)
                 y1 += 1
         elif dy == 0:
             while x1 <= x2:
-                self._set_pixel(x1, y2, color)
+                self._set_pixel(x1, y1, color, z_depth=z_depth)
                 x1 += 1
         elif dy < 0:
             d = 0
             while x1 <= x2:
-                self._set_pixel(x1, y1, color)
+                self._set_pixel(x1, y1, color, z_depth=z_depth)
                 if d > 0:
                     y1 += -1
                     d += -dx
@@ -85,7 +100,7 @@ class Drawing():
         elif dx < 0:
             d = 0
             while y1 <= y2:
-                self._set_pixel(x1, y1, color)
+                self._set_pixel(x1, y1, color, z_depth=z_depth)
                 if d > 0:
                     x1 += -1
                     d += -dy
@@ -94,7 +109,7 @@ class Drawing():
         elif dx > dy:
             d = 0
             while x1 <= x2:
-                self._set_pixel(x1, y1, color)
+                self._set_pixel(x1, y1, color, z_depth=z_depth)
                 if d > 0:
                     y1 += 1
                     d += -dx
@@ -103,12 +118,17 @@ class Drawing():
         else:
             d = 0
             while y1 <= y2:
-                self._set_pixel(x1, y1, color)
+                self._set_pixel(x1, y1, color, z_depth=z_depth)
                 if d > 0:
                     x1 += 1
                     d += -dy
                 y1 += 1
                 d += dx
+
+    def set_view_vector(self, view_vector):
+        if not isinstance(view_vector, Vector):
+            raise TypeError("%s is not a Vector" % view_vector)
+        self.view_vector = view_vector
 
     def push_matrix(self):
         """
@@ -316,8 +336,7 @@ class Drawing():
             self._draw_line(
                 edge[0][0], edge[0][1], edge[1][0], edge[1][1], color)
 
-    def draw_polygonmatrix(self, matrix, cull_view_vector=None,
-                           color=Color.BLACK()):
+    def draw_polygonmatrix(self, matrix, color=Color.BLACK()):
         """
         Draws the given PolygonMatrix onto the internal raster after applying
         the current TransformationMatrix on the stack.
@@ -330,21 +349,20 @@ class Drawing():
         """
         if not isinstance(matrix, PolygonMatrix):
             raise TypeError("%s is not a PolygonMatrix" % matrix)
-        if cull_view_vector:
-            matrix = matrix.cull_faces(cull_view_vector)
+        if self.view_vector:
+            matrix = matrix.cull_faces(self.view_vector)
         for triangle in (matrix * self.get_transformation()).get_rounded():
             self._draw_line(
                 triangle[0][0], triangle[0][1], triangle[1][0], triangle[1][1],
-                color)
+                color, z_depth=min(triangle[0][2], triangle[1][2]))
             self._draw_line(
                 triangle[1][0], triangle[1][1], triangle[2][0], triangle[2][1],
-                color)
+                color, z_depth=min(triangle[1][2], triangle[2][2]))
             self._draw_line(
                 triangle[2][0], triangle[2][1], triangle[0][0], triangle[0][1],
-                color)
+                color, z_depth=min(triangle[2][2], triangle[0][2]))
 
-    def fill_polygonmatrix(self, matrix, cull_view_vector=None,
-                           color=Color.BLACK()):
+    def fill_polygonmatrix(self, matrix, color=Color.BLACK()):
         """
         Draws and fills the current PolygonMatrix onto the internal raster
         after applying the current TransformationMatrix on the stack.
@@ -357,22 +375,23 @@ class Drawing():
         """
         if not isinstance(matrix, PolygonMatrix):
             raise TypeError("%s is not a PolygonMatrix" % matrix)
-        if cull_view_vector:
-            matrix = matrix.cull_faces(cull_view_vector)
+        # if self.view_vector:
+        #     matrix = matrix.cull_faces(self.view_vector)
         for triangle in (matrix * self.get_transformation()).get_rounded():
             b = min(triangle, key=lambda point: point[1])
             m = sorted(triangle, key=lambda point: point[1])[1]
             t = max(triangle, key=lambda point: point[1])
+            z_depth = min(triangle, key=lambda point: point[2])
             x1, x2 = b[0], b[0]
             dx1 = (t[0] - b[0]) / float(t[1] - b[1]) if t[1] - b[1] else 0
             dx2bm = (m[0] - b[0]) / float(m[1] - b[1]) if m[1] - b[1] else 0
             dx2mt = (t[0] - m[0]) / float(t[1] - m[1]) if t[1] - m[1] else 0
             for y in range(b[1], m[1]):
-                self._draw_line(int(x1), y, int(x2), y, color)
+                self._draw_line(int(x1), y, int(x2), y, color, z_depth=z_depth)
                 x1 += dx1
                 x2 += dx2bm
             for y in range(m[1], t[1]):
-                self._draw_line(int(x1), y, int(x2), y, color)
+                self._draw_line(int(x1), y, int(x2), y, color, z_depth=z_depth)
                 x1 += dx1
                 x2 += dx2mt
 

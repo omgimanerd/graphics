@@ -13,8 +13,9 @@ import random
 def main():
     drawing = Drawing(300, 300)
 
-    drawing.fill_polygonmatrix(Generator.get_sphere_polygonmatrix(
-        150, 150, 0, 100))
+    drawing.rotate_x_about_point(150, 150, 0, 30)
+    drawing.rotate_y_about_point(150, 150, 0, 30)
+    drawing.draw_box(150, 150, 0, 10, 40, 20)
 
     drawing.display()
 

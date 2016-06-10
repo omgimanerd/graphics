@@ -34,7 +34,7 @@ class Picture():
         self.grid = [[Color("#FFFFFF") for x in range(
             self.width)] for y in range(self.height)]
 
-    def set_pixel(self, x, y, color, suppress_error=True):
+    def set_pixel(self, x, y, color):
         """
         Sets the specified pixel to the specified color.
 
@@ -47,11 +47,9 @@ class Picture():
         """
         if not isinstance(color, Color):
             raise TypeError("%s is not a valid Color." % color)
-        if Util.in_bound(x, 0, self.width) and Util.in_bound(y, 0, self.height):
-            # The coordinates are reversed because of the way lists of lists
-            # work in Python.
+        try:
             self.grid[y][x] = color
-        elif not suppress_error:
+        except IndexError:
             raise ValueError("Invalid coordinate %d %d." % (x, y))
 
     @deprecated
