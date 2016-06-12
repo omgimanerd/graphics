@@ -11,13 +11,13 @@ from graphics.lib.vector import Vector
 import random
 
 def main():
-    drawing = Drawing(300, 300)
+    drawing = Drawing(500, 500)
 
-    drawing.rotate_x_about_point(150, 150, 0, 30)
-    drawing.rotate_y_about_point(150, 150, 0, 30)
-    drawing.draw_box(150, 150, 0, 10, 40, 20)
+    drawing.rotate_y(90)
 
-    drawing.display()
+    sphere = Generator.get_sphere_polygonmatrix(0, 250, -250, 200)
+    drawing.draw_polygonmatrix(sphere)
+    drawing.generate("test")
 
 
 if __name__ == "__main__":

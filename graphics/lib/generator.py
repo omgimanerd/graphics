@@ -383,5 +383,67 @@ class Generator():
                                points[i + phi_step + 1])
         return matrix
 
+    @staticmethod
+    @accepts((int, float), (int, float), (int, float), (int, float),
+             (int, float))
+    def get_torus_polygonmatrix_alt(center_x, center_y, center_z, radius1, radius2,
+                                theta_step=30, phi_step=30):
+        """
+        Alternate version of get_torus_polygonmatrix, based off of DW's code. 
+        Same for draw, different for fill; More buggy in some ways and less buggy in others.
+        Generates a Matrix of points representing the points on the surface of
+        a torus.
+
+        Parameters:
+        center_x: int, the x coordinate of the center of the sphere
+        center_y: int, the y coordinate of the center of the sphere
+        center_z: int, the z coordinate of the center of the sphere
+        radius1: int, the radius of the circle being revolved to make the torus
+        radius2: int, the radius of the torus itself
+        theta_step: int (optional), the number of steps to use when drawing the
+            circle that is revolved to make the torus
+        phi_step: int(optional), the number of steps to use when rotating the
+            circles about the center point
+        """
+        matrix = PolygonMatrix()
+        points = Generator.get_torus_pointmatrix(
+            center_x, center_y, center_z, radius1, radius2,
+            theta_step=theta_step, phi_step=phi_step)
+        temp  = []
+        for i in range(len(points)):
+            temp.append(points[i])
+        for i in range(theta_step):
+            temp.append(points[i])
+        num_points = len(temp)
+        num_steps = phi_step
+        lat = 0
+        lat_stop = num_steps
+        longt_stop = num_steps
+    
+        while lat < lat_stop:
+            longt = 0
+
+            while longt < longt_stop:
+                #print "lat: " + str(lat)
+                #print "longt: " + str(longt)
+                index = lat * num_steps + longt
+
+                p0 = temp[ index ]
+
+                p1 = temp[ (index + num_steps) % num_points ]
+
+           
+                p2 = temp[ (index + num_steps + 1) % num_points ]
+
+                p3 = temp[ (index + 1) % num_points ]
+
+                matrix.add_polygon(p0, p1, p2)
+                matrix.add_polygon(p2, p3, p0)       
+            
+                longt+= 1
+            lat+= 1
+        return matrix
+
+
 if __name__ == "__main__":
     print Generator.get_knob_range(60, 10, 30, 0, 1)

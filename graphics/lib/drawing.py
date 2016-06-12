@@ -386,11 +386,11 @@ class Drawing():
             dx1 = (t[0] - b[0]) / float(t[1] - b[1]) if t[1] - b[1] else 0
             dx2bm = (m[0] - b[0]) / float(m[1] - b[1]) if m[1] - b[1] else 0
             dx2mt = (t[0] - m[0]) / float(t[1] - m[1]) if t[1] - m[1] else 0
-            for y in range(b[1], m[1]):
+            for y in range(b[1], m[1] + 1):
                 self._draw_line(int(x1), y, int(x2), y, color, z_depth=z_depth)
                 x1 += dx1
                 x2 += dx2bm
-            for y in range(m[1], t[1]):
+            for y in range(m[1], t[1] + 1):
                 self._draw_line(int(x1), y, int(x2), y, color, z_depth=z_depth)
                 x1 += dx1
                 x2 += dx2mt
