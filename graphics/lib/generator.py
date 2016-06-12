@@ -317,7 +317,8 @@ class Generator():
     def get_torus_pointmatrix(center_x, center_y, center_z, radius1, radius2,
                               theta_step=30, phi_step=30):
         """
-        Generates a PolygonMatrix representing the mesh surface of a torus.
+        Generates a Matrix of points representing the points on the surface of
+        a torus.
 
         Parameters:
         center_x: int, the x coordinate of the center of the sphere
@@ -350,8 +351,7 @@ class Generator():
     def get_torus_polygonmatrix(center_x, center_y, center_z, radius1, radius2,
                                 theta_step=30, phi_step=30):
         """
-        Generates a Matrix of points representing the points on the surface of
-        a torus.
+        Generates a PolygonMatrix representing the mesh surface of a torus.
 
         Parameters:
         center_x: int, the x coordinate of the center of the sphere
@@ -364,12 +364,6 @@ class Generator():
         phi_step: int(optional), the number of steps to use when rotating the
             circles about the center point
         """
-        def x(theta, phi): return radius1 * cos(theta) + center_x
-        def y(theta, phi): return cos(phi) * (
-            radius1 * sin(theta) + radius2) + center_y
-        def z(theta, phi): return sin(phi) * (
-            radius1 * sin(theta) + radius2) + center_z
-        parametric = Parametric(x, y, z)
         matrix = PolygonMatrix()
         points = Generator.get_torus_pointmatrix(
             center_x, center_y, center_z, radius1, radius2,
