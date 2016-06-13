@@ -14,7 +14,7 @@ class Vector():
         x, y, and z component represented by the zeroth, first, and second
         index of the internal list.
         """
-        self.vector = [0, 0, 0]
+        self.vector = [0, 0, -1]
         if vector:
             self.vector = Vector._check_vector(vector)
 

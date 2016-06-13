@@ -9,3 +9,8 @@ Path configuration:
 ```
 . ./env
 ```
+
+Features Implemented:
+  - Backface culling
+  - Scanline conversion (buggy)
+  - z-depth buffering (buggy)

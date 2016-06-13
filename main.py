@@ -13,12 +13,19 @@ import random
 def main():
     drawing = Drawing(500, 500)
 
-    drawing.rotate_y(90)
-
-    sphere = Generator.get_sphere_polygonmatrix(0, 250, -250, 200)
+    drawing.push_matrix()
+    drawing.translate(250, 250, 0)
+    drawing.set_view_vector(Vector())
+    # drawing.rotate_y(45)
+    drawing.rotate_x(45)
+    drawing.rotate_z(45)
+    sphere = Generator.get_torus_polygonmatrix(0, 0, 0, 80, 200)
     drawing.draw_polygonmatrix(sphere)
-    drawing.generate("test")
+    # box = Generator.get_box_polygonmatrix(0, 0, 0, 30, 40, 50)
+    # drawing.draw_polygonmatrix(box)
+    drawing.pop_matrix()
 
+    drawing.display()
 
 if __name__ == "__main__":
     main()

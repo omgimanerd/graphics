@@ -349,9 +349,10 @@ class Drawing():
         """
         if not isinstance(matrix, PolygonMatrix):
             raise TypeError("%s is not a PolygonMatrix" % matrix)
+        matrix *= self.get_transformation()
         if self.view_vector:
             matrix = matrix.cull_faces(self.view_vector)
-        for triangle in (matrix * self.get_transformation()).get_rounded():
+        for triangle in matrix.get_rounded():
             self._draw_line(
                 triangle[0][0], triangle[0][1], triangle[1][0], triangle[1][1],
                 color, z_depth=min(triangle[0][2], triangle[1][2]))
@@ -375,9 +376,10 @@ class Drawing():
         """
         if not isinstance(matrix, PolygonMatrix):
             raise TypeError("%s is not a PolygonMatrix" % matrix)
-        # if self.view_vector:
-        #     matrix = matrix.cull_faces(self.view_vector)
-        for triangle in (matrix * self.get_transformation()).get_rounded():
+        matrix *= self.get_transformation()
+        if self.view_vector:
+            matrix = matrix.cull_faces(self.view_vector)
+        for triangle in matrix.get_rounded():
             b = min(triangle, key=lambda point: point[1])
             m = sorted(triangle, key=lambda point: point[1])[1]
             t = max(triangle, key=lambda point: point[1])

@@ -380,10 +380,10 @@ class Generator():
     @staticmethod
     @accepts((int, float), (int, float), (int, float), (int, float),
              (int, float))
-    def get_torus_polygonmatrix_alt(center_x, center_y, center_z, radius1, radius2,
-                                theta_step=30, phi_step=30):
+    def get_torus_polygonmatrix_alt(center_x, center_y, center_z, radius1,
+                                    radius2, theta_step=30, phi_step=30):
         """
-        Alternate version of get_torus_polygonmatrix, based off of DW's code. 
+        Alternate version of get_torus_polygonmatrix, based off of DW's code.
         Same for draw, different for fill; More buggy in some ways and less buggy in others.
         Generates a Matrix of points representing the points on the surface of
         a torus.
@@ -413,27 +413,17 @@ class Generator():
         lat = 0
         lat_stop = num_steps
         longt_stop = num_steps
-    
+
         while lat < lat_stop:
             longt = 0
-
             while longt < longt_stop:
-                #print "lat: " + str(lat)
-                #print "longt: " + str(longt)
                 index = lat * num_steps + longt
-
                 p0 = temp[ index ]
-
                 p1 = temp[ (index + num_steps) % num_points ]
-
-           
                 p2 = temp[ (index + num_steps + 1) % num_points ]
-
                 p3 = temp[ (index + 1) % num_points ]
-
                 matrix.add_polygon(p0, p1, p2)
-                matrix.add_polygon(p2, p3, p0)       
-            
+                matrix.add_polygon(p2, p3, p0)
                 longt+= 1
             lat+= 1
         return matrix

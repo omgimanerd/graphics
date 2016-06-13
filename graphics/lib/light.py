@@ -15,5 +15,12 @@ class Light:
     def get_illumination(self):
         return self.i_ambient + self.i_diffuse + self.i_specular
 
+    def set_ambient_light(self, color, kA):
+        self.i_ambient = color * kA
+
+    def set_diffuse_light(self, color, kD, angle):
+        pass
+
+
 if __name__ == "__main__":
     pass

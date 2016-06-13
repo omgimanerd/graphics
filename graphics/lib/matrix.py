@@ -519,8 +519,8 @@ class PolygonMatrix(Matrix):
         return self
 
     def __add__(self, other):
-        raise NotImplementedError("You cannot call __add__() on a " +
-                                  "PolygonMatrix")
+        raise NotImplementedError(
+            "You cannot call __add__() on a PolygonMatrix")
 
     def __iter__(self):
         return self
@@ -555,10 +555,8 @@ class PolygonMatrix(Matrix):
                 polygon[1][2] - polygon[0][2]
             ])
             normal = Vector.cross(v1, v2)
-            theta = Vector.get_angle_between(normal, view_vector)
-            if Util.in_bound(theta, pi / 2, 3 * pi / 2):
-                culled_polygonmatrix.add_polygon(
-                    polygon[0], polygon[1], polygon[2])
+            if Vector.dot(normal, view_vector) < 0:
+                culled_polygonmatrix.add_polygon(*polygon)
         return culled_polygonmatrix
 
 if __name__ == "__main__":
